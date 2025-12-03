@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1315&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> | ItemDrops Plugin</title>
+
+    <meta name="description"
+        content="">
+
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    
+    <link rel="stylesheet" href="/css/custom.css">
+
+    <meta name="generator" content="Hugo 0.146.5">
+</head>
+
+<body>
+    <div class="gb-layout">
+        <header class="gb-header">
+    <a href="/" class="gb-brand">
+        <i class="fas fa-cubes" style="color: var(--gb-primary);"></i>
+        <span>Grid Building</span>
+    </a>
+
+    <div class="gb-search">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search documentation..." aria-label="Search">
+    </div>
+
+    <nav class="gb-nav">
+        
+        
+        <a href="/itemdrops/getting-started/" class="gb-nav-link ">
+            Getting Started
+        </a>
+        
+        <a href="/itemdrops/api-reference/" class="gb-nav-link ">
+            API Reference
+        </a>
+        
+        <a href="/itemdrops/examples/" class="gb-nav-link ">
+            Examples
+        </a>
+        
+        <a href="/itemdrops/migration/" class="gb-nav-link ">
+            Migration
+        </a>
+        
+    </nav>
+</header>
+
+        
+        <aside class="gb-sidebar">
+    <nav class="gb-sidebar-nav">
+        
+
+        
+        
+
+        
+
+        
+        <div class="gb-sidebar-section">
+            <div class="gb-sidebar-title">ItemDrops Plugin</div>
+            
+            <a href="/itemdrops/architecture/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/itemdrops/configuration/data-driven/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/itemdrops/configuration/migration/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/itemdrops/examples/basic-usage/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/itemdrops/feature_suggestions/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/itemdrops/getting-started/quick-start-guide/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/itemdrops/getting-started/quick-start/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/itemdrops/godot-integration/"
+                class="gb-sidebar-link active">
+                
+            </a>
+            
+            <a href="/itemdrops/implementation/data-driven-implementation/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/itemdrops/improvements/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/itemdrops/integration_guide/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/itemdrops/readme/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/itemdrops/reference/schema/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/itemdrops/unity-integration/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+        </div>
+        
+    </nav>
+</aside>
+        
+
+        <main class="gb-main">
+            
+            <div class="gb-content">
+                <h1></h1>
+                <h1 id="godot-integration-guide">Godot Integration Guide</h1>
+<h2 id="-overview">🎮 Overview</h2>
+<p>This guide covers integrating the ItemDrops plugin into Godot 4.x games. The Godot integration provides Resource-based configuration, Node-based runtime components, and signal-based event handling.</p>
+<h2 id="-installation">📦 Installation</h2>
+<h3 id="plugin-setup">Plugin Setup</h3>
+<ol>
+<li>Copy the <code>ItemDrops</code> folder to your Godot project&rsquo;s <code>addons/</code> directory</li>
+<li>Enable the plugin in Project Settings → Plugins</li>
+<li>Configure the ItemDrops settings as needed</li>
+</ol>
+<h3 id="dependencies">Dependencies</h3>
+<ul>
+<li>Godot 4.2+</li>
+<li>.NET 6.0+ (for C# support)</li>
+<li>No external dependencies required</li>
+</ul>
+<h2 id="-architecture">🏗️ Architecture</h2>
+<h3 id="godot-specific-components">Godot-Specific Components</h3>
+<pre tabindex="0"><code>ItemDrops.Godot/
+├── Resources/
+│   ├── DropTable.cs           # Resource for drop configuration
+│   ├── DropData.cs            # Resource for individual drops
+│   ├── DropCondition.cs       # Resource for drop conditions
+│   └── ItemDropsBus.cs        # Global drop management
+├── Systems/
+│   ├── EnemyDrops.cs         # Enemy drop component
+│   └── ItemDropNode.cs        # Dropped item node
+└── Visuals/
+    └── DropEffects.cs         # Visual effects for drops
+</code></pre><h3 id="integration-pattern">Integration Pattern</h3>
+<ul>
+<li><strong>Resources</strong>: Configuration data stored as Godot Resources</li>
+<li><strong>Nodes</strong>: Runtime behavior as Godot Nodes</li>
+<li><strong>Signals</strong>: Event-driven communication</li>
+<li><strong>Scene Tree</strong>: Integration with Godot&rsquo;s scene system</li>
+</ul>
+<h2 id="-quick-start">🚀 Quick Start</h2>
+<h3 id="1-create-a-drop-table">1. Create a Drop Table</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// Create a new DropTable resource</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> dropTable <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> DropTable<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>dropTable<span style="color:#1f2328">.</span>MinDrops <span style="color:#1f2328">=</span> <span style="color:#0550ae">1</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>dropTable<span style="color:#1f2328">.</span>MaxDrops <span style="color:#1f2328">=</span> <span style="color:#0550ae">3</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>dropTable<span style="color:#1f2328">.</span>DropChance <span style="color:#1f2328">=</span> <span style="color:#0550ae">0.8f</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Add some drops</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> swordDrop <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> DropData<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>swordDrop<span style="color:#1f2328">.</span>ItemId <span style="color:#1f2328">=</span> <span style="color:#0a3069">&#34;sword&#34;</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>swordDrop<span style="color:#1f2328">.</span>Weight <span style="color:#1f2328">=</span> <span style="color:#0550ae">2.0f</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>swordDrop<span style="color:#1f2328">.</span>Rarity <span style="color:#1f2328">=</span> ItemRarity<span style="color:#1f2328">.</span>Common<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>dropTable<span style="color:#1f2328">.</span>Drops<span style="color:#1f2328">.</span>Add<span style="color:#1f2328">(</span>swordDrop<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> potionDrop <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> DropData<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>potionDrop<span style="color:#1f2328">.</span>ItemId <span style="color:#1f2328">=</span> <span style="color:#0a3069">&#34;health_potion&#34;</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>potionDrop<span style="color:#1f2328">.</span>Weight <span style="color:#1f2328">=</span> <span style="color:#0550ae">3.0f</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>potionDrop<span style="color:#1f2328">.</span>Rarity <span style="color:#1f2328">=</span> ItemRarity<span style="color:#1f2328">.</span>Common<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>dropTable<span style="color:#1f2328">.</span>Drops<span style="color:#1f2328">.</span>Add<span style="color:#1f2328">(</span>potionDrop<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Save the resource</span>
+</span></span><span style="display:flex;"><span>ResourceSaver<span style="color:#1f2328">.</span>Save<span style="color:#1f2328">(</span>dropTable<span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;res://data/drops/enemy_drops.tres&#34;</span><span style="color:#1f2328">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="2-configure-enemy-drops">2. Configure Enemy Drops</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// Add EnemyDrops component to an enemy</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">partial</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">Enemy</span> <span style="color:#1f2328">:</span> CharacterBody2D
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> DropTable DropTable <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">override</span> <span style="color:#cf222e">void</span> _Ready<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a">// Configure drop behavior</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">var</span> enemyDrops <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> EnemyDrops<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>        enemyDrops<span style="color:#1f2328">.</span>DropTable <span style="color:#1f2328">=</span> DropTable<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        enemyDrops<span style="color:#1f2328">.</span>AutoGenerateOnDeath <span style="color:#1f2328">=</span> <span style="color:#cf222e">true</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        AddChild<span style="color:#1f2328">(</span>enemyDrops<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="3-handle-drop-events">3. Handle Drop Events</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">partial</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">Player</span> <span style="color:#1f2328">:</span> CharacterBody2D
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">override</span> <span style="color:#cf222e">void</span> _Ready<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a">// Connect to drop events</span>
+</span></span><span style="display:flex;"><span>        ItemDropsBus<span style="color:#1f2328">.</span>Instance<span style="color:#1f2328">.</span>DropGenerated <span style="color:#1f2328">+=</span> OnDropGenerated<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> <span style="color:#cf222e">void</span> OnDropGenerated<span style="color:#1f2328">(</span><span style="color:#cf222e">string</span> itemId<span style="color:#1f2328">,</span> Vector2 position<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        GD<span style="color:#1f2328">.</span>Print<span style="color:#1f2328">(</span><span style="color:#0a3069">$&#34;Drop generated: {itemId} at {position}&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="-resource-configuration">📋 Resource Configuration</h2>
+<h3 id="droptable-resource">DropTable Resource</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#1f2328">[Tool]</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">partial</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">DropTable</span> <span style="color:#1f2328">:</span> Resource<span style="color:#1f2328">,</span> IDropTable
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> Godot<span style="color:#1f2328">.</span>Collections<span style="color:#1f2328">.</span>Array<span style="color:#1f2328">&lt;</span>DropData<span style="color:#1f2328">&gt;</span> Drops <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">int</span> MinDrops <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span> <span style="color:#1f2328">=</span> <span style="color:#0550ae">1</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">int</span> MaxDrops <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span> <span style="color:#1f2328">=</span> <span style="color:#0550ae">1</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">float</span> DropChance <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span> <span style="color:#1f2328">=</span> <span style="color:#0550ae">1.0f</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Methods for drop generation</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> Godot<span style="color:#1f2328">.</span>Collections<span style="color:#1f2328">.</span>Array<span style="color:#1f2328">&lt;</span>Node<span style="color:#1f2328">&gt;</span> GenerateDrops<span style="color:#1f2328">(</span>Vector2 globalPosition<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> DropTableValidationResult Validate<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="dropdata-resource">DropData Resource</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#1f2328">[Tool]</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">partial</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">DropData</span> <span style="color:#1f2328">:</span> Resource
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">string</span> ItemId <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">float</span> Weight <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span> <span style="color:#1f2328">=</span> <span style="color:#0550ae">1.0f</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> ItemRarity Rarity <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span> <span style="color:#1f2328">=</span> ItemRarity<span style="color:#1f2328">.</span>Common<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">int</span> MinQuantity <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span> <span style="color:#1f2328">=</span> <span style="color:#0550ae">1</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">int</span> MaxQuantity <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span> <span style="color:#1f2328">=</span> <span style="color:#0550ae">1</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> Godot<span style="color:#1f2328">.</span>Collections<span style="color:#1f2328">.</span>Array<span style="color:#1f2328">&lt;</span>DropCondition<span style="color:#1f2328">&gt;</span> Conditions <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="dropcondition-resource">DropCondition Resource</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#1f2328">[Tool]</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">partial</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">DropCondition</span> <span style="color:#1f2328">:</span> Resource
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">string</span> ConditionType <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">string</span> StringValue <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">int</span> IntValue <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">float</span> FloatValue <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="-runtime-components">🎯 Runtime Components</h2>
+<h3 id="itemdropsbus-global-manager">ItemDropsBus (Global Manager)</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#1f2328">[Tool]</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">partial</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">ItemDropsBus</span> <span style="color:#1f2328">:</span> Resource
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Singleton instance</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">static</span> ItemDropsBus Instance <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Default drop tables</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> DropTable DefaultEnemyDrops <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> DropTable DefaultBossDrops <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Global configuration</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">float</span> GlobalLuckModifier <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span> <span style="color:#1f2328">=</span> <span style="color:#0550ae">1.0f</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Methods</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">void</span> RegisterDropTable<span style="color:#1f2328">(</span><span style="color:#cf222e">string</span> id<span style="color:#1f2328">,</span> DropTable dropTable<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> Godot<span style="color:#1f2328">.</span>Collections<span style="color:#1f2328">.</span>Array<span style="color:#1f2328">&lt;</span>Node<span style="color:#1f2328">&gt;</span> GenerateDrops<span style="color:#1f2328">(</span><span style="color:#cf222e">string</span> tableId<span style="color:#1f2328">,</span> Vector2 position<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> DropStatistics GetStatistics<span style="color:#1f2328">(</span><span style="color:#cf222e">string</span> tableId<span style="color:#1f2328">,</span> LootContext<span style="color:#1f2328">?</span> context <span style="color:#1f2328">=</span> <span style="color:#cf222e">null</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Signals</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Signal]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">delegate</span> <span style="color:#cf222e">void</span> DropGeneratedEventHandler<span style="color:#1f2328">(</span><span style="color:#cf222e">string</span> itemId<span style="color:#1f2328">,</span> Vector2 position<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Signal]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">delegate</span> <span style="color:#cf222e">void</span> DropCollectedEventHandler<span style="color:#1f2328">(</span><span style="color:#cf222e">string</span> itemId<span style="color:#1f2328">,</span> Node collector<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="enemydrops-component">EnemyDrops Component</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#1f2328">[Tool]</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">partial</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">EnemyDrops</span> <span style="color:#1f2328">:</span> Node
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> DropTable DropTable <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">int</span> LevelOverride <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span> <span style="color:#1f2328">=</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">string</span> EntityTypeOverride <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span> <span style="color:#1f2328">=</span> <span style="color:#0a3069">&#34;&#34;</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">float</span> LuckModifier <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span> <span style="color:#1f2328">=</span> <span style="color:#0550ae">1.0f</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">bool</span> AutoGenerateOnDeath <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span> <span style="color:#1f2328">=</span> <span style="color:#cf222e">true</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">float</span> DropDelay <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span> <span style="color:#1f2328">=</span> <span style="color:#0550ae">0.5f</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">bool</span> RandomOffset <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span> <span style="color:#1f2328">=</span> <span style="color:#cf222e">true</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Methods</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> Godot<span style="color:#1f2328">.</span>Collections<span style="color:#1f2328">.</span>Array<span style="color:#1f2328">&lt;</span>Node<span style="color:#1f2328">&gt;</span> GenerateDrops<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> DropStatistics GetStatistics<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">void</span> SetDropTable<span style="color:#1f2328">(</span>DropTable dropTable<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="itemdropnode-dropped-item">ItemDropNode (Dropped Item)</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#1f2328">[Tool]</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">partial</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">ItemDropNode</span> <span style="color:#1f2328">:</span> Node2D
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">string</span> ItemId <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> ItemRarity Rarity <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">int</span> Quantity <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span> <span style="color:#1f2328">=</span> <span style="color:#0550ae">1</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">bool</span> AutoCollect <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span> <span style="color:#1f2328">=</span> <span style="color:#cf222e">false</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">float</span> CollectionRange <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span> <span style="color:#1f2328">=</span> <span style="color:#0550ae">50.0f</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Methods</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">void</span> Configure<span style="color:#1f2328">(</span>DropResult dropResult<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">void</span> Collect<span style="color:#1f2328">(</span>Node collector<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">void</span> PlayCollectionEffects<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Signals</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Signal]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">delegate</span> <span style="color:#cf222e">void</span> CollectedEventHandler<span style="color:#1f2328">(</span><span style="color:#cf222e">string</span> itemId<span style="color:#1f2328">,</span> Node collector<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Signal]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">delegate</span> <span style="color:#cf222e">void</span> HoverStartEventHandler<span style="color:#1f2328">(</span><span style="color:#cf222e">string</span> itemId<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Signal]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">delegate</span> <span style="color:#cf222e">void</span> HoverEndEventHandler<span style="color:#1f2328">(</span><span style="color:#cf222e">string</span> itemId<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="-visual-effects">🎨 Visual Effects</h2>
+<h3 id="drop-effects">Drop Effects</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">partial</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">DropEffects</span> <span style="color:#1f2328">:</span> Node
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Particle effects for different rarities</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> PackedScene CommonEffect <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> PackedScene UncommonEffect <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> PackedScene RareEffect <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Sound effects</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> AudioStream DropSound <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> AudioStream CollectSound <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">void</span> PlayDropEffect<span style="color:#1f2328">(</span>Vector2 position<span style="color:#1f2328">,</span> ItemRarity rarity<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">void</span> PlayCollectEffect<span style="color:#1f2328">(</span>Vector2 position<span style="color:#1f2328">,</span> ItemRarity rarity<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="rarity-based-visuals">Rarity-Based Visuals</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">static</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">RarityVisuals</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">static</span> Color GetColor<span style="color:#1f2328">(</span>ItemRarity rarity<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">static</span> <span style="color:#cf222e">float</span> GetGlowIntensity<span style="color:#1f2328">(</span>ItemRarity rarity<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">static</span> <span style="color:#cf222e">float</span> GetParticleCount<span style="color:#1f2328">(</span>ItemRarity rarity<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">static</span> AudioStream GetSound<span style="color:#1f2328">(</span>ItemRarity rarity<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="-advanced-usage">📊 Advanced Usage</h2>
+<h3 id="conditional-drops">Conditional Drops</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// Create level-based condition</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> levelCondition <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> DropCondition<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>levelCondition<span style="color:#1f2328">.</span>ConditionType <span style="color:#1f2328">=</span> <span style="color:#0a3069">&#34;MinimumLevel&#34;</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>levelCondition<span style="color:#1f2328">.</span>IntValue <span style="color:#1f2328">=</span> <span style="color:#0550ae">10</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Create entity type condition</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> entityCondition <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> DropCondition<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>entityCondition<span style="color:#1f2328">.</span>ConditionType <span style="color:#1f2328">=</span> <span style="color:#0a3069">&#34;EntityType&#34;</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>entityCondition<span style="color:#1f2328">.</span>StringValue <span style="color:#1f2328">=</span> <span style="color:#0a3069">&#34;dragon&#34;</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Add to drop data</span>
+</span></span><span style="display:flex;"><span>dropData<span style="color:#1f2328">.</span>Conditions<span style="color:#1f2328">.</span>Add<span style="color:#1f2328">(</span>levelCondition<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>dropData<span style="color:#1f2328">.</span>Conditions<span style="color:#1f2328">.</span>Add<span style="color:#1f2328">(</span>entityCondition<span style="color:#1f2328">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="custom-drop-generation">Custom Drop Generation</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">partial</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">CustomDropGenerator</span> <span style="color:#1f2328">:</span> Node
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> DropTable DropTable <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">override</span> <span style="color:#cf222e">void</span> _Ready<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a">// Generate drops with custom context</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">var</span> context <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> LootContext
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            Level <span style="color:#1f2328">=</span> <span style="color:#0550ae">25</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            EntityType <span style="color:#1f2328">=</span> <span style="color:#0a3069">&#34;boss&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            LuckModifier <span style="color:#1f2328">=</span> <span style="color:#0550ae">2.0f</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">};</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">var</span> drops <span style="color:#1f2328">=</span> DropTable<span style="color:#1f2328">.</span>GenerateDrops<span style="color:#1f2328">(</span>GlobalPosition<span style="color:#1f2328">,</span> context<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">foreach</span> <span style="color:#1f2328">(</span><span style="color:#cf222e">var</span> drop <span style="color:#cf222e">in</span> drops<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            AddChild<span style="color:#1f2328">(</span>drop<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="loot-generation-with-modifiers">Loot Generation with Modifiers</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// Create custom loot generator</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> generator <span style="color:#1f2328">=</span> ItemDropsBus<span style="color:#1f2328">.</span>Instance<span style="color:#1f2328">.</span>CreateLootGenerator<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;boss_loot&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">new</span> LuckModifier<span style="color:#1f2328">(</span><span style="color:#0550ae">1.5f</span><span style="color:#1f2328">),</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">new</span> LevelBonusModifier<span style="color:#1f2328">(</span><span style="color:#0550ae">20</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">2.0f</span><span style="color:#1f2328">),</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">new</span> RarityFilterModifier<span style="color:#1f2328">(</span>ItemRarity<span style="color:#1f2328">.</span>Rare<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Generate enhanced loot</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> drops <span style="color:#1f2328">=</span> ItemDropsBus<span style="color:#1f2328">.</span>Instance<span style="color:#1f2328">.</span>GenerateLoot<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;boss_loot&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;boss_table&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    GlobalPosition
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="-testing-in-godot">🧪 Testing in Godot</h2>
+<h3 id="unit-tests-with-godottest">Unit Tests with GoDotTest</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#1f2328">[Test]</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">void</span> TestDropGeneration<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Create test drop table</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">var</span> dropTable <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> DropTable<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>    dropTable<span style="color:#1f2328">.</span>AddDrop<span style="color:#1f2328">(</span><span style="color:#cf222e">new</span> DropData <span style="color:#1f2328">{</span> ItemId <span style="color:#1f2328">=</span> <span style="color:#0a3069">&#34;test_item&#34;</span><span style="color:#1f2328">,</span> Weight <span style="color:#1f2328">=</span> <span style="color:#0550ae">1.0f</span> <span style="color:#1f2328">});</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Generate drops</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">var</span> drops <span style="color:#1f2328">=</span> dropTable<span style="color:#1f2328">.</span>GenerateDrops<span style="color:#1f2328">(</span>Vector2<span style="color:#1f2328">.</span>Zero<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Assert results</span>
+</span></span><span style="display:flex;"><span>    Assert<span style="color:#1f2328">.</span>That<span style="color:#1f2328">(</span>drops<span style="color:#1f2328">.</span>Count<span style="color:#1f2328">,</span> Is<span style="color:#1f2328">.</span>EqualTo<span style="color:#1f2328">(</span><span style="color:#0550ae">1</span><span style="color:#1f2328">));</span>
+</span></span><span style="display:flex;"><span>    Assert<span style="color:#1f2328">.</span>That<span style="color:#1f2328">(</span>drops<span style="color:#1f2328">[</span><span style="color:#0550ae">0</span><span style="color:#1f2328">].</span>ItemId<span style="color:#1f2328">,</span> Is<span style="color:#1f2328">.</span>EqualTo<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;test_item&#34;</span><span style="color:#1f2328">));</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="integration-tests">Integration Tests</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#1f2328">[Test]</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">void</span> TestEnemyDropGeneration<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Create test enemy</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">var</span> enemy <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> Enemy<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>    enemy<span style="color:#1f2328">.</span>DropTable <span style="color:#1f2328">=</span> LoadDropTable<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;test_enemy&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Simulate death</span>
+</span></span><span style="display:flex;"><span>    enemy<span style="color:#1f2328">.</span>EmitSignal<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;defeated&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Verify drops generated</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">var</span> drops <span style="color:#1f2328">=</span> GetTree<span style="color:#1f2328">().</span>GetNodesInGroup<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;drops&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    Assert<span style="color:#1f2328">.</span>That<span style="color:#1f2328">(</span>drops<span style="color:#1f2328">.</span>Count<span style="color:#1f2328">,</span> Is<span style="color:#1f2328">.</span>GreaterThan<span style="color:#1f2328">(</span><span style="color:#0550ae">0</span><span style="color:#1f2328">));</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="-performance-optimization">🔧 Performance Optimization</h2>
+<h3 id="object-pooling">Object Pooling</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">partial</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">DropNodePool</span> <span style="color:#1f2328">:</span> Node
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> <span style="color:#cf222e">readonly</span> Queue<span style="color:#1f2328">&lt;</span>ItemDropNode<span style="color:#1f2328">&gt;</span> _pool <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span><span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> ItemDropNode Get<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>_pool<span style="color:#1f2328">.</span>Count <span style="color:#1f2328">&gt;</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">return</span> _pool<span style="color:#1f2328">.</span>Dequeue<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> CreateNewDropNode<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">void</span> Return<span style="color:#1f2328">(</span>ItemDropNode node<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        node<span style="color:#1f2328">.</span>Reset<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>        _pool<span style="color:#1f2328">.</span>Enqueue<span style="color:#1f2328">(</span>node<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="batch-processing">Batch Processing</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">override</span> <span style="color:#cf222e">void</span> _Process<span style="color:#1f2328">(</span><span style="color:#cf222e">double</span> delta<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Process drops in batches for performance</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">var</span> drops <span style="color:#1f2328">=</span> GetTree<span style="color:#1f2328">().</span>GetNodesInGroup<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;drops&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">foreach</span> <span style="color:#1f2328">(</span><span style="color:#cf222e">var</span> batch <span style="color:#cf222e">in</span> drops<span style="color:#1f2328">.</span>Chunk<span style="color:#1f2328">(</span><span style="color:#0550ae">10</span><span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        ProcessDropBatch<span style="color:#1f2328">(</span>batch<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="-common-issues--solutions">🐛 Common Issues &amp; Solutions</h2>
+<h3 id="drop-generation-not-working">Drop Generation Not Working</h3>
+<p><strong>Problem</strong>: Drops not appearing when expected
+<strong>Solution</strong>:</p>
+<ol>
+<li>Verify drop table is properly configured</li>
+<li>Check that scene paths are correct</li>
+<li>Ensure AutoGenerateOnDeath is enabled</li>
+<li>Verify signal connections</li>
+</ol>
+<h3 id="performance-issues">Performance Issues</h3>
+<p><strong>Problem</strong>: Lag when many drops are generated
+<strong>Solution</strong>:</p>
+<ol>
+<li>Use object pooling for drop nodes</li>
+<li>Limit simultaneous drops</li>
+<li>Optimize visual effects</li>
+<li>Use batch processing</li>
+</ol>
+<h3 id="resource-loading-issues">Resource Loading Issues</h3>
+<p><strong>Problem</strong>: Drop tables not loading correctly
+<strong>Solution</strong>:</p>
+<ol>
+<li>Check file paths and extensions</li>
+<li>Verify resources are saved properly</li>
+<li>Ensure proper export properties</li>
+<li>Check for circular references</li>
+</ol>
+<h2 id="-best-practices">📚 Best Practices</h2>
+<h3 id="resource-management">Resource Management</h3>
+<ul>
+<li>Save drop tables as .tres files</li>
+<li>Use ResourceLoader for loading</li>
+<li>Implement proper validation</li>
+<li>Cache frequently used tables</li>
+</ul>
+<h3 id="scene-integration">Scene Integration</h3>
+<ul>
+<li>Use proper node hierarchy</li>
+<li>Connect signals in _Ready()</li>
+<li>Clean up in _ExitTree()</li>
+<li>Use groups for organization</li>
+</ul>
+<h3 id="performance">Performance</h3>
+<ul>
+<li>Pool drop objects</li>
+<li>Limit visual effects</li>
+<li>Use spatial partitioning</li>
+<li>Optimize collision detection</li>
+</ul>
+<h3 id="debugging">Debugging</h3>
+<ul>
+<li>Enable verbose logging</li>
+<li>Use Godot&rsquo;s debugger</li>
+<li>Profile with Godot profiler</li>
+<li>Test with different drop rates</li>
+</ul>
+<hr>
+<p><em>This guide evolves with the Godot integration development</em><br>
+<em>Last Updated: November 2025</em><br>
+<em>Godot Version: 4.2+</em></p>
+
+            </div>
+            
+        </main>
+
+        
+        <aside class="gb-toc">
+            <div class="gb-toc-title">On this page</div>
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#-overview">🎮 Overview</a></li>
+    <li><a href="#-installation">📦 Installation</a>
+      <ul>
+        <li><a href="#plugin-setup">Plugin Setup</a></li>
+        <li><a href="#dependencies">Dependencies</a></li>
+      </ul>
+    </li>
+    <li><a href="#-architecture">🏗️ Architecture</a>
+      <ul>
+        <li><a href="#godot-specific-components">Godot-Specific Components</a></li>
+        <li><a href="#integration-pattern">Integration Pattern</a></li>
+      </ul>
+    </li>
+    <li><a href="#-quick-start">🚀 Quick Start</a>
+      <ul>
+        <li><a href="#1-create-a-drop-table">1. Create a Drop Table</a></li>
+        <li><a href="#2-configure-enemy-drops">2. Configure Enemy Drops</a></li>
+        <li><a href="#3-handle-drop-events">3. Handle Drop Events</a></li>
+      </ul>
+    </li>
+    <li><a href="#-resource-configuration">📋 Resource Configuration</a>
+      <ul>
+        <li><a href="#droptable-resource">DropTable Resource</a></li>
+        <li><a href="#dropdata-resource">DropData Resource</a></li>
+        <li><a href="#dropcondition-resource">DropCondition Resource</a></li>
+      </ul>
+    </li>
+    <li><a href="#-runtime-components">🎯 Runtime Components</a>
+      <ul>
+        <li><a href="#itemdropsbus-global-manager">ItemDropsBus (Global Manager)</a></li>
+        <li><a href="#enemydrops-component">EnemyDrops Component</a></li>
+        <li><a href="#itemdropnode-dropped-item">ItemDropNode (Dropped Item)</a></li>
+      </ul>
+    </li>
+    <li><a href="#-visual-effects">🎨 Visual Effects</a>
+      <ul>
+        <li><a href="#drop-effects">Drop Effects</a></li>
+        <li><a href="#rarity-based-visuals">Rarity-Based Visuals</a></li>
+      </ul>
+    </li>
+    <li><a href="#-advanced-usage">📊 Advanced Usage</a>
+      <ul>
+        <li><a href="#conditional-drops">Conditional Drops</a></li>
+        <li><a href="#custom-drop-generation">Custom Drop Generation</a></li>
+        <li><a href="#loot-generation-with-modifiers">Loot Generation with Modifiers</a></li>
+      </ul>
+    </li>
+    <li><a href="#-testing-in-godot">🧪 Testing in Godot</a>
+      <ul>
+        <li><a href="#unit-tests-with-godottest">Unit Tests with GoDotTest</a></li>
+        <li><a href="#integration-tests">Integration Tests</a></li>
+      </ul>
+    </li>
+    <li><a href="#-performance-optimization">🔧 Performance Optimization</a>
+      <ul>
+        <li><a href="#object-pooling">Object Pooling</a></li>
+        <li><a href="#batch-processing">Batch Processing</a></li>
+      </ul>
+    </li>
+    <li><a href="#-common-issues--solutions">🐛 Common Issues &amp; Solutions</a>
+      <ul>
+        <li><a href="#drop-generation-not-working">Drop Generation Not Working</a></li>
+        <li><a href="#performance-issues">Performance Issues</a></li>
+        <li><a href="#resource-loading-issues">Resource Loading Issues</a></li>
+      </ul>
+    </li>
+    <li><a href="#-best-practices">📚 Best Practices</a>
+      <ul>
+        <li><a href="#resource-management">Resource Management</a></li>
+        <li><a href="#scene-integration">Scene Integration</a></li>
+        <li><a href="#performance">Performance</a></li>
+        <li><a href="#debugging">Debugging</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+        </aside>
+        
+
+        <footer class="gb-footer">
+    <p>&copy; 2025 Chris Tutorials. All rights reserved.</p>
+    <p>
+        Built with <a href="https://gohugo.io/" target="_blank">Hugo</a> and
+        <a href="https://godotengine.org/" target="_blank">Godot</a>.
+    </p>
+</footer>
+    </div>
+</body>
+
+</html>

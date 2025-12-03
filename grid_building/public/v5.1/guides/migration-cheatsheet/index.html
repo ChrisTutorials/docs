@@ -1,0 +1,181 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Migration Cheat Sheet | GridBuilding Plugin</title>
+<meta name=description content="Quick reference for Grid Building 5.0.0 to 5.1.0 migration commands and common fixes"><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel=stylesheet><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css><link rel=stylesheet href=/css/custom.css><meta name=generator content="Hugo 0.146.5"></head><body><div class=gb-layout><header class=gb-header><a href=/ class=gb-brand><i class="fas fa-cubes" style=color:var(--gb-primary)></i>
+<span>GridBuilding Plugin</span></a><div class=gb-search><i class="fas fa-search"></i>
+<input type=text placeholder="Search documentation..." aria-label=Search></div><nav class=gb-nav><a href=/ class=gb-nav-link>Home
+</a><a href=/v5.1/overview/ class=gb-nav-link>Documentation
+</a><a href=/v5.1/overview/ class=gb-nav-link>Grid Building Plugin Overview
+</a><a href=/v5.1/api/ class=gb-nav-link>API Reference
+</a><a href=/v5.1/guides/ class=gb-nav-link>Getting Started Guides
+</a><a href=/v5.1/examples/ class=gb-nav-link>Examples
+</a><a href=/v5.1/examples/ class=gb-nav-link>Code Examples
+</a><a href=/community/ class=gb-nav-link>Community</a></nav></header><aside class=gb-sidebar><nav class=gb-sidebar-nav><div class=gb-sidebar-section><div class=gb-sidebar-title>GridBuilding Plugin</div><a href=/gridbuilding/getting_started/ class=gb-sidebar-link>Getting Started with GridBuilding
+</a><a href=/gridbuilding/csharp_state_integration/ class=gb-sidebar-link>C# State Integration with Godot Frontend
+</a><a href=/gridbuilding/api_reference/ class=gb-sidebar-link>API Reference
+</a><a href=/gridbuilding/troubleshooting/ class=gb-sidebar-link>Troubleshooting Guide
+</a><a href=/gridbuilding/godot_integration_example/ class=gb-sidebar-link>Godot Integration Example
+</a><a href=/gridbuilding/service_based_architecture/ class=gb-sidebar-link>Service-Based Architecture</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.1.0</div><a href=/v5.1/overview/ class=gb-sidebar-link>Grid Building Plugin Overview
+</a><a href=/v5.1/guides/ class=gb-sidebar-link>Getting Started Guides
+</a><a href=/v5.1/api/ class=gb-sidebar-link>C# API Reference
+</a><a href=/v5.1/examples/ class=gb-sidebar-link>Code Examples
+</a><a href=/v5.1/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.1/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.1/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.1/validation/ class=gb-sidebar-link>Validation Tools</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.0.0</div><a href=/v5.0/api/ class=gb-sidebar-link>GDScript API Reference
+</a><a href=/v5.0/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.0/overview/ class=gb-sidebar-link>Grid Building Plugin v5.0.0
+</a><a href=/v5.0/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.0/guides/ class=gb-sidebar-link>Plugin Overview
+</a><a href=/v5.0/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.0/validation/ class=gb-sidebar-link>Validation Tools</a></div></nav></aside><main class=gb-main><div class=gb-content><h1>Migration Cheat Sheet</h1><h2 id=-quick-start>🚀 Quick Start</h2><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#8b949e;font-style:italic># 1. Backup project</span>
+</span></span><span style=display:flex><span>git add -A <span style=color:#ff7b72;font-weight:700>&amp;&amp;</span> git commit -m <span style=color:#a5d6ff>&#34;Pre-migration backup&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># 2. Run migration (dry run first)</span>
+</span></span><span style=display:flex><span>./enhanced_migration --dry-run --verbose
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># 3. Execute migration</span>
+</span></span><span style=display:flex><span>./enhanced_migration --execute --verbose
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># 4. Test in Godot</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># 5. Commit changes</span>
+</span></span><span style=display:flex><span>git add -A <span style=color:#ff7b72;font-weight:700>&amp;&amp;</span> git commit -m <span style=color:#a5d6ff>&#34;Migrated to Grid Building 5.1.0 C#&#34;</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=-essential-commands>📋 Essential Commands</h2><h3 id=migration-commands>Migration Commands</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Basic migration</span>
+</span></span><span style=display:flex><span>./enhanced_migration --source ./addons/grid_building --target ./addons/grid_building_cs
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># With configuration</span>
+</span></span><span style=display:flex><span>./enhanced_migration --config migration_config.toml --execute
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Verbose output</span>
+</span></span><span style=display:flex><span>./enhanced_migration --verbose --dry-run
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Custom namespace</span>
+</span></span><span style=display:flex><span>./enhanced_migration --namespace <span style=color:#a5d6ff>&#34;MyProject.GridBuilding&#34;</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=validation-commands>Validation Commands</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">8
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Build C# project</span>
+</span></span><span style=display:flex><span>cd addons/grid_building <span style=color:#ff7b72;font-weight:700>&amp;&amp;</span> dotnet build
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Check for errors</span>
+</span></span><span style=display:flex><span>dotnet build --verbosity normal
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Run tests</span>
+</span></span><span style=display:flex><span>dotnet test
+</span></span></code></pre></td></tr></table></div></div><h2 id=-common-fixes>🔧 Common Fixes</h2><h3 id=missing-using-statements>Missing Using Statements</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Add to top of C# files</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>using</span> <span style=color:#ff7b72>Godot</span>;
+</span></span><span style=display:flex><span><span style=color:#ff7b72>using</span> <span style=color:#ff7b72>YourProject.GridBuilding</span>;
+</span></span></code></pre></td></tr></table></div></div><h3 id=api-changes>API Changes</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Old (GDScript)</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_item</span>(item: <span style=color:#f0883e;font-weight:700>Node</span>, position: <span style=color:#f0883e;font-weight:700>Vector2</span>)
+</span></span><span style=display:flex><span>grid_size <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#f0883e;font-weight:700>Vector2i</span>(<span style=color:#a5d6ff>10</span>, <span style=color:#a5d6ff>10</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># New (C#)</span>
+</span></span><span style=display:flex><span>public <span style=color:#ff7b72>void</span> <span style=color:#d2a8ff;font-weight:700>PlaceItem</span>(<span style=color:#f0883e;font-weight:700>Node</span> item, <span style=color:#f0883e;font-weight:700>Vector2</span> position)
+</span></span><span style=display:flex><span>GridSize <span style=color:#ff7b72;font-weight:700>=</span> new <span style=color:#d2a8ff;font-weight:700>Vector2I</span>(<span style=color:#a5d6ff>10</span>, <span style=color:#a5d6ff>10</span>);
+</span></span></code></pre></td></tr></table></div></div><h3 id=property-access>Property Access</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Old</span>
+</span></span><span style=display:flex><span>manager<span style=color:#ff7b72;font-weight:700>.</span>current_item <span style=color:#ff7b72;font-weight:700>=</span> new_item
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> size <span style=color:#ff7b72;font-weight:700>=</span> manager<span style=color:#ff7b72;font-weight:700>.</span>grid_size
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># New</span>
+</span></span><span style=display:flex><span>manager<span style=color:#ff7b72;font-weight:700>.</span>CurrentItem <span style=color:#ff7b72;font-weight:700>=</span> newItem;
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> size <span style=color:#ff7b72;font-weight:700>=</span> manager<span style=color:#ff7b72;font-weight:700>.</span>GridSize;
+</span></span></code></pre></td></tr></table></div></div><h2 id=-critical-points>⚠️ Critical Points</h2><h3 id=must-do>MUST DO</h3><ul><li><input disabled type=checkbox> Close Godot Editor before migration</li><li><input disabled type=checkbox> Create backup before starting</li><li><input disabled type=checkbox> Run dry run first</li><li><input disabled type=checkbox> Test after migration</li><li><input disabled type=checkbox> Update custom scripts</li></ul><h3 id=never-do>NEVER DO</h3><ul><li><input disabled type=checkbox> Don&rsquo;t run migration with Godot open</li><li><input disabled type=checkbox> Don&rsquo;t skip backup step</li><li><input disabled type=checkbox> Don&rsquo;t ignore build errors</li><li><input disabled type=checkbox> Don&rsquo;t delete old addon until verified</li></ul><h2 id=-quick-troubleshooting>🐛 Quick Troubleshooting</h2><table><thead><tr><th>Problem</th><th>Solution</th></tr></thead><tbody><tr><td>&ldquo;Can&rsquo;t find class&rdquo;</td><td>Update scene references, check namespaces</td></tr><tr><td>Build errors</td><td>Check <code>dotnet build</code> output, fix syntax</td></tr><tr><td>Performance issues</td><td>Verify C# compilation, check profiler</td></tr><tr><td>Missing methods</td><td>Check API migration guide</td></tr><tr><td>UID errors</td><td>Verify scene file updates</td></tr></tbody></table><h2 id=-file-structure-changes>📁 File Structure Changes</h2><h3 id=before-500>Before (5.0.0)</h3><pre tabindex=0><code>addons/
+└── grid_building/
+    ├── plugin.gd
+    ├── scripts/
+    │   ├── grid_building_manager.gd
+    │   └── placement_manager.gd
+    └── scenes/
+</code></pre><h3 id=after-510>After (5.1.0)</h3><pre tabindex=0><code>addons/
+└── grid_building/
+    ├── GridBuilding.csproj
+    ├── GridBuildingManager.cs
+    ├── PlacementManager.cs
+    └── scenes/
+</code></pre><h2 id=-performance-tips>🎯 Performance Tips</h2><h3 id=c-optimizations>C# Optimizations</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">8
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Use properties instead of direct access</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> Vector2I GridSize { <span style=color:#ff7b72>get</span>; <span style=color:#ff7b72>set</span>; }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Use proper types</span>
+</span></span><span style=display:flex><span>List&lt;Node&gt; items = <span style=color:#ff7b72>new</span> List&lt;Node&gt;();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Use async for heavy operations</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>async</span> Task&lt;<span style=color:#ff7b72>void</span>&gt; ProcessLargeGrid()
+</span></span></code></pre></td></tr></table></div></div><h3 id=memory-management>Memory Management</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">8
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Dispose resources properly</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>using</span> <span style=color:#ff7b72>var</span> resource = <span style=color:#ff7b72>new</span> Resource();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Avoid memory leaks</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>override</span> <span style=color:#ff7b72>void</span> _ExitTree()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Cleanup code</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h2 id=-migration-checklist>📝 Migration Checklist</h2><h3 id=pre-migration-5-min>Pre-Migration (5 min)</h3><ul><li><input disabled type=checkbox> Godot closed? ✓</li><li><input disabled type=checkbox> Backup created? ✓</li><li><input disabled type=checkbox> .NET installed? ✓</li><li><input disabled type=checkbox> Migration tool ready? ✓</li></ul><h3 id=migration-10-30-min>Migration (10-30 min)</h3><ul><li><input disabled type=checkbox> Dry run successful? ✓</li><li><input disabled type=checkbox> Migration executed? ✓</li><li><input disabled type=checkbox> No errors reported? ✓</li><li><input disabled type=checkbox> Files converted? ✓</li></ul><h3 id=post-migration-15-60-min>Post-Migration (15-60 min)</h3><ul><li><input disabled type=checkbox> C# project builds? ✓</li><li><input disabled type=checkbox> Godot opens cleanly? ✓</li><li><input disabled type=checkbox> Basic functions work? ✓</li><li><input disabled type=checkbox> Custom code updated? ✓</li><li><input disabled type=checkbox> Performance verified? ✓</li></ul><h2 id=-quick-links>🔗 Quick Links</h2><ul><li><a href=./MIGRATION_GUIDE_5_0_to_5_1.md>Full Migration Guide</a></li><li><a href=./docs/API_REFERENCE.md>API Reference</a></li><li><a href=./enhanced_migration/CONFIGURATION_README.md>Configuration Guide</a></li><li><a href=./docs/TROUBLESHOOTING.md>Troubleshooting</a></li></ul><h2 id=-emergency-rollback>🆘 Emergency Rollback</h2><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Quick rollback to previous commit</span>
+</span></span><span style=display:flex><span>git reset --hard HEAD~1
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Or restore from backup</span>
+</span></span><span style=display:flex><span>cp -r ../backup/grid_building addons/
+</span></span></code></pre></td></tr></table></div></div><hr><p><strong>Remember</strong>: Take your time, test thoroughly, and keep backups! 🎮</p></div></main><aside class=gb-toc><div class=gb-toc-title>On this page</div><nav id=TableOfContents><ul><li><a href=#-quick-start>🚀 Quick Start</a></li><li><a href=#-essential-commands>📋 Essential Commands</a><ul><li><a href=#migration-commands>Migration Commands</a></li><li><a href=#validation-commands>Validation Commands</a></li></ul></li><li><a href=#-common-fixes>🔧 Common Fixes</a><ul><li><a href=#missing-using-statements>Missing Using Statements</a></li><li><a href=#api-changes>API Changes</a></li><li><a href=#property-access>Property Access</a></li></ul></li><li><a href=#-critical-points>⚠️ Critical Points</a><ul><li><a href=#must-do>MUST DO</a></li><li><a href=#never-do>NEVER DO</a></li></ul></li><li><a href=#-quick-troubleshooting>🐛 Quick Troubleshooting</a></li><li><a href=#-file-structure-changes>📁 File Structure Changes</a><ul><li><a href=#before-500>Before (5.0.0)</a></li><li><a href=#after-510>After (5.1.0)</a></li></ul></li><li><a href=#-performance-tips>🎯 Performance Tips</a><ul><li><a href=#c-optimizations>C# Optimizations</a></li><li><a href=#memory-management>Memory Management</a></li></ul></li><li><a href=#-migration-checklist>📝 Migration Checklist</a><ul><li><a href=#pre-migration-5-min>Pre-Migration (5 min)</a></li><li><a href=#migration-10-30-min>Migration (10-30 min)</a></li><li><a href=#post-migration-15-60-min>Post-Migration (15-60 min)</a></li></ul></li><li><a href=#-quick-links>🔗 Quick Links</a></li><li><a href=#-emergency-rollback>🆘 Emergency Rollback</a></li></ul></nav></aside><footer class=gb-footer><p>&copy; 2025 Chris Tutorials. All rights reserved.</p><p>Built with <a href=https://gohugo.io/ target=_blank>Hugo</a> and
+<a href=https://godotengine.org/ target=_blank>Godot</a>.</p></footer></div></body></html>

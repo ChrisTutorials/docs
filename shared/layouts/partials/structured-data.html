@@ -1,0 +1,72 @@
+<!-- Enhanced Structured Data for SEO -->
+{{- $schema := dict -}}
+{{- $page := . -}}
+{{- $site := .Site -}}
+
+{{- if .IsHome -}}
+  {{- $schema = merge $schema (dict 
+    "@context" "https://schema.org"
+    "@type" "SoftwareDocumentation"
+    "name" $site.Title
+    "description" $site.Params.description
+    "url" $site.Params.canonicalBaseURL
+    "inLanguage" $site.LanguageCode
+    "isAccessibleForFree" true
+    "applicationCategory" "DeveloperApplication"
+    "operatingSystem" "Windows, macOS, Linux, iOS, Android, Web"
+    "softwareRequirements" "Godot 4.x"
+    "author" (dict 
+      "@type" "Person"
+      "name" $site.Params.author
+      "url" "https://github.com/ChrisTutorials"
+    )
+    "publisher" (dict
+      "@type" "Organization" 
+      "name" $site.Params.author
+      "logo" (dict
+        "@type" "ImageObject"
+        "url" (printf "%s%s" $site.Params.canonicalBaseURL "/images/logo.png")
+      )
+    )
+    "dateModified" (now.Format "2006-01-02")
+    "datePublished" "2025-01-01"
+  ) -}}
+{{- else if .IsPage -}}
+  {{- $schema = merge $schema (dict
+    "@context" "https://schema.org"
+    "@type" "TechArticle"
+    "headline" .Title
+    "description" .Description
+    "url" .Permalink
+    "dateModified" (.Lastmod.Format "2006-01-02")
+    "datePublished" (.Date.Format "2006-01-02")
+    "author" (dict
+      "@type" "Person"
+      "name" $site.Params.author
+    )
+    "publisher" (dict
+      "@type" "Organization"
+      "name" $site.Params.author
+    )
+    "about" (dict
+      "@type" "SoftwareApplication"
+      "name" "Grid Building Plugin"
+      "applicationCategory" "DeveloperApplication"
+    )
+  ) -}}
+{{- end -}}
+
+{{- if .Params.api_class -}}
+  {{- $schema = merge $schema (dict
+    "mainEntity" (dict
+      "@type" "SoftwareSourceCode"
+      "name" .Params.api_class
+      "programmingLanguage" "C#"
+      "runtimePlatform" "Godot 4.x"
+    )
+  ) -}}
+{{- end -}}
+
+<script type="application/ld+json">
+{{ $schema | jsonify }}
+</script>

@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> | Item Drops</title>
+
+    <meta name="description"
+        content="">
+
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    
+    <link rel="stylesheet" href="/css/custom.css">
+
+    <meta name="generator" content="Hugo 0.146.5">
+</head>
+
+<body>
+    <div class="gb-layout">
+        <header class="gb-header">
+    <a href="/" class="gb-brand">
+        <i class="fas fa-cubes" style="color: var(--gb-primary);"></i>
+        <span>Item Drops</span>
+    </a>
+
+    <div class="gb-search">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search documentation..." aria-label="Search">
+    </div>
+
+    <nav class="gb-nav">
+        
+        
+        <a href="/item_drops/getting-started/" class="gb-nav-link ">
+            Getting Started
+        </a>
+        
+        <a href="/item_drops/api-reference/" class="gb-nav-link ">
+            API Reference
+        </a>
+        
+        <a href="/item_drops/examples/" class="gb-nav-link ">
+            Examples
+        </a>
+        
+        <a href="/item_drops/integration-guide/" class="gb-nav-link ">
+            Integration Guide
+        </a>
+        
+        <a href="/item_drops/architecture/" class="gb-nav-link ">
+            Architecture
+        </a>
+        
+    </nav>
+</header>
+
+        
+        <aside class="gb-sidebar">
+    <nav class="gb-sidebar-nav">
+        
+
+        
+        
+
+        
+
+        
+        <div class="gb-sidebar-section">
+            <div class="gb-sidebar-title">Item Drops Plugin</div>
+            
+            <a href="/item_drops/getting-started/"
+                class="gb-sidebar-link ">
+                Getting Started
+            </a>
+            
+            <a href="/item_drops/architecture/system-overview/"
+                class="gb-sidebar-link ">
+                System Architecture Overview
+            </a>
+            
+            <a href="/item_drops/reference/"
+                class="gb-sidebar-link ">
+                API Reference
+            </a>
+            
+            <a href="/item_drops/architecture/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/configuration/data-driven/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/configuration/migration/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/examples/basic-usage/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/feature_suggestions/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/godot-integration/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/implementation/data-driven-implementation/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/improvements/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/integration_guide/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/readme/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/unity-integration/"
+                class="gb-sidebar-link active">
+                
+            </a>
+            
+        </div>
+        
+    </nav>
+</aside>
+        
+
+        <main class="gb-main">
+            
+            <div class="gb-content">
+                <h1></h1>
+                <h1 id="unity-integration-guide">Unity Integration Guide</h1>
+<h2 id="-overview">🎮 Overview</h2>
+<p>This guide covers integrating the ItemDrops plugin into Unity games. The Unity integration provides ScriptableObject-based configuration, MonoBehaviour runtime components, and Unity event system integration.</p>
+<h2 id="-installation">📦 Installation</h2>
+<h3 id="package-setup">Package Setup</h3>
+<ol>
+<li>Copy the <code>ItemDrops</code> folder to your Unity project&rsquo;s <code>Packages/</code> directory</li>
+<li>Open Package Manager and select &ldquo;Add package from disk&rdquo;</li>
+<li>Navigate to the <code>ItemDrops/package.json</code> file</li>
+<li>Configure the ItemDrops settings in Project Settings</li>
+</ol>
+<h3 id="dependencies">Dependencies</h3>
+<ul>
+<li>Unity 2022.3 LTS or later</li>
+<li>No external dependencies required</li>
+<li>Compatible with Unity&rsquo;s Entity Component System (ECS)</li>
+</ul>
+<h2 id="-architecture">🏗️ Architecture</h2>
+<h3 id="unity-specific-components">Unity-Specific Components</h3>
+<pre tabindex="0"><code>ItemDrops.Unity/
+├── Assets/
+│   ├── DropTableAsset.cs        # ScriptableObject for drop configuration
+│   ├── DropData.cs              # ScriptableObject for individual drops
+│   └── DropConditionAsset.cs    # ScriptableObject for drop conditions
+├── Components/
+│   ├── ItemDropComponent.cs     # MonoBehaviour for dropped items
+│   ├── EnemyDrops.cs           # Enemy drop component
+│   ├── Health.cs                # Health component
+│   ├── Level.cs                 # Level component
+│   └── EnemyData.cs             # Enemy metadata component
+└── Managers/
+    └── ItemDropsManager.cs      # Singleton drop manager
+</code></pre><h3 id="integration-pattern">Integration Pattern</h3>
+<ul>
+<li><strong>ScriptableObjects</strong>: Configuration data stored as Unity ScriptableObjects</li>
+<li><strong>MonoBehaviours</strong>: Runtime behavior as Unity components</li>
+<li><strong>Events</strong>: UnityEvent-based communication</li>
+<li><strong>Prefabs</strong>: Reusable drop item prefabs</li>
+</ul>
+<h2 id="-quick-start">🚀 Quick Start</h2>
+<h3 id="1-create-a-drop-table-asset">1. Create a Drop Table Asset</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#75715e">// Create a new DropTableAsset</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">[CreateAssetMenu(fileName = &#34;EnemyDrops&#34;, menuName = &#34;ItemDrops/Drop Table&#34;)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DropTableAsset</span> : ScriptableObject
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> List&lt;DropData&gt; drops = <span style="color:#66d9ef">new</span>();
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> minDrops = <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> maxDrops = <span style="color:#ae81ff">3</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">float</span> dropChance = <span style="color:#ae81ff">0.8f</span>;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Methods for drop generation</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> List&lt;GameObject&gt; GenerateDrops(Vector3 position)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> DropTableValidationResult Validate()
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="2-configure-enemy-drops">2. Configure Enemy Drops</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Enemy</span> : MonoBehaviour
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> DropTableAsset dropTable;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> EnemyDrops enemyDrops;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> Start()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Configure drop behavior</span>
+</span></span><span style="display:flex;"><span>        enemyDrops.DropTable = dropTable;
+</span></span><span style="display:flex;"><span>        enemyDrops.AutoGenerateOnDeath = <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> Die()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Trigger drop generation</span>
+</span></span><span style="display:flex;"><span>        enemyDrops.GenerateDrops();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="3-handle-drop-events">3. Handle Drop Events</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Player</span> : MonoBehaviour
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> Start()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Subscribe to drop events</span>
+</span></span><span style="display:flex;"><span>        ItemDropsManager.OnDropGenerated += HandleDropGenerated;
+</span></span><span style="display:flex;"><span>        ItemDropsManager.OnDropCollected += HandleDropCollected;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> HandleDropGenerated(<span style="color:#66d9ef">string</span> itemId, Vector3 position)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        Debug.Log(<span style="color:#e6db74">$&#34;Drop generated: {itemId} at {position}&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> HandleDropCollected(<span style="color:#66d9ef">string</span> itemId, GameObject collector)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        Debug.Log(<span style="color:#e6db74">$&#34;Drop collected: {itemId} by {collector.name}&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="-asset-configuration">📋 Asset Configuration</h2>
+<h3 id="droptableasset">DropTableAsset</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#a6e22e">[CreateAssetMenu(fileName = &#34;DropTable&#34;, menuName = &#34;ItemDrops/Drop Table&#34;)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DropTableAsset</span> : ScriptableObject, IDropTable
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [Header(&#34;Drop Configuration&#34;)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> List&lt;DropData&gt; drops = <span style="color:#66d9ef">new</span>();
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> minDrops = <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> maxDrops = <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField, Range(0f, 1f)]</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">float</span> dropChance = <span style="color:#ae81ff">1f</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [Header(&#34;Advanced Settings&#34;)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">bool</span> guaranteeRareDrops = <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">float</span> luckMultiplier = <span style="color:#ae81ff">1f</span>;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Core interface implementation</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> IReadOnlyList&lt;IDrop&gt; Drops =&gt; GetCoreDrops();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> MinDrops =&gt; minDrops;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> MaxDrops =&gt; maxDrops;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">float</span> DropChance =&gt; dropChance;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Methods</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> List&lt;GameObject&gt; GenerateDrops(Vector3 position)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> List&lt;GameObject&gt; GenerateDrops(Vector3 position, LootContext context)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> DropTableValidationResult Validate()
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="dropdata">DropData</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#a6e22e">[Serializable]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DropData</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [Header(&#34;Item Configuration&#34;)]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> itemId;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">float</span> weight = <span style="color:#ae81ff">1f</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> ItemRarity rarity = ItemRarity.Common;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [Header(&#34;Quantity&#34;)]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> minQuantity = <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> maxQuantity = <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [Header(&#34;Conditions&#34;)]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> List&lt;DropConditionAsset&gt; conditions = <span style="color:#66d9ef">new</span>();
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [Header(&#34;Prefab&#34;)]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> GameObject itemPrefab;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="dropconditionasset">DropConditionAsset</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#a6e22e">[CreateAssetMenu(fileName = &#34;DropCondition&#34;, menuName = &#34;ItemDrops/Drop Condition&#34;)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DropConditionAsset</span> : ScriptableObject
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [Header(&#34;Condition Type&#34;)]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> DropConditionType conditionType;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [Header(&#34;Parameters&#34;)]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> stringValue;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> intValue;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> intValue2;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">float</span> floatValue;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> IDropCondition CreateCondition()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> conditionType <span style="color:#66d9ef">switch</span>
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            DropConditionType.MinimumLevel =&gt; <span style="color:#66d9ef">new</span> MinimumLevelCondition(intValue),
+</span></span><span style="display:flex;"><span>            DropConditionType.LevelRange =&gt; <span style="color:#66d9ef">new</span> LevelRangeCondition(intValue, intValue2),
+</span></span><span style="display:flex;"><span>            DropConditionType.EntityType =&gt; <span style="color:#66d9ef">new</span> EntityTypeCondition(stringValue),
+</span></span><span style="display:flex;"><span>            DropConditionType.Luck =&gt; <span style="color:#66d9ef">new</span> LuckCondition(floatValue),
+</span></span><span style="display:flex;"><span>            DropConditionType.RandomChance =&gt; <span style="color:#66d9ef">new</span> RandomChanceCondition(floatValue),
+</span></span><span style="display:flex;"><span>            _ =&gt; <span style="color:#66d9ef">null</span>
+</span></span><span style="display:flex;"><span>        };
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="-runtime-components">🎯 Runtime Components</h2>
+<h3 id="itemdropsmanager-singleton">ItemDropsManager (Singleton)</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ItemDropsManager</span> : MonoBehaviour
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> ItemDropsManager Instance { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">set</span>; }
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [Header(&#34;Default Tables&#34;)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> DropTableAsset defaultEnemyDrops;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> DropTableAsset defaultBossDrops;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> DropTableAsset defaultChestDrops;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [Header(&#34;Global Settings&#34;)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">float</span> globalLuckModifier = <span style="color:#ae81ff">1f</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">bool</span> enableLogging = <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Events</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> UnityEvent&lt;<span style="color:#66d9ef">string</span>, Vector3&gt; OnDropGenerated = <span style="color:#66d9ef">new</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> UnityEvent&lt;<span style="color:#66d9ef">string</span>, GameObject&gt; OnDropCollected = <span style="color:#66d9ef">new</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> UnityEvent&lt;<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">bool</span>&gt; OnDropTableValidated = <span style="color:#66d9ef">new</span>();
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Methods</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> RegisterDropTable(<span style="color:#66d9ef">string</span> id, DropTableAsset dropTable)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> DropTableAsset GetDropTable(<span style="color:#66d9ef">string</span> id)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> List&lt;GameObject&gt; GenerateDrops(<span style="color:#66d9ef">string</span> tableId, Vector3 position)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> DropStatistics GetStatistics(<span style="color:#66d9ef">string</span> tableId, LootContext context = <span style="color:#66d9ef">null</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="enemydrops-component">EnemyDrops Component</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">EnemyDrops</span> : MonoBehaviour
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [Header(&#34;Drop Configuration&#34;)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> DropTableAsset dropTable;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> levelOverride = <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">string</span> entityTypeOverride = <span style="color:#e6db74">&#34;&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [Header(&#34;Behavior&#34;)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">float</span> luckModifier = <span style="color:#ae81ff">1f</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">bool</span> autoGenerateOnDeath = <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">float</span> dropDelay = <span style="color:#ae81ff">0.5f</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">bool</span> randomOffset = <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">float</span> maxOffsetDistance = <span style="color:#ae81ff">2f</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [Header(&#34;Effects&#34;)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> GameObject deathEffect;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> AudioClip deathSound;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Methods</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> List&lt;GameObject&gt; GenerateDrops()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> GenerateDropsWithDelay()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> DropStatistics GetStatistics()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> SetDropTable(DropTableAsset newDropTable)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Events</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> UnityEvent&lt;List&lt;GameObject&gt;&gt; OnDropsGenerated = <span style="color:#66d9ef">new</span>();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="itemdropcomponent">ItemDropComponent</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ItemDropComponent</span> : MonoBehaviour
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [Header(&#34;Item Data&#34;)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">string</span> itemId;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> ItemRarity rarity = ItemRarity.Common;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> quantity = <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [Header(&#34;Visual Settings&#34;)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">bool</span> showRarityGlow = <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> Color glowColor = Color.white;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">float</span> glowIntensity = <span style="color:#ae81ff">1f</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [Header(&#34;Pickup Settings&#34;)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">bool</span> autoCollect = <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">float</span> collectionRange = <span style="color:#ae81ff">2f</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> LayerMask collectableLayers = -<span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [Header(&#34;Effects&#34;)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> GameObject pickupEffect;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> AudioClip pickupSound;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">float</span> rotationSpeed = <span style="color:#ae81ff">50f</span>;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Methods</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> Configure(DropResult dropResult)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> Collect(GameObject collector)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> PlayCollectionEffects()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Events</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> UnityEvent&lt;<span style="color:#66d9ef">string</span>, GameObject&gt; OnCollected = <span style="color:#66d9ef">new</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> UnityEvent&lt;<span style="color:#66d9ef">string</span>&gt; OnHoverStart = <span style="color:#66d9ef">new</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> UnityEvent&lt;<span style="color:#66d9ef">string</span>&gt; OnHoverEnd = <span style="color:#66d9ef">new</span>();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="-visual-effects">🎨 Visual Effects</h2>
+<h3 id="rarity-based-visuals">Rarity-Based Visuals</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RarityVisuals</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> Color GetColor(ItemRarity rarity)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> rarity <span style="color:#66d9ef">switch</span>
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            ItemRarity.Common =&gt; Color.white,
+</span></span><span style="display:flex;"><span>            ItemRarity.Uncommon =&gt; Color.green,
+</span></span><span style="display:flex;"><span>            ItemRarity.Rare =&gt; Color.blue,
+</span></span><span style="display:flex;"><span>            ItemRarity.Epic =&gt; Color.magenta,
+</span></span><span style="display:flex;"><span>            ItemRarity.Legendary =&gt; Color.yellow,
+</span></span><span style="display:flex;"><span>            _ =&gt; Color.white
+</span></span><span style="display:flex;"><span>        };
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">float</span> GetGlowIntensity(ItemRarity rarity)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> rarity <span style="color:#66d9ef">switch</span>
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            ItemRarity.Common =&gt; <span style="color:#ae81ff">0.5f</span>,
+</span></span><span style="display:flex;"><span>            ItemRarity.Uncommon =&gt; <span style="color:#ae81ff">0.7f</span>,
+</span></span><span style="display:flex;"><span>            ItemRarity.Rare =&gt; <span style="color:#ae81ff">1.0f</span>,
+</span></span><span style="display:flex;"><span>            ItemRarity.Epic =&gt; <span style="color:#ae81ff">1.2f</span>,
+</span></span><span style="display:flex;"><span>            ItemRarity.Legendary =&gt; <span style="color:#ae81ff">1.5f</span>,
+</span></span><span style="display:flex;"><span>            _ =&gt; <span style="color:#ae81ff">0.5f</span>
+</span></span><span style="display:flex;"><span>        };
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="particle-effects">Particle Effects</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DropEffects</span> : MonoBehaviour
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [Header(&#34;Particle Systems&#34;)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> ParticleSystem commonEffect;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> ParticleSystem uncommonEffect;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> ParticleSystem rareEffect;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> ParticleSystem epicEffect;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> ParticleSystem legendaryEffect;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [Header(&#34;Audio&#34;)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> AudioSource audioSource;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> AudioClip[] pickupSounds;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> PlayDropEffect(Vector3 position, ItemRarity rarity)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> effect = GetEffectForRarity(rarity);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (effect != <span style="color:#66d9ef">null</span>)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">var</span> instance = Instantiate(effect, position, Quaternion.identity);
+</span></span><span style="display:flex;"><span>            Destroy(instance, effect.main.duration);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> ParticleSystem GetEffectForRarity(ItemRarity rarity)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> rarity <span style="color:#66d9ef">switch</span>
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            ItemRarity.Common =&gt; commonEffect,
+</span></span><span style="display:flex;"><span>            ItemRarity.Uncommon =&gt; uncommonEffect,
+</span></span><span style="display:flex;"><span>            ItemRarity.Rare =&gt; rareEffect,
+</span></span><span style="display:flex;"><span>            ItemRarity.Epic =&gt; epicEffect,
+</span></span><span style="display:flex;"><span>            ItemRarity.Legendary =&gt; legendaryEffect,
+</span></span><span style="display:flex;"><span>            _ =&gt; commonEffect
+</span></span><span style="display:flex;"><span>        };
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="-advanced-usage">📊 Advanced Usage</h2>
+<h3 id="conditional-drops">Conditional Drops</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#75715e">// Create level-based condition</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> levelCondition = ScriptableObject.CreateInstance&lt;DropConditionAsset&gt;();
+</span></span><span style="display:flex;"><span>levelCondition.conditionType = DropConditionType.MinimumLevel;
+</span></span><span style="display:flex;"><span>levelCondition.intValue = <span style="color:#ae81ff">10</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Create entity type condition</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> entityCondition = ScriptableObject.CreateInstance&lt;DropConditionAsset&gt;();
+</span></span><span style="display:flex;"><span>entityCondition.conditionType = DropConditionType.EntityType;
+</span></span><span style="display:flex;"><span>entityCondition.stringValue = <span style="color:#e6db74">&#34;dragon&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Add to drop data</span>
+</span></span><span style="display:flex;"><span>dropData.conditions.Add(levelCondition);
+</span></span><span style="display:flex;"><span>dropData.conditions.Add(entityCondition);
+</span></span></code></pre></div><h3 id="custom-drop-generation">Custom Drop Generation</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CustomDropGenerator</span> : MonoBehaviour
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> DropTableAsset dropTable;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> Start()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Generate drops with custom context</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> context = <span style="color:#66d9ef">new</span> LootContext
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            Level = <span style="color:#ae81ff">25</span>,
+</span></span><span style="display:flex;"><span>            EntityType = <span style="color:#e6db74">&#34;boss&#34;</span>,
+</span></span><span style="display:flex;"><span>            LuckModifier = <span style="color:#ae81ff">2.0f</span>
+</span></span><span style="display:flex;"><span>        };
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> drops = dropTable.GenerateDrops(transform.position, context);
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">foreach</span> (<span style="color:#66d9ef">var</span> drop <span style="color:#66d9ef">in</span> drops)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Parent drops to this object</span>
+</span></span><span style="display:flex;"><span>            drop.transform.parent = transform;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="loot-generation-with-modifiers">Loot Generation with Modifiers</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#75715e">// Create custom loot generator</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> generator = <span style="color:#66d9ef">new</span> LootGenerator();
+</span></span><span style="display:flex;"><span>generator.AddModifier(<span style="color:#66d9ef">new</span> LuckModifier(<span style="color:#ae81ff">1.5f</span>));
+</span></span><span style="display:flex;"><span>generator.AddModifier(<span style="color:#66d9ef">new</span> LevelBonusModifier(<span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">2.0f</span>));
+</span></span><span style="display:flex;"><span>generator.AddModifier(<span style="color:#66d9ef">new</span> RarityFilterModifier(ItemRarity.Rare));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Generate enhanced loot</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> settings = <span style="color:#66d9ef">new</span> LootGenerationSettings
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    DropTable = dropTable,
+</span></span><span style="display:flex;"><span>    Context = context
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> dropResults = generator.GenerateLoot(settings);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> gameObjects = ItemDropsManager.Instance.SpawnDrops(dropResults, transform.position);
+</span></span></code></pre></div><h2 id="-testing-in-unity">🧪 Testing in Unity</h2>
+<h3 id="unit-tests-with-unity-test-framework">Unit Tests with Unity Test Framework</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#a6e22e">[Test]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> TestDropGeneration()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Create test drop table asset</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> dropTable = ScriptableObject.CreateInstance&lt;DropTableAsset&gt;();
+</span></span><span style="display:flex;"><span>    dropTable.drops.Add(<span style="color:#66d9ef">new</span> DropData { itemId = <span style="color:#e6db74">&#34;test_item&#34;</span>, weight = <span style="color:#ae81ff">1.0f</span> });
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Generate drops</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> drops = dropTable.GenerateDrops(Vector3.zero);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Assert results</span>
+</span></span><span style="display:flex;"><span>    Assert.AreEqual(<span style="color:#ae81ff">1</span>, drops.Count);
+</span></span><span style="display:flex;"><span>    Assert.AreEqual(<span style="color:#e6db74">&#34;test_item&#34;</span>, drops[<span style="color:#ae81ff">0</span>].GetComponent&lt;ItemDropComponent&gt;().ItemId);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="integration-tests">Integration Tests</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#a6e22e">[UnityTest]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> IEnumerator TestEnemyDropGeneration()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Create test enemy</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> enemy = <span style="color:#66d9ef">new</span> GameObject(<span style="color:#e6db74">&#34;TestEnemy&#34;</span>);
+</span></span><span style="display:flex;"><span>    enemy.AddComponent&lt;Enemy&gt;();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> enemyDrops = enemy.AddComponent&lt;EnemyDrops&gt;();
+</span></span><span style="display:flex;"><span>    enemyDrops.DropTable = LoadDropTable(<span style="color:#e6db74">&#34;TestEnemy&#34;</span>);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Simulate death</span>
+</span></span><span style="display:flex;"><span>    enemyDrops.GenerateDrops();
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Wait for drop generation</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">yield</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> WaitForSeconds(<span style="color:#ae81ff">0.1f</span>);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Verify drops generated</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> drops = GameObject.FindGameObjectsWithTag(<span style="color:#e6db74">&#34;ItemDrop&#34;</span>);
+</span></span><span style="display:flex;"><span>    Assert.IsTrue(drops.Length &gt; <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="-performance-optimization">🔧 Performance Optimization</h2>
+<h3 id="object-pooling">Object Pooling</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DropObjectPool</span> : MonoBehaviour
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> GameObject dropPrefab;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> poolSize = <span style="color:#ae81ff">50</span>;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">readonly</span> Queue&lt;GameObject&gt; _pool = <span style="color:#66d9ef">new</span>();
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> Start()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Pre-populate pool</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i = <span style="color:#ae81ff">0</span>; i &lt; poolSize; i++)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">var</span> drop = Instantiate(dropPrefab);
+</span></span><span style="display:flex;"><span>            drop.SetActive(<span style="color:#66d9ef">false</span>);
+</span></span><span style="display:flex;"><span>            _pool.Enqueue(drop);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> GameObject Get()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (_pool.Count &gt; <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">var</span> drop = _pool.Dequeue();
+</span></span><span style="display:flex;"><span>            drop.SetActive(<span style="color:#66d9ef">true</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> drop;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> Instantiate(dropPrefab);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> Return(GameObject drop)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        drop.SetActive(<span style="color:#66d9ef">false</span>);
+</span></span><span style="display:flex;"><span>        _pool.Enqueue(drop);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="batch-processing">Batch Processing</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DropBatchProcessor</span> : MonoBehaviour
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [SerializeField]</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> batchSize = <span style="color:#ae81ff">10</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">readonly</span> List&lt;ItemDropComponent&gt; _pendingDrops = <span style="color:#66d9ef">new</span>();
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> Update()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (_pendingDrops.Count &gt;= batchSize)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            ProcessBatch();
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> ProcessBatch()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">foreach</span> (<span style="color:#66d9ef">var</span> drop <span style="color:#66d9ef">in</span> _pendingDrops)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Process drop physics, effects, etc.</span>
+</span></span><span style="display:flex;"><span>            drop.ProcessPhysics();
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        _pendingDrops.Clear();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="-common-issues--solutions">🐛 Common Issues &amp; Solutions</h2>
+<h3 id="drop-generation-not-working">Drop Generation Not Working</h3>
+<p><strong>Problem</strong>: Drops not appearing when expected
+<strong>Solution</strong>:</p>
+<ol>
+<li>Verify drop table asset is properly configured</li>
+<li>Check that prefabs are assigned correctly</li>
+<li>Ensure ItemDropsManager is in scene</li>
+<li>Verify event subscriptions</li>
+</ol>
+<h3 id="performance-issues">Performance Issues</h3>
+<p><strong>Problem</strong>: Lag when many drops are generated
+<strong>Solution</strong>:</p>
+<ol>
+<li>Use object pooling for drop prefabs</li>
+<li>Limit simultaneous active drops</li>
+<li>Optimize particle effects</li>
+<li>Use spatial partitioning for collision detection</li>
+</ol>
+<h3 id="prefab-loading-issues">Prefab Loading Issues</h3>
+<p><strong>Problem</strong>: Drop prefabs not instantiating correctly
+<strong>Solution</strong>:</p>
+<ol>
+<li>Check prefab references in DropData</li>
+<li>Ensure prefabs have ItemDropComponent</li>
+<li>Verify prefab settings and layers</li>
+<li>Check for missing components</li>
+</ol>
+<h3 id="serialization-issues">Serialization Issues</h3>
+<p><strong>Problem</strong>: ScriptableObject data not saving
+<strong>Solution</strong>:</p>
+<ol>
+<li>Use [SerializeField] on all fields</li>
+<li>Mark classes as [Serializable]</li>
+<li>Ensure proper field types</li>
+<li>Check for circular references</li>
+</ol>
+<h2 id="-best-practices">📚 Best Practices</h2>
+<h3 id="asset-management">Asset Management</h3>
+<ul>
+<li>Organize drop tables in dedicated folders</li>
+<li>Use consistent naming conventions</li>
+<li>Create template assets for common configurations</li>
+<li>Use addressable assets for large projects</li>
+</ul>
+<h3 id="component-design">Component Design</h3>
+<ul>
+<li>Keep components focused on single responsibilities</li>
+<li>Use proper Unity component lifecycle</li>
+<li>Implement proper cleanup in OnDestroy</li>
+<li>Use events for loose coupling</li>
+</ul>
+<h3 id="performance">Performance</h3>
+<ul>
+<li>Pool frequently instantiated objects</li>
+<li>Use object pooling for drops and effects</li>
+<li>Optimize collision detection with layers</li>
+<li>Use coroutines for delayed operations</li>
+</ul>
+<h3 id="debugging">Debugging</h3>
+<ul>
+<li>Enable debug logging in ItemDropsManager</li>
+<li>Use Unity&rsquo;s Profiler for performance analysis</li>
+<li>Create debug visualization tools</li>
+<li>Test with different drop rates and quantities</li>
+</ul>
+<h2 id="-editor-integration">🎨 Editor Integration</h2>
+<h3 id="custom-editors">Custom Editors</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#a6e22e">[CustomEditor(typeof(DropTableAsset))]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DropTableAssetEditor</span> : Editor
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">void</span> OnInspectorGUI()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        DrawDefaultInspector();
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> dropTable = (DropTableAsset)target;
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (GUILayout.Button(<span style="color:#e6db74">&#34;Validate&#34;</span>))
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">var</span> result = dropTable.Validate();
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (!result.IsValid)
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">foreach</span> (<span style="color:#66d9ef">var</span> error <span style="color:#66d9ef">in</span> result.Errors)
+</span></span><span style="display:flex;"><span>                {
+</span></span><span style="display:flex;"><span>                    EditorGUILayout.HelpBox(error, MessageType.Error);
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>                EditorGUILayout.HelpBox(<span style="color:#e6db74">&#34;Drop table is valid!&#34;</span>, MessageType.Info);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (GUILayout.Button(<span style="color:#e6db74">&#34;Generate Test Drops&#34;</span>))
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">var</span> drops = dropTable.GenerateDrops(Vector3.zero);
+</span></span><span style="display:flex;"><span>            Debug.Log(<span style="color:#e6db74">$&#34;Generated {drops.Count} test drops&#34;</span>);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="property-drawers">Property Drawers</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#a6e22e">[CustomPropertyDrawer(typeof(ItemRarity))]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ItemRarityPropertyDrawer</span> : PropertyDrawer
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">void</span> OnGUI(Rect position, SerializedProperty property, GUIContent label)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        property.enumValueIndex = EditorGUI.Popup(position, label.text, property.enumValueIndex, property.enumDisplayNames);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><hr>
+<p><em>This guide evolves with the Unity integration development</em><br>
+<em>Last Updated: November 2025</em><br>
+<em>Unity Version: 2022.3 LTS+</em></p>
+
+            </div>
+            
+        </main>
+
+        
+        <aside class="gb-toc">
+            <div class="gb-toc-title">On this page</div>
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#-overview">🎮 Overview</a></li>
+    <li><a href="#-installation">📦 Installation</a>
+      <ul>
+        <li><a href="#package-setup">Package Setup</a></li>
+        <li><a href="#dependencies">Dependencies</a></li>
+      </ul>
+    </li>
+    <li><a href="#-architecture">🏗️ Architecture</a>
+      <ul>
+        <li><a href="#unity-specific-components">Unity-Specific Components</a></li>
+        <li><a href="#integration-pattern">Integration Pattern</a></li>
+      </ul>
+    </li>
+    <li><a href="#-quick-start">🚀 Quick Start</a>
+      <ul>
+        <li><a href="#1-create-a-drop-table-asset">1. Create a Drop Table Asset</a></li>
+        <li><a href="#2-configure-enemy-drops">2. Configure Enemy Drops</a></li>
+        <li><a href="#3-handle-drop-events">3. Handle Drop Events</a></li>
+      </ul>
+    </li>
+    <li><a href="#-asset-configuration">📋 Asset Configuration</a>
+      <ul>
+        <li><a href="#droptableasset">DropTableAsset</a></li>
+        <li><a href="#dropdata">DropData</a></li>
+        <li><a href="#dropconditionasset">DropConditionAsset</a></li>
+      </ul>
+    </li>
+    <li><a href="#-runtime-components">🎯 Runtime Components</a>
+      <ul>
+        <li><a href="#itemdropsmanager-singleton">ItemDropsManager (Singleton)</a></li>
+        <li><a href="#enemydrops-component">EnemyDrops Component</a></li>
+        <li><a href="#itemdropcomponent">ItemDropComponent</a></li>
+      </ul>
+    </li>
+    <li><a href="#-visual-effects">🎨 Visual Effects</a>
+      <ul>
+        <li><a href="#rarity-based-visuals">Rarity-Based Visuals</a></li>
+        <li><a href="#particle-effects">Particle Effects</a></li>
+      </ul>
+    </li>
+    <li><a href="#-advanced-usage">📊 Advanced Usage</a>
+      <ul>
+        <li><a href="#conditional-drops">Conditional Drops</a></li>
+        <li><a href="#custom-drop-generation">Custom Drop Generation</a></li>
+        <li><a href="#loot-generation-with-modifiers">Loot Generation with Modifiers</a></li>
+      </ul>
+    </li>
+    <li><a href="#-testing-in-unity">🧪 Testing in Unity</a>
+      <ul>
+        <li><a href="#unit-tests-with-unity-test-framework">Unit Tests with Unity Test Framework</a></li>
+        <li><a href="#integration-tests">Integration Tests</a></li>
+      </ul>
+    </li>
+    <li><a href="#-performance-optimization">🔧 Performance Optimization</a>
+      <ul>
+        <li><a href="#object-pooling">Object Pooling</a></li>
+        <li><a href="#batch-processing">Batch Processing</a></li>
+      </ul>
+    </li>
+    <li><a href="#-common-issues--solutions">🐛 Common Issues &amp; Solutions</a>
+      <ul>
+        <li><a href="#drop-generation-not-working">Drop Generation Not Working</a></li>
+        <li><a href="#performance-issues">Performance Issues</a></li>
+        <li><a href="#prefab-loading-issues">Prefab Loading Issues</a></li>
+        <li><a href="#serialization-issues">Serialization Issues</a></li>
+      </ul>
+    </li>
+    <li><a href="#-best-practices">📚 Best Practices</a>
+      <ul>
+        <li><a href="#asset-management">Asset Management</a></li>
+        <li><a href="#component-design">Component Design</a></li>
+        <li><a href="#performance">Performance</a></li>
+        <li><a href="#debugging">Debugging</a></li>
+      </ul>
+    </li>
+    <li><a href="#-editor-integration">🎨 Editor Integration</a>
+      <ul>
+        <li><a href="#custom-editors">Custom Editors</a></li>
+        <li><a href="#property-drawers">Property Drawers</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+        </aside>
+        
+
+        <footer class="gb-footer">
+    <p>&copy; 2025 Chris Tutorials. All rights reserved.</p>
+    <p>
+        Built with <a href="https://gohugo.io/" target="_blank">Hugo</a> and
+        <a href="https://godotengine.org/" target="_blank">Godot</a>.
+    </p>
+</footer>
+    </div>
+</body>
+
+</html>

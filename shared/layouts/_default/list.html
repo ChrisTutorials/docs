@@ -1,0 +1,201 @@
+{{ define "main" }}
+<div class="gb-section">
+  <header class="gb-section-header">
+    <h1>{{ .Title }}</h1>
+    {{ if .Description }}
+    <p class="gb-section-description">{{ .Description }}</p>
+    {{ end }}
+  </header>
+  
+  <div class="gb-section-content">
+    {{ if .Content }}
+    <div class="gb-section-intro">
+      {{ .Content }}
+    </div>
+    {{ end }}
+    
+    {{ if .Pages }}
+    <div class="gb-page-grid">
+      {{ range .Pages.ByWeight }}
+      <article class="gb-page-card">
+        <h2>
+          <a href="{{ .Permalink }}">{{ .Title }}</a>
+        </h2>
+        {{ if .Description }}
+        <p class="gb-page-description">{{ .Description }}</p>
+        {{ else if .Summary }}
+        <p class="gb-page-description">{{ .Summary }}</p>
+        {{ end }}
+        
+        <div class="gb-page-meta">
+          <span class="gb-page-date">
+            <i class="fas fa-calendar"></i>
+            {{ .Lastmod.Format "Jan 2, 2006" }}
+          </span>
+          {{ if .Params.weight }}
+          <span class="gb-page-weight">
+            <i class="fas fa-sort"></i>
+            {{ .Params.weight }}
+          </span>
+          {{ end }}
+        </div>
+        
+        <a href="{{ .Permalink }}" class="gb-page-link">
+          Read more
+          <i class="fas fa-arrow-right"></i>
+        </a>
+      </article>
+      {{ end }}
+    </div>
+    {{ end }}
+  </div>
+</div>
+
+<style>
+.gb-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.gb-section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.gb-section-header h1 {
+  font-size: 3rem;
+  color: var(--gb-primary);
+  margin-bottom: 1rem;
+}
+
+.gb-section-description {
+  font-size: 1.25rem;
+  color: var(--gb-text-secondary);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.gb-section-intro {
+  max-width: 800px;
+  margin: 0 auto 3rem auto;
+  padding: 1.5rem;
+  background: var(--gb-surface);
+  border-radius: 0.5rem;
+  border-left: 4px solid var(--gb-primary);
+}
+
+.gb-page-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.gb-page-card {
+  background: var(--gb-surface);
+  border: 1px solid var(--gb-border);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.gb-page-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--gb-primary), var(--gb-secondary));
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.gb-page-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border-color: var(--gb-primary);
+}
+
+.gb-page-card:hover::before {
+  transform: scaleX(1);
+}
+
+.gb-page-card h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+}
+
+.gb-page-card h2 a {
+  color: var(--gb-text-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.gb-page-card h2 a:hover {
+  color: var(--gb-primary);
+}
+
+.gb-page-description {
+  color: var(--gb-text-secondary);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  flex: 1;
+}
+
+.gb-page-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.875rem;
+  color: var(--gb-text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.gb-page-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.gb-page-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--gb-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.gb-page-link:hover {
+  color: var(--gb-secondary);
+  transform: translateX(4px);
+}
+
+@media (max-width: 768px) {
+  .gb-section {
+    padding: 1rem;
+  }
+  
+  .gb-section-header h1 {
+    font-size: 2rem;
+  }
+  
+  .gb-section-description {
+    font-size: 1.125rem;
+  }
+  
+  .gb-page-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .gb-page-card {
+    padding: 1.25rem;
+  }
+}
+</style>
+{{ end }}

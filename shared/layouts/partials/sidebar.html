@@ -1,0 +1,23 @@
+<aside class="gb-sidebar">
+    <nav class="gb-sidebar-nav">
+        {{ $currentPage := . }}
+
+        {{/* Get the current section or the top-level section if we are deep in the tree */}}
+        {{ $currentSection := .FirstSection }}
+
+        {{/* If we are on the home page or a top-level page that isn't a section, we might want to show the main
+        sections */}}
+
+        {{ range .Site.Sections }}
+        <div class="gb-sidebar-section">
+            <div class="gb-sidebar-title">{{ .Title }}</div>
+            {{ range .Pages }}
+            <a href="{{ .RelPermalink }}"
+                class="gb-sidebar-link {{ if eq $currentPage.RelPermalink .RelPermalink }}active{{ end }}">
+                {{ .Title }}
+            </a>
+            {{ end }}
+        </div>
+        {{ end }}
+    </nav>
+</aside>

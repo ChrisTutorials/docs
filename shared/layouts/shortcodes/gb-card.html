@@ -1,0 +1,90 @@
+{{ $title := .Get "title" }}
+{{ $icon := .Get "icon" }}
+{{ $description := .Get "description" }}
+{{ $link := .Get "link" }}
+{{ $color := .Get "color" | default "var(--gb-primary)" }}
+
+<div class="gb-card gb-feature-card" style="
+  padding: 1.5rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+">
+  <div class="card-content" style="flex: 1;">
+    {{ if $icon }}
+    <div class="card-icon" style="
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: {{ $color }};
+    ">
+      {{ if or (strings.Contains $icon "<") (strings.Contains $icon ">") }}
+        {{ $icon | safeHTML }}
+      {{ else }}
+        <i class="fas fa-{{ $icon }}"></i>
+      {{ end }}
+    </div>
+    {{ end }}
+    
+    <h3 class="card-title" style="
+      margin: 0 0 0.75rem 0;
+      color: var(--gb-text-primary);
+      font-size: 1.25rem;
+      font-weight: 600;
+    ">
+      {{ if $link }}
+      <a href="{{ $link }}" style="color: inherit; text-decoration: none;">{{ $title }}</a>
+      {{ else }}
+      {{ $title }}
+      {{ end }}
+    </h3>
+    
+    {{ if $description }}
+    <p class="card-description" style="
+      margin: 0;
+      color: var(--gb-text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    ">
+      {{ $description }}
+    </p>
+    {{ end }}
+    
+    <div class="card-inner" style="margin-top: 1rem; color: var(--gb-text-secondary);">
+      {{ .Inner }}
+    </div>
+  </div>
+  
+  {{ if $link }}
+  <div class="card-footer" style="
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--gb-border);
+  ">
+    <a href="{{ $link }}" style="
+      color: {{ $color }};
+      text-decoration: none;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    ">
+      Learn more →
+    </a>
+  </div>
+  {{ end }}
+</div>
+
+<style>
+.gb-card .highlight,
+.gb-card pre,
+.gb-card .card-inner pre {
+  margin-bottom: 0;
+}
+
+.gb-card .highlight pre {
+  margin-bottom: 0;
+}
+</style>

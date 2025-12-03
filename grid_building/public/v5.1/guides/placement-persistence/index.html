@@ -1,0 +1,776 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Placement Persistence | GridBuilding Plugin</title>
+<meta name=description content="Complete guide to saving and loading placed objects using metadata-based persistence"><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel=stylesheet><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css><link rel=stylesheet href=/css/custom.css><meta name=generator content="Hugo 0.146.5"></head><body><div class=gb-layout><header class=gb-header><a href=/ class=gb-brand><i class="fas fa-cubes" style=color:var(--gb-primary)></i>
+<span>GridBuilding Plugin</span></a><div class=gb-search><i class="fas fa-search"></i>
+<input type=text placeholder="Search documentation..." aria-label=Search></div><nav class=gb-nav><a href=/ class=gb-nav-link>Home
+</a><a href=/v5.1/overview/ class=gb-nav-link>Documentation
+</a><a href=/v5.1/overview/ class=gb-nav-link>Grid Building Plugin Overview
+</a><a href=/v5.1/api/ class=gb-nav-link>API Reference
+</a><a href=/v5.1/guides/ class=gb-nav-link>Getting Started Guides
+</a><a href=/v5.1/examples/ class=gb-nav-link>Examples
+</a><a href=/v5.1/examples/ class=gb-nav-link>Code Examples
+</a><a href=/community/ class=gb-nav-link>Community</a></nav></header><aside class=gb-sidebar><nav class=gb-sidebar-nav><div class=gb-sidebar-section><div class=gb-sidebar-title>GridBuilding Plugin</div><a href=/gridbuilding/getting_started/ class=gb-sidebar-link>Getting Started with GridBuilding
+</a><a href=/gridbuilding/csharp_state_integration/ class=gb-sidebar-link>C# State Integration with Godot Frontend
+</a><a href=/gridbuilding/api_reference/ class=gb-sidebar-link>API Reference
+</a><a href=/gridbuilding/troubleshooting/ class=gb-sidebar-link>Troubleshooting Guide
+</a><a href=/gridbuilding/godot_integration_example/ class=gb-sidebar-link>Godot Integration Example
+</a><a href=/gridbuilding/service_based_architecture/ class=gb-sidebar-link>Service-Based Architecture</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.1.0</div><a href=/v5.1/overview/ class=gb-sidebar-link>Grid Building Plugin Overview
+</a><a href=/v5.1/guides/ class=gb-sidebar-link>Getting Started Guides
+</a><a href=/v5.1/api/ class=gb-sidebar-link>C# API Reference
+</a><a href=/v5.1/examples/ class=gb-sidebar-link>Code Examples
+</a><a href=/v5.1/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.1/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.1/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.1/validation/ class=gb-sidebar-link>Validation Tools</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.0.0</div><a href=/v5.0/api/ class=gb-sidebar-link>GDScript API Reference
+</a><a href=/v5.0/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.0/overview/ class=gb-sidebar-link>Grid Building Plugin v5.0.0
+</a><a href=/v5.0/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.0/guides/ class=gb-sidebar-link>Plugin Overview
+</a><a href=/v5.0/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.0/validation/ class=gb-sidebar-link>Validation Tools</a></div></nav></aside><main class=gb-main><div class=gb-content><h1>Placement Persistence</h1><hr><h2 id=overview>Overview</h2><p><strong>Placement Persistence</strong> allows you to save and reload all objects placed by the building system, recreating the exact state of your game world even if those objects don&rsquo;t exist in the base starting scene. This enables complete save/load systems, level editors, and persistent world states.</p><p><strong>Purpose:</strong> When players build structures in your game, those placements need to persist across game sessions. The placement persistence system tracks which objects were placed, stores their configuration, and recreates them identically when loading a saved game.</p><aside type=note title="New in v5.1">The placement persistence system was completely rewritten in **v5.1** to use lightweight **metadata** instead of component nodes. This makes it faster, more transparent, and easier to use.<p><strong>Previous approach (v5.0):</strong> Hidden <a href=../api/PlaceableInstance/>PlaceableInstance</a> component nodes<br><strong>New approach (v5.1+):</strong> Lightweight metadata with <a href=../api/GBPlacementPersistence/>GBPlacementPersistence</a> utility</p></aside><h2 id=what-is-placement-persistence>What is Placement Persistence?</h2><p>When players place objects using the building system, those objects need to be:</p><ol><li><strong>Tracked</strong> - Identified as &ldquo;placed by player&rdquo; vs &ldquo;part of original scene&rdquo;</li><li><strong>Saved</strong> - Serialized with enough data to recreate them later</li><li><strong>Loaded</strong> - Recreated from save data when loading a level</li></ol><p>The <strong>metadata-based approach</strong> stores placement information directly on each placed node using Godot&rsquo;s metadata system.</p><h2 id=how-it-works>How It Works</h2><h3 id=automatic-marking>Automatic Marking</h3><p>When you place an object through <a href=../api/BuildingSystem/>BuildingSystem</a>, it&rsquo;s <strong>automatically marked</strong> with metadata:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># This happens automatically when you place an object</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> placed_node <span style=color:#ff7b72;font-weight:700>=</span> building_system<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>place_buildable</span>(placeable)
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># placed_node now has metadata: { &#34;gb_placement&#34;: { &#34;placeable_path&#34;: &#34;res://...&#34; } }</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=the-metadata-key>The Metadata Key</h3><p>Every placed object gets a metadata entry:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Metadata key</span>
+</span></span><span style=display:flex><span><span style=color:#a5d6ff>&#34;gb_placement&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Metadata value (Dictionary)</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#a5d6ff>&#34;placeable_path&#34;</span>: <span style=color:#a5d6ff>&#34;res://placeables/tower.tres&#34;</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><p>This tells the system:</p><ul><li>✅ This object was placed by the building system</li><li>✅ It can be recreated from this placeable resource</li><li>✅ It should be included in save/load operations</li></ul><h2 id=viewing-placement-metadata>Viewing Placement Metadata</h2><h3 id=in-godot-editor>In Godot Editor</h3><p>You can view placement metadata using Godot&rsquo;s inspector:</p><ol><li><strong>Install a metadata viewer plugin</strong> (search Asset Library for &ldquo;metadata inspector&rdquo;)</li><li><strong>Select a placed object</strong> in the scene tree</li><li><strong>View the Inspector</strong> - look for &ldquo;Metadata&rdquo; section</li><li><strong>Find <code>gb_placement</code> key</strong> with the placeable path</li></ol><h3 id=in-code>In Code</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Check if object is marked as placed</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>if</span> node<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>has_meta</span>(<span style=color:#a5d6ff>&#34;gb_placement&#34;</span>):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> placement_data <span style=color:#ff7b72;font-weight:700>=</span> node<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get_meta</span>(<span style=color:#a5d6ff>&#34;gb_placement&#34;</span>)
+</span></span><span style=display:flex><span>    print(<span style=color:#a5d6ff>&#34;Placed from: &#34;</span>, placement_data[<span style=color:#a5d6ff>&#34;placeable_path&#34;</span>])
+</span></span></code></pre></td></tr></table></div></div><h2 id=using-the-gbplacementpersistence-api>Using the GBPlacementPersistence API</h2><p>The <a href=../api/GBPlacementPersistence/>GBPlacementPersistence</a> class provides all placement persistence functionality through static methods.</p><h3 id=checking-placement-status>Checking Placement Status</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">9
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Check if a node was placed by the building system</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>if</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>is_placed</span>(node):
+</span></span><span style=display:flex><span>    print(<span style=color:#a5d6ff>&#34;This was placed by the player&#34;</span>)
+</span></span><span style=display:flex><span><span style=color:#ff7b72>else</span>:
+</span></span><span style=display:flex><span>    print(<span style=color:#a5d6ff>&#34;This is part of the original scene&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Check if a node is a preview (not a real placement)</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>if</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>is_preview</span>(node):
+</span></span><span style=display:flex><span>    print(<span style=color:#a5d6ff>&#34;This is just a preview, don&#39;t save it&#34;</span>)
+</span></span></code></pre></td></tr></table></div></div><h3 id=manual-marking-advanced>Manual Marking (Advanced)</h3><p>You can manually mark objects as placed:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">9
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Mark an object as placed</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> placeable <span style=color:#ff7b72;font-weight:700>=</span> load(<span style=color:#a5d6ff>&#34;res://placeables/tower.tres&#34;</span>) <span style=color:#ff7b72;font-weight:700>as</span> Placeable
+</span></span><span style=display:flex><span>GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>mark_as_placed</span>(my_node, placeable)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Mark as preview (temporary, don&#39;t save)</span>
+</span></span><span style=display:flex><span>GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>mark_as_preview</span>(preview_node)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Unmark a node</span>
+</span></span><span style=display:flex><span>GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>unmark</span>(node)
+</span></span></code></pre></td></tr></table></div></div><h3 id=getting-placeable-from-node>Getting Placeable from Node</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Get the original placeable resource</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> placeable: Placeable <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get_placeable</span>(placed_node)
+</span></span><span style=display:flex><span><span style=color:#ff7b72>if</span> placeable:
+</span></span><span style=display:flex><span>    print(<span style=color:#a5d6ff>&#34;This was placed from: &#34;</span>, placeable<span style=color:#ff7b72;font-weight:700>.</span>display_name)
+</span></span></code></pre></td></tr></table></div></div><h2 id=saving-placed-objects>Saving Placed Objects</h2><h3 id=save-single-object>Save Single Object</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>save_object</span>(node: <span style=color:#f0883e;font-weight:700>Node</span>) <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#f0883e;font-weight:700>Dictionary</span>:
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>is_placed</span>(node):
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> {}  <span style=color:#8b949e;font-style:italic># Not a placed object, skip</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Get save data for this object</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> save_data: <span style=color:#f0883e;font-weight:700>Dictionary</span> <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>save_placement_data</span>(node)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># save_data contains:</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># {</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>#     &#34;instance_name&#34;: &#34;Tower_001&#34;,</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>#     &#34;transform&#34;: &#34;Transform2D(...)&#34;,</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>#     &#34;placeable&#34;: &#34;res://placeables/tower.tres&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># }</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> save_data
+</span></span></code></pre></td></tr></table></div></div><h3 id=save-all-placed-objects>Save All Placed Objects</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>save_level</span>() <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#f0883e;font-weight:700>Dictionary</span>:
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Get all placed objects under a root node</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> placed_objects: <span style=color:#f0883e;font-weight:700>Array</span>[<span style=color:#f0883e;font-weight:700>Dictionary</span>] <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>save_all_placements</span>(level_root)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># placed_objects is an array of save data dictionaries</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Preview objects are automatically excluded</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> level_save <span style=color:#ff7b72;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a5d6ff>&#34;version&#34;</span>: <span style=color:#a5d6ff>&#34;1.0&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a5d6ff>&#34;placed_objects&#34;</span>: placed_objects
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> level_save
+</span></span></code></pre></td></tr></table></div></div><h3 id=complete-save-example>Complete Save Example</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#ff7b72>class_name</span> <span style=color:#f0883e;font-weight:700>Level</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>extends</span> <span style=color:#f0883e;font-weight:700>Node2D</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#d2a8ff;font-weight:700>@export</span> <span style=color:#ff7b72>var</span> objects_parent: <span style=color:#f0883e;font-weight:700>Node2D</span>  <span style=color:#8b949e;font-style:italic># Where placed objects live</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>save_to_file</span>(filepath: <span style=color:#f0883e;font-weight:700>String</span>) <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#ff7b72>void</span>:
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Get all placement data</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> placements: <span style=color:#f0883e;font-weight:700>Array</span>[<span style=color:#f0883e;font-weight:700>Dictionary</span>] <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>save_all_placements</span>(objects_parent)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Create save data structure</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> save_data <span style=color:#ff7b72;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a5d6ff>&#34;version&#34;</span>: <span style=color:#a5d6ff>&#34;1.0&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a5d6ff>&#34;level_name&#34;</span>: name,
+</span></span><span style=display:flex><span>        <span style=color:#a5d6ff>&#34;placements&#34;</span>: placements
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Write to file</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> file <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#f0883e;font-weight:700>FileAccess</span><span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>open</span>(filepath, <span style=color:#f0883e;font-weight:700>FileAccess</span><span style=color:#ff7b72;font-weight:700>.</span>WRITE)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> file:
+</span></span><span style=display:flex><span>        file<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>store_var</span>(save_data)
+</span></span><span style=display:flex><span>        file<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>close</span>()
+</span></span><span style=display:flex><span>        print(<span style=color:#a5d6ff>&#34;Level saved with </span><span style=color:#a5d6ff>%d</span><span style=color:#a5d6ff> placed objects&#34;</span> <span style=color:#ff7b72;font-weight:700>%</span> placements<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>size</span>())
+</span></span></code></pre></td></tr></table></div></div><h2 id=loading-placed-objects>Loading Placed Objects</h2><h3 id=load-single-object>Load Single Object</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>load_object</span>(save_data: <span style=color:#f0883e;font-weight:700>Dictionary</span>, parent: <span style=color:#f0883e;font-weight:700>Node</span>) <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#f0883e;font-weight:700>Node</span>:
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Instantiate from save data</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> instance: <span style=color:#f0883e;font-weight:700>Node</span> <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>instance_from_save</span>(save_data, parent)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> instance:
+</span></span><span style=display:flex><span>        print(<span style=color:#a5d6ff>&#34;Loaded: &#34;</span>, instance<span style=color:#ff7b72;font-weight:700>.</span>name)
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> instance
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>else</span>:
+</span></span><span style=display:flex><span>        push_error(<span style=color:#a5d6ff>&#34;Failed to load object from save data&#34;</span>)
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> <span style=color:#ff7b72>null</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=load-all-placed-objects>Load All Placed Objects</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>load_level</span>(save_data_array: <span style=color:#f0883e;font-weight:700>Array</span>[<span style=color:#f0883e;font-weight:700>Dictionary</span>], parent: <span style=color:#f0883e;font-weight:700>Node</span>) <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#ff7b72>void</span>:
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Load all placements at once</span>
+</span></span><span style=display:flex><span>    GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>load_all_placements</span>(save_data_array, parent)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    print(<span style=color:#a5d6ff>&#34;Loaded </span><span style=color:#a5d6ff>%d</span><span style=color:#a5d6ff> placed objects&#34;</span> <span style=color:#ff7b72;font-weight:700>%</span> save_data_array<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>size</span>())
+</span></span></code></pre></td></tr></table></div></div><h3 id=complete-load-example>Complete Load Example</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#ff7b72>class_name</span> <span style=color:#f0883e;font-weight:700>Level</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>extends</span> <span style=color:#f0883e;font-weight:700>Node2D</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#d2a8ff;font-weight:700>@export</span> <span style=color:#ff7b72>var</span> objects_parent: <span style=color:#f0883e;font-weight:700>Node2D</span>  <span style=color:#8b949e;font-style:italic># Where to spawn loaded objects</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>load_from_file</span>(filepath: <span style=color:#f0883e;font-weight:700>String</span>) <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#ff7b72>void</span>:
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Read save file</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> file <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#f0883e;font-weight:700>FileAccess</span><span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>open</span>(filepath, <span style=color:#f0883e;font-weight:700>FileAccess</span><span style=color:#ff7b72;font-weight:700>.</span>READ)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> file:
+</span></span><span style=display:flex><span>        push_error(<span style=color:#a5d6ff>&#34;Could not open save file: &#34;</span> <span style=color:#ff7b72;font-weight:700>+</span> filepath)
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> save_data <span style=color:#ff7b72;font-weight:700>=</span> file<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get_var</span>()
+</span></span><span style=display:flex><span>    file<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>close</span>()
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Clear existing placed objects</span>
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>_clear_placed_objects</span>()
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Load placements</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> placements: <span style=color:#f0883e;font-weight:700>Array</span>[<span style=color:#f0883e;font-weight:700>Dictionary</span>] <span style=color:#ff7b72;font-weight:700>=</span> save_data<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get</span>(<span style=color:#a5d6ff>&#34;placements&#34;</span>, [])
+</span></span><span style=display:flex><span>    GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>load_all_placements</span>(placements, objects_parent)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    print(<span style=color:#a5d6ff>&#34;Level loaded: </span><span style=color:#a5d6ff>%d</span><span style=color:#a5d6ff> objects restored&#34;</span> <span style=color:#ff7b72;font-weight:700>%</span> placements<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>size</span>())
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>_clear_placed_objects</span>() <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#ff7b72>void</span>:
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Remove all placed objects (but not original scene objects)</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> placed <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get_placed_objects</span>(objects_parent)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>for</span> node <span style=color:#ff7b72;font-weight:700>in</span> placed:
+</span></span><span style=display:flex><span>        node<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>queue_free</span>()
+</span></span></code></pre></td></tr></table></div></div><h2 id=advanced-usage>Advanced Usage</h2><h3 id=filtering-placed-objects>Filtering Placed Objects</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Get all placed objects under a root</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> all_placed: <span style=color:#f0883e;font-weight:700>Array</span>[<span style=color:#f0883e;font-weight:700>Node</span>] <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get_placed_objects</span>(root_node)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Exclude preview objects (happens automatically in save_all_placements)</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> real_placed: <span style=color:#f0883e;font-weight:700>Array</span>[<span style=color:#f0883e;font-weight:700>Node</span>] <span style=color:#ff7b72;font-weight:700>=</span> []
+</span></span><span style=display:flex><span><span style=color:#ff7b72>for</span> node <span style=color:#ff7b72;font-weight:700>in</span> all_placed:
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>is_preview</span>(node):
+</span></span><span style=display:flex><span>        real_placed<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>append</span>(node)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Filter by placeable type</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> towers: <span style=color:#f0883e;font-weight:700>Array</span>[<span style=color:#f0883e;font-weight:700>Node</span>] <span style=color:#ff7b72;font-weight:700>=</span> []
+</span></span><span style=display:flex><span><span style=color:#ff7b72>for</span> node <span style=color:#ff7b72;font-weight:700>in</span> all_placed:
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> placeable <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get_placeable</span>(node)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> placeable <span style=color:#ff7b72;font-weight:700>and</span> placeable<span style=color:#ff7b72;font-weight:700>.</span>display_name <span style=color:#ff7b72;font-weight:700>==</span> <span style=color:#a5d6ff>&#34;Tower&#34;</span>:
+</span></span><span style=display:flex><span>        towers<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>append</span>(node)
+</span></span></code></pre></td></tr></table></div></div><h3 id=custom-save-data>Custom Save Data</h3><p>You can extend the save data with custom fields:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">30
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>save_with_custom_data</span>(node: <span style=color:#f0883e;font-weight:700>Node</span>) <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#f0883e;font-weight:700>Dictionary</span>:
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Get base save data</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> save_data <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>save_placement_data</span>(node)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Add custom fields</span>
+</span></span><span style=display:flex><span>    save_data[<span style=color:#a5d6ff>&#34;health&#34;</span>] <span style=color:#ff7b72;font-weight:700>=</span> node<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get</span>(<span style=color:#a5d6ff>&#34;health&#34;</span>) <span style=color:#ff7b72>if</span> node<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>has_method</span>(<span style=color:#a5d6ff>&#34;get&#34;</span>) <span style=color:#ff7b72>else</span> <span style=color:#a5d6ff>100</span>
+</span></span><span style=display:flex><span>    save_data[<span style=color:#a5d6ff>&#34;level&#34;</span>] <span style=color:#ff7b72;font-weight:700>=</span> node<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get</span>(<span style=color:#a5d6ff>&#34;level&#34;</span>) <span style=color:#ff7b72>if</span> node<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>has_method</span>(<span style=color:#a5d6ff>&#34;get&#34;</span>) <span style=color:#ff7b72>else</span> <span style=color:#a5d6ff>1</span>
+</span></span><span style=display:flex><span>    save_data[<span style=color:#a5d6ff>&#34;custom_data&#34;</span>] <span style=color:#ff7b72;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a5d6ff>&#34;color&#34;</span>: <span style=color:#f0883e;font-weight:700>Color</span><span style=color:#ff7b72;font-weight:700>.</span>RED,
+</span></span><span style=display:flex><span>        <span style=color:#a5d6ff>&#34;tags&#34;</span>: [<span style=color:#a5d6ff>&#34;enemy&#34;</span>, <span style=color:#a5d6ff>&#34;flying&#34;</span>]
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> save_data
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>load_with_custom_data</span>(save_data: <span style=color:#f0883e;font-weight:700>Dictionary</span>, parent: <span style=color:#f0883e;font-weight:700>Node</span>) <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#f0883e;font-weight:700>Node</span>:
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Load base object</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> instance <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>instance_from_save</span>(save_data, parent)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> instance:
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic># Apply custom data</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> save_data<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>has</span>(<span style=color:#a5d6ff>&#34;health&#34;</span>) <span style=color:#ff7b72;font-weight:700>and</span> instance<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>has_method</span>(<span style=color:#a5d6ff>&#34;set_health&#34;</span>):
+</span></span><span style=display:flex><span>            instance<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>set_health</span>(save_data[<span style=color:#a5d6ff>&#34;health&#34;</span>])
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> save_data<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>has</span>(<span style=color:#a5d6ff>&#34;level&#34;</span>) <span style=color:#ff7b72;font-weight:700>and</span> instance<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>has_method</span>(<span style=color:#a5d6ff>&#34;set_level&#34;</span>):
+</span></span><span style=display:flex><span>            instance<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>set_level</span>(save_data[<span style=color:#a5d6ff>&#34;level&#34;</span>])
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> save_data<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>has</span>(<span style=color:#a5d6ff>&#34;custom_data&#34;</span>):
+</span></span><span style=display:flex><span>            instance<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>set_meta</span>(<span style=color:#a5d6ff>&#34;custom_data&#34;</span>, save_data[<span style=color:#a5d6ff>&#34;custom_data&#34;</span>])
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> instance
+</span></span></code></pre></td></tr></table></div></div><h3 id=error-handling>Error Handling</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">34
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>safe_save_placements</span>(root: <span style=color:#f0883e;font-weight:700>Node</span>) <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#f0883e;font-weight:700>Array</span>[<span style=color:#f0883e;font-weight:700>Dictionary</span>]:
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> valid_saves: <span style=color:#f0883e;font-weight:700>Array</span>[<span style=color:#f0883e;font-weight:700>Dictionary</span>] <span style=color:#ff7b72;font-weight:700>=</span> []
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> placed <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get_placed_objects</span>(root)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>for</span> node <span style=color:#ff7b72;font-weight:700>in</span> placed:
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>is_preview</span>(node):
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>continue</span>  <span style=color:#8b949e;font-style:italic># Skip previews</span>
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> save_data <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>save_placement_data</span>(node)
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic># Validate save data</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> save_data<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>is_empty</span>():
+</span></span><span style=display:flex><span>            push_warning(<span style=color:#a5d6ff>&#34;Skipping node with empty save data: &#34;</span> <span style=color:#ff7b72;font-weight:700>+</span> node<span style=color:#ff7b72;font-weight:700>.</span>name)
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>continue</span>
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> save_data<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>has</span>(<span style=color:#a5d6ff>&#34;placeable&#34;</span>):
+</span></span><span style=display:flex><span>            push_warning(<span style=color:#a5d6ff>&#34;Skipping node without placeable reference: &#34;</span> <span style=color:#ff7b72;font-weight:700>+</span> node<span style=color:#ff7b72;font-weight:700>.</span>name)
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>continue</span>
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        valid_saves<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>append</span>(save_data)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> valid_saves
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>safe_load_placements</span>(save_data_array: <span style=color:#f0883e;font-weight:700>Array</span>[<span style=color:#f0883e;font-weight:700>Dictionary</span>], parent: <span style=color:#f0883e;font-weight:700>Node</span>) <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#ff7b72>int</span>:
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> loaded_count <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>0</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>for</span> save_data <span style=color:#ff7b72;font-weight:700>in</span> save_data_array:
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> instance <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>instance_from_save</span>(save_data, parent)
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> instance:
+</span></span><span style=display:flex><span>            loaded_count <span style=color:#ff7b72;font-weight:700>+=</span> <span style=color:#a5d6ff>1</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>else</span>:
+</span></span><span style=display:flex><span>            push_warning(<span style=color:#a5d6ff>&#34;Failed to load placement: &#34;</span> <span style=color:#ff7b72;font-weight:700>+</span> str(save_data<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get</span>(<span style=color:#a5d6ff>&#34;instance_name&#34;</span>, <span style=color:#a5d6ff>&#34;unknown&#34;</span>)))
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> loaded_count
+</span></span></code></pre></td></tr></table></div></div><h2 id=save-data-format>Save Data Format</h2><p>The save data format is intentionally simple for easy serialization:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># The instance name in the scene tree</span>
+</span></span><span style=display:flex><span>    <span style=color:#a5d6ff>&#34;instance_name&#34;</span>: <span style=color:#a5d6ff>&#34;Tower_001&#34;</span>,
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Transform as string (for easy serialization)</span>
+</span></span><span style=display:flex><span>    <span style=color:#a5d6ff>&#34;transform&#34;</span>: <span style=color:#a5d6ff>&#34;Transform2D(1, 0, 0, 1, 100, 200)&#34;</span>,
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Resource path to the placeable (simple string, not dictionary)</span>
+</span></span><span style=display:flex><span>    <span style=color:#a5d6ff>&#34;placeable&#34;</span>: <span style=color:#a5d6ff>&#34;res://placeables/tower.tres&#34;</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h3 id=why-simple-strings>Why Simple Strings?</h3><ul><li>✅ <strong>Easy to serialize</strong> - Works with JSON, ConfigFile, or any text format</li><li>✅ <strong>Human readable</strong> - Can inspect and edit save files manually</li><li>✅ <strong>Version safe</strong> - Simple format is less likely to break between versions</li><li>✅ <strong>Lightweight</strong> - Minimal data overhead</li></ul><h2 id=best-practices>Best Practices</h2><h3 id=1-always-exclude-previews>1. Always Exclude Previews</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">8
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ✅ Correct - Automatically excludes previews</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> placements <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>save_all_placements</span>(root)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ✅ Also correct - Manual filtering</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> placed <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get_placed_objects</span>(root)
+</span></span><span style=display:flex><span><span style=color:#ff7b72>for</span> node <span style=color:#ff7b72;font-weight:700>in</span> placed:
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>is_preview</span>(node):
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> save_data <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>save_placement_data</span>(node)
+</span></span></code></pre></td></tr></table></div></div><h3 id=2-clear-before-loading>2. Clear Before Loading</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ✅ Clear existing placements before loading new ones</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>load_level</span>(save_data: <span style=color:#f0883e;font-weight:700>Array</span>[<span style=color:#f0883e;font-weight:700>Dictionary</span>]) <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#ff7b72>void</span>:
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Remove old placed objects</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> old_placed <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get_placed_objects</span>(objects_parent)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>for</span> node <span style=color:#ff7b72;font-weight:700>in</span> old_placed:
+</span></span><span style=display:flex><span>        node<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>queue_free</span>()
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Wait for nodes to be removed</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>await</span> <span style=color:#d2a8ff;font-weight:700>get_tree</span>()<span style=color:#ff7b72;font-weight:700>.</span>process_frame
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Load new placements</span>
+</span></span><span style=display:flex><span>    GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>load_all_placements</span>(save_data, objects_parent)
+</span></span></code></pre></td></tr></table></div></div><h3 id=3-validate-placeable-resources>3. Validate Placeable Resources</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ✅ Ensure placeable resources exist before saving</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>validate_placements</span>(root: <span style=color:#f0883e;font-weight:700>Node</span>) <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#f0883e;font-weight:700>Array</span>[<span style=color:#f0883e;font-weight:700>String</span>]:
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> issues: <span style=color:#f0883e;font-weight:700>Array</span>[<span style=color:#f0883e;font-weight:700>String</span>] <span style=color:#ff7b72;font-weight:700>=</span> []
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> placed <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get_placed_objects</span>(root)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>for</span> node <span style=color:#ff7b72;font-weight:700>in</span> placed:
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> placeable <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get_placeable</span>(node)
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> placeable:
+</span></span><span style=display:flex><span>            issues<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>append</span>(<span style=color:#a5d6ff>&#34;Node &#39;</span><span style=color:#a5d6ff>%s</span><span style=color:#a5d6ff>&#39; has invalid placeable reference&#34;</span> <span style=color:#ff7b72;font-weight:700>%</span> node<span style=color:#ff7b72;font-weight:700>.</span>name)
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>elif</span> <span style=color:#ff7b72;font-weight:700>not</span> <span style=color:#f0883e;font-weight:700>ResourceLoader</span><span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>exists</span>(placeable<span style=color:#ff7b72;font-weight:700>.</span>resource_path):
+</span></span><span style=display:flex><span>            issues<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>append</span>(<span style=color:#a5d6ff>&#34;Placeable resource missing: &#34;</span> <span style=color:#ff7b72;font-weight:700>+</span> placeable<span style=color:#ff7b72;font-weight:700>.</span>resource_path)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> issues
+</span></span></code></pre></td></tr></table></div></div><h3 id=4-version-your-save-format>4. Version Your Save Format</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#ff7b72>const</span> SAVE_VERSION <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>&#34;1.0&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>save_level</span>() <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#f0883e;font-weight:700>Dictionary</span>:
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a5d6ff>&#34;version&#34;</span>: SAVE_VERSION,
+</span></span><span style=display:flex><span>        <span style=color:#a5d6ff>&#34;placements&#34;</span>: GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>save_all_placements</span>(level_root)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>load_level</span>(save_data: <span style=color:#f0883e;font-weight:700>Dictionary</span>) <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#ff7b72>void</span>:
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> version <span style=color:#ff7b72;font-weight:700>=</span> save_data<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get</span>(<span style=color:#a5d6ff>&#34;version&#34;</span>, <span style=color:#a5d6ff>&#34;unknown&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> version <span style=color:#ff7b72;font-weight:700>!=</span> SAVE_VERSION:
+</span></span><span style=display:flex><span>        push_warning(<span style=color:#a5d6ff>&#34;Save format version mismatch: &#34;</span> <span style=color:#ff7b72;font-weight:700>+</span> version)
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic># Handle migration if needed</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> placements <span style=color:#ff7b72;font-weight:700>=</span> save_data<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get</span>(<span style=color:#a5d6ff>&#34;placements&#34;</span>, [])
+</span></span><span style=display:flex><span>    GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>load_all_placements</span>(placements, level_root)
+</span></span></code></pre></td></tr></table></div></div><h2 id=common-patterns>Common Patterns</h2><h3 id=auto-save-on-placement>Auto-Save on Placement</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>_ready</span>() <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#ff7b72>void</span>:
+</span></span><span style=display:flex><span>    building_system<span style=color:#ff7b72;font-weight:700>.</span>placed<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>connect</span>(_on_object_placed)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>_on_object_placed</span>(placed_node: <span style=color:#f0883e;font-weight:700>Node</span>) <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#ff7b72>void</span>:
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Auto-save when player places something</span>
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>save_level</span>()
+</span></span></code></pre></td></tr></table></div></div><h3 id=undoredo-support>Undo/Redo Support</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#ff7b72>var</span> placement_history: <span style=color:#f0883e;font-weight:700>Array</span>[<span style=color:#f0883e;font-weight:700>Dictionary</span>] <span style=color:#ff7b72;font-weight:700>=</span> []
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> history_index: <span style=color:#ff7b72>int</span> <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#ff7b72;font-weight:700>-</span><span style=color:#a5d6ff>1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>on_place_object</span>(node: <span style=color:#f0883e;font-weight:700>Node</span>) <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#ff7b72>void</span>:
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> save_state <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>save_all_placements</span>(level_root)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Add to history</span>
+</span></span><span style=display:flex><span>    history_index <span style=color:#ff7b72;font-weight:700>+=</span> <span style=color:#a5d6ff>1</span>
+</span></span><span style=display:flex><span>    placement_history<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>resize</span>(history_index <span style=color:#ff7b72;font-weight:700>+</span> <span style=color:#a5d6ff>1</span>)
+</span></span><span style=display:flex><span>    placement_history[history_index] <span style=color:#ff7b72;font-weight:700>=</span> {<span style=color:#a5d6ff>&#34;placements&#34;</span>: save_state}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>undo</span>() <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#ff7b72>void</span>:
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> history_index <span style=color:#ff7b72;font-weight:700>&gt;</span> <span style=color:#a5d6ff>0</span>:
+</span></span><span style=display:flex><span>        history_index <span style=color:#ff7b72;font-weight:700>-=</span> <span style=color:#a5d6ff>1</span>
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>_restore_state</span>(placement_history[history_index])
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>redo</span>() <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#ff7b72>void</span>:
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> history_index <span style=color:#ff7b72;font-weight:700>&lt;</span> placement_history<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>size</span>() <span style=color:#ff7b72;font-weight:700>-</span> <span style=color:#a5d6ff>1</span>:
+</span></span><span style=display:flex><span>        history_index <span style=color:#ff7b72;font-weight:700>+=</span> <span style=color:#a5d6ff>1</span>
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>_restore_state</span>(placement_history[history_index])
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>_restore_state</span>(state: <span style=color:#f0883e;font-weight:700>Dictionary</span>) <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#ff7b72>void</span>:
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> placed <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get_placed_objects</span>(level_root)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>for</span> node <span style=color:#ff7b72;font-weight:700>in</span> placed:
+</span></span><span style=display:flex><span>        node<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>queue_free</span>()
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>await</span> <span style=color:#d2a8ff;font-weight:700>get_tree</span>()<span style=color:#ff7b72;font-weight:700>.</span>process_frame
+</span></span><span style=display:flex><span>    GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>load_all_placements</span>(state[<span style=color:#a5d6ff>&#34;placements&#34;</span>], level_root)
+</span></span></code></pre></td></tr></table></div></div><h3 id=network-sync>Network Sync</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">9
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Server: Send placement updates to clients</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>on_player_place_object</span>(placed_node: <span style=color:#f0883e;font-weight:700>Node</span>) <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#ff7b72>void</span>:
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> save_data <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>save_placement_data</span>(placed_node)
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>rpc</span>(<span style=color:#a5d6ff>&#34;sync_placement&#34;</span>, save_data)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#d2a8ff;font-weight:700>@rpc</span>(<span style=color:#a5d6ff>&#34;authority&#34;</span>, <span style=color:#a5d6ff>&#34;call_remote&#34;</span>, <span style=color:#a5d6ff>&#34;reliable&#34;</span>)
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>sync_placement</span>(save_data: <span style=color:#f0883e;font-weight:700>Dictionary</span>) <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#ff7b72>void</span>:
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Client: Recreate the placed object</span>
+</span></span><span style=display:flex><span>    GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>instance_from_save</span>(save_data, objects_parent)
+</span></span></code></pre></td></tr></table></div></div><h2 id=troubleshooting>Troubleshooting</h2><h3 id=save-data-is-empty>&ldquo;Save data is empty&rdquo;</h3><p>Check if the node is actually marked as placed:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>is_placed</span>(node):
+</span></span><span style=display:flex><span>    push_error(<span style=color:#a5d6ff>&#34;Node is not marked as placed&#34;</span>)
+</span></span></code></pre></td></tr></table></div></div><h3 id=failed-to-load-placement>&ldquo;Failed to load placement&rdquo;</h3><p>Verify the placeable resource path exists:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#ff7b72>var</span> placeable_path <span style=color:#ff7b72;font-weight:700>=</span> save_data[<span style=color:#a5d6ff>&#34;placeable&#34;</span>]
+</span></span><span style=display:flex><span><span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> <span style=color:#f0883e;font-weight:700>ResourceLoader</span><span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>exists</span>(placeable_path):
+</span></span><span style=display:flex><span>    push_error(<span style=color:#a5d6ff>&#34;Placeable resource not found: &#34;</span> <span style=color:#ff7b72;font-weight:700>+</span> placeable_path)
+</span></span></code></pre></td></tr></table></div></div><h3 id=objects-not-saving>&ldquo;Objects not saving&rdquo;</h3><p>Ensure you&rsquo;re calling save on the correct root node:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ✅ Correct - Pass the parent that contains placed objects</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> placements <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>save_all_placements</span>(objects_parent)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ❌ Wrong - Passing the wrong node won&#39;t find placed objects</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> placements <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>save_all_placements</span>(self)
+</span></span></code></pre></td></tr></table></div></div><h3 id=preview-objects-being-saved>&ldquo;Preview objects being saved&rdquo;</h3><p>The API automatically excludes previews, but verify:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#ff7b72>var</span> placed <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get_placed_objects</span>(root)
+</span></span><span style=display:flex><span><span style=color:#ff7b72>for</span> node <span style=color:#ff7b72;font-weight:700>in</span> placed:
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>is_preview</span>(node):
+</span></span><span style=display:flex><span>        push_error(<span style=color:#a5d6ff>&#34;Preview leaked into placed objects list&#34;</span>)
+</span></span></code></pre></td></tr></table></div></div><h2 id=limitations-and-advanced-considerations>Limitations and Advanced Considerations</h2><h3 id=resource-path-dependencies>Resource Path Dependencies</h3><p>The placement persistence system uses <strong>resource paths</strong> (<code>res://placeables/tower.tres</code>) to reference Placeable resources. This is standard Godot practice, but has implications:</p><p><strong>What happens if a Placeable is moved or renamed:</strong></p><ul><li>❌ Save files with old paths will fail to load</li><li>❌ <code>ResourceLoader.exists()</code> returns false</li><li>❌ Placed objects cannot be recreated</li></ul><p><strong>What happens if a Placeable is deleted:</strong></p><ul><li>❌ Save files become invalid</li><li>❌ Load operations fail silently or with errors</li><li>❌ No automatic recovery mechanism</li></ul><h3 id=industry-standard-recovery-strategies>Industry-Standard Recovery Strategies</h3><p><strong>1. Resource Mapping/Migration System</strong></p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Map old paths to new paths</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>const</span> RESOURCE_MIGRATIONS <span style=color:#ff7b72;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a5d6ff>&#34;res://old/tower.tres&#34;</span>: <span style=color:#a5d6ff>&#34;res://new/tower.tres&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a5d6ff>&#34;res://deleted/wall.tres&#34;</span>: <span style=color:#a5d6ff>&#34;res://replacement/wall.tres&#34;</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>load_with_migration</span>(save_data: <span style=color:#f0883e;font-weight:700>Dictionary</span>) <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#f0883e;font-weight:700>Node</span>:
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> path <span style=color:#ff7b72;font-weight:700>=</span> save_data[<span style=color:#a5d6ff>&#34;placeable&#34;</span>]
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> path <span style=color:#ff7b72;font-weight:700>in</span> RESOURCE_MIGRATIONS:
+</span></span><span style=display:flex><span>        save_data[<span style=color:#a5d6ff>&#34;placeable&#34;</span>] <span style=color:#ff7b72;font-weight:700>=</span> RESOURCE_MIGRATIONS[path]
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>instance_from_save</span>(save_data, parent)
+</span></span></code></pre></td></tr></table></div></div><p><strong>2. Custom UUID System (Beyond Plugin Scope)</strong></p><p>For production games requiring robust asset tracking:</p><ul><li>Assign custom UUIDs to each Placeable (separate from Godot&rsquo;s editor UIDs)</li><li>Maintain a UUID → resource path registry</li><li>Store UUIDs in save files instead of paths</li><li>Rebuild registry on startup to handle moved files</li></ul><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Example pattern (implement separately)</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>class_name</span> <span style=color:#f0883e;font-weight:700>PlaceableRegistry</span> <span style=color:#ff7b72>extends</span> <span style=color:#f0883e;font-weight:700>Node</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> _uuid_to_path: <span style=color:#f0883e;font-weight:700>Dictionary</span> <span style=color:#ff7b72;font-weight:700>=</span> {}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>register_placeable</span>(uuid: <span style=color:#f0883e;font-weight:700>String</span>, path: <span style=color:#f0883e;font-weight:700>String</span>) <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#ff7b72>void</span>:
+</span></span><span style=display:flex><span>    _uuid_to_path[uuid] <span style=color:#ff7b72;font-weight:700>=</span> path
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>load_by_uuid</span>(uuid: <span style=color:#f0883e;font-weight:700>String</span>) <span style=color:#ff7b72;font-weight:700>-&gt;</span> Placeable:
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> path <span style=color:#ff7b72;font-weight:700>=</span> _uuid_to_path<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get</span>(uuid)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> load(path) <span style=color:#ff7b72>if</span> path <span style=color:#ff7b72>else</span> <span style=color:#ff7b72>null</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>3. Validation on Save</strong></p><p>Check resource validity before saving:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>validate_before_save</span>(root: <span style=color:#f0883e;font-weight:700>Node</span>) <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#f0883e;font-weight:700>Array</span>[<span style=color:#f0883e;font-weight:700>String</span>]:
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> warnings: <span style=color:#f0883e;font-weight:700>Array</span>[<span style=color:#f0883e;font-weight:700>String</span>] <span style=color:#ff7b72;font-weight:700>=</span> []
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> placed <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get_placed_objects</span>(root)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>for</span> node <span style=color:#ff7b72;font-weight:700>in</span> placed:
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> placeable <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get_placeable</span>(node)
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> placeable:
+</span></span><span style=display:flex><span>            warnings<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>append</span>(<span style=color:#a5d6ff>&#34;Invalid placeable reference: &#34;</span> <span style=color:#ff7b72;font-weight:700>+</span> node<span style=color:#ff7b72;font-weight:700>.</span>name)
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>elif</span> <span style=color:#ff7b72;font-weight:700>not</span> <span style=color:#f0883e;font-weight:700>ResourceLoader</span><span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>exists</span>(placeable<span style=color:#ff7b72;font-weight:700>.</span>resource_path):
+</span></span><span style=display:flex><span>            warnings<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>append</span>(<span style=color:#a5d6ff>&#34;Missing resource: &#34;</span> <span style=color:#ff7b72;font-weight:700>+</span> placeable<span style=color:#ff7b72;font-weight:700>.</span>resource_path)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> warnings
+</span></span></code></pre></td></tr></table></div></div><p><strong>4. Graceful Degradation</strong></p><p>Handle missing resources gracefully:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>load_with_fallback</span>(save_data: <span style=color:#f0883e;font-weight:700>Dictionary</span>, parent: <span style=color:#f0883e;font-weight:700>Node</span>) <span style=color:#ff7b72;font-weight:700>-&gt;</span> <span style=color:#f0883e;font-weight:700>Node</span>:
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> instance <span style=color:#ff7b72;font-weight:700>=</span> GBPlacementPersistence<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>instance_from_save</span>(save_data, parent)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> instance:
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic># Option A: Skip and log</span>
+</span></span><span style=display:flex><span>        push_warning(<span style=color:#a5d6ff>&#34;Failed to load: &#34;</span> <span style=color:#ff7b72;font-weight:700>+</span> str(save_data<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get</span>(<span style=color:#a5d6ff>&#34;instance_name&#34;</span>)))
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic># Option B: Spawn placeholder</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> placeholder <span style=color:#ff7b72;font-weight:700>=</span> PlaceholderNode<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>new</span>()
+</span></span><span style=display:flex><span>        placeholder<span style=color:#ff7b72;font-weight:700>.</span>name <span style=color:#ff7b72;font-weight:700>=</span> save_data<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get</span>(<span style=color:#a5d6ff>&#34;instance_name&#34;</span>, <span style=color:#a5d6ff>&#34;Missing&#34;</span>)
+</span></span><span style=display:flex><span>        parent<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>add_child</span>(placeholder)
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> placeholder
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> instance
+</span></span></code></pre></td></tr></table></div></div><h3 id=why-this-is-outside-plugin-scope>Why This Is Outside Plugin Scope</h3><p>The Grid Building plugin provides <strong>placement mechanics and basic persistence</strong>. Full save/load systems require:</p><ul><li>Game-specific asset management strategies</li><li>Custom serialization formats (JSON, binary, etc.)</li><li>Version migration systems</li><li>Error recovery policies</li><li>Performance optimization for large worlds</li></ul><p>These are <strong>architectural decisions</strong> that vary by project and should be implemented at the game level using the persistence API as a foundation.</p><h3 id=recommendations-for-production>Recommendations for Production</h3><ul><li>✅ <strong>Use version numbers</strong> in save files for migration support</li><li>✅ <strong>Validate Placeable existence</strong> before saving</li><li>✅ <strong>Log errors gracefully</strong> when resources are missing</li><li>✅ <strong>Consider asset bundling</strong> (export only used Placeables)</li><li>✅ <strong>Document resource dependencies</strong> for your project</li><li>⚠️ <strong>Don&rsquo;t rely on Godot Editor UIDs</strong> - they&rsquo;re editor-only and don&rsquo;t export</li></ul><h2 id=api-reference>API Reference</h2><p>See the <a href=../api/GBPlacementPersistence/>GBPlacementPersistence</a> class documentation (to be generated) for complete method signatures and parameter details.</p><h2 id=migration-from-placeableinstance>Migration from PlaceableInstance</h2><p>If you&rsquo;re migrating from v5.0 where you used the old <a href=../api/PlaceableInstance/>PlaceableInstance</a> component, see the <a href=../migration/breaking-changes/>Breaking Changes Guide</a> for step-by-step migration instructions.</p></div></main><aside class=gb-toc><div class=gb-toc-title>On this page</div><nav id=TableOfContents><ul><li><a href=#overview>Overview</a></li><li><a href=#what-is-placement-persistence>What is Placement Persistence?</a></li><li><a href=#how-it-works>How It Works</a><ul><li><a href=#automatic-marking>Automatic Marking</a></li><li><a href=#the-metadata-key>The Metadata Key</a></li></ul></li><li><a href=#viewing-placement-metadata>Viewing Placement Metadata</a><ul><li><a href=#in-godot-editor>In Godot Editor</a></li><li><a href=#in-code>In Code</a></li></ul></li><li><a href=#using-the-gbplacementpersistence-api>Using the GBPlacementPersistence API</a><ul><li><a href=#checking-placement-status>Checking Placement Status</a></li><li><a href=#manual-marking-advanced>Manual Marking (Advanced)</a></li><li><a href=#getting-placeable-from-node>Getting Placeable from Node</a></li></ul></li><li><a href=#saving-placed-objects>Saving Placed Objects</a><ul><li><a href=#save-single-object>Save Single Object</a></li><li><a href=#save-all-placed-objects>Save All Placed Objects</a></li><li><a href=#complete-save-example>Complete Save Example</a></li></ul></li><li><a href=#loading-placed-objects>Loading Placed Objects</a><ul><li><a href=#load-single-object>Load Single Object</a></li><li><a href=#load-all-placed-objects>Load All Placed Objects</a></li><li><a href=#complete-load-example>Complete Load Example</a></li></ul></li><li><a href=#advanced-usage>Advanced Usage</a><ul><li><a href=#filtering-placed-objects>Filtering Placed Objects</a></li><li><a href=#custom-save-data>Custom Save Data</a></li><li><a href=#error-handling>Error Handling</a></li></ul></li><li><a href=#save-data-format>Save Data Format</a><ul><li><a href=#why-simple-strings>Why Simple Strings?</a></li></ul></li><li><a href=#best-practices>Best Practices</a><ul><li><a href=#1-always-exclude-previews>1. Always Exclude Previews</a></li><li><a href=#2-clear-before-loading>2. Clear Before Loading</a></li><li><a href=#3-validate-placeable-resources>3. Validate Placeable Resources</a></li><li><a href=#4-version-your-save-format>4. Version Your Save Format</a></li></ul></li><li><a href=#common-patterns>Common Patterns</a><ul><li><a href=#auto-save-on-placement>Auto-Save on Placement</a></li><li><a href=#undoredo-support>Undo/Redo Support</a></li><li><a href=#network-sync>Network Sync</a></li></ul></li><li><a href=#troubleshooting>Troubleshooting</a><ul><li><a href=#save-data-is-empty>&ldquo;Save data is empty&rdquo;</a></li><li><a href=#failed-to-load-placement>&ldquo;Failed to load placement&rdquo;</a></li><li><a href=#objects-not-saving>&ldquo;Objects not saving&rdquo;</a></li><li><a href=#preview-objects-being-saved>&ldquo;Preview objects being saved&rdquo;</a></li></ul></li><li><a href=#limitations-and-advanced-considerations>Limitations and Advanced Considerations</a><ul><li><a href=#resource-path-dependencies>Resource Path Dependencies</a></li><li><a href=#industry-standard-recovery-strategies>Industry-Standard Recovery Strategies</a></li><li><a href=#why-this-is-outside-plugin-scope>Why This Is Outside Plugin Scope</a></li><li><a href=#recommendations-for-production>Recommendations for Production</a></li></ul></li><li><a href=#api-reference>API Reference</a></li><li><a href=#migration-from-placeableinstance>Migration from PlaceableInstance</a></li></ul></nav></aside><footer class=gb-footer><p>&copy; 2025 Chris Tutorials. All rights reserved.</p><p>Built with <a href=https://gohugo.io/ target=_blank>Hugo</a> and
+<a href=https://godotengine.org/ target=_blank>Godot</a>.</p></footer></div></body></html>

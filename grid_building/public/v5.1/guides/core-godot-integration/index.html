@@ -1,0 +1,413 @@
+<!doctype html><html lang=en-us><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1316&amp;path=livereload" data-no-instant defer></script><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Core/Godot DLL Integration Guide | GridBuilding Plugin</title>
+<meta name=description content="Complete guide for integrating GridBuilding Core DLL with Godot projects"><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel=stylesheet><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css><link rel=stylesheet href=/css/custom.css><meta name=generator content="Hugo 0.146.5"></head><body><div class=gb-layout><header class=gb-header><a href=/ class=gb-brand><i class="fas fa-cubes" style=color:var(--gb-primary)></i>
+<span>GridBuilding Plugin</span></a><div class=gb-search><i class="fas fa-search"></i>
+<input type=text placeholder="Search documentation..." aria-label=Search></div><nav class=gb-nav><a href=/ class=gb-nav-link>Home
+</a><a href=/v5.1/overview/ class=gb-nav-link>Documentation
+</a><a href=/v5.1/overview/ class=gb-nav-link>Grid Building Plugin Overview
+</a><a href=/v5.1/api/ class=gb-nav-link>API Reference
+</a><a href=/v5.1/guides/ class=gb-nav-link>Getting Started Guides
+</a><a href=/v5.1/examples/ class=gb-nav-link>Examples
+</a><a href=/v5.1/examples/ class=gb-nav-link>Code Examples
+</a><a href=/community/ class=gb-nav-link>Community
+</a><a href=/v5.1/architecture-diagrams/ class=gb-nav-link>Architecture Diagrams</a></nav></header><aside class=gb-sidebar><nav class=gb-sidebar-nav><div class=gb-sidebar-section><div class=gb-sidebar-title>GridBuilding Plugin</div><a href=/gridbuilding/getting_started/ class=gb-sidebar-link>Getting Started with GridBuilding
+</a><a href=/gridbuilding/csharp_state_integration/ class=gb-sidebar-link>C# State Integration with Godot Frontend
+</a><a href=/gridbuilding/api_reference/ class=gb-sidebar-link>API Reference
+</a><a href=/gridbuilding/troubleshooting/ class=gb-sidebar-link>Troubleshooting Guide
+</a><a href=/gridbuilding/godot_integration_example/ class=gb-sidebar-link>Godot Integration Example
+</a><a href=/gridbuilding/service_based_architecture/ class=gb-sidebar-link>Service-Based Architecture</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.1.0</div><a href=/v5.1/overview/ class=gb-sidebar-link>Grid Building Plugin Overview
+</a><a href=/v5.1/guides/ class=gb-sidebar-link>Getting Started Guides
+</a><a href=/v5.1/api/ class=gb-sidebar-link>C# API Reference
+</a><a href=/v5.1/examples/ class=gb-sidebar-link>Code Examples
+</a><a href=/v5.1/architecture-diagrams/ class=gb-sidebar-link>Architecture Diagrams
+</a><a href=/v5.1/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.1/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.1/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.1/validation/ class=gb-sidebar-link>Validation Tools</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.0.0</div><a href=/v5.0/api/ class=gb-sidebar-link>GDScript API Reference
+</a><a href=/v5.0/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.0/overview/ class=gb-sidebar-link>Grid Building Plugin v5.0.0
+</a><a href=/v5.0/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.0/guides/ class=gb-sidebar-link>Plugin Overview
+</a><a href=/v5.0/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.0/validation/ class=gb-sidebar-link>Validation Tools</a></div></nav></aside><main class=gb-main><div class=gb-content><h1>Core/Godot DLL Integration Guide</h1><h1 id=coregodot-dll-integration-guide>Core/Godot DLL Integration Guide</h1><p>This guide covers the new v5.1.0 architecture where GridBuilding&rsquo;s core logic is separated into an engine-agnostic C# DLL with a dedicated Godot integration layer.</p><h2 id=-architecture-overview>🏗️ Architecture Overview</h2><h3 id=two-layer-architecture>Two-Layer Architecture</h3><pre tabindex=0><code>┌─────────────────────────────────────┐
+│           Godot Layer               │
+│  ┌─────────────────────────────────┐ │
+│  │     StateBridge.cs              │ │ ← Event-to-Signal Bridge
+│  │     Godot Systems               │ │
+│  │     UI Components               │ │
+│  └─────────────────────────────────┘ │
+└─────────────────────────────────────┘
+                    ↓
+┌─────────────────────────────────────┐
+│            Core DLL                  │
+│  ┌─────────────────────────────────┐ │
+│  │   BuildingService               │ │ ← Engine-Agnostic Logic
+│  │   EventDispatcher               │ │
+│  │   BuildingState                 │ │
+│  │   Validation &amp; Error Handling   │ │
+│  └─────────────────────────────────┘ │
+└─────────────────────────────────────┘
+</code></pre><h3 id=key-components>Key Components</h3><h4 id=core-dll-gridbuildingcoredll>Core DLL (<code>GridBuilding.Core.dll</code>)</h4><ul><li><strong>Engine Agnostic</strong>: No Godot dependencies</li><li><strong>Business Logic</strong>: Building placement, validation, state management</li><li><strong>Event System</strong>: C# events for all building operations</li><li><strong>Thread Safe</strong>: ReaderWriterLockSlim for concurrent access</li><li><strong>Testable</strong>: Can be unit tested independently</li></ul><h4 id=godot-integration-layer>Godot Integration Layer</h4><ul><li><strong>StateBridge</strong>: Converts C# events to Godot signals</li><li><strong>Godot Systems</strong>: Engine-specific implementations</li><li><strong>UI Integration</strong>: GDScript-friendly state access</li><li><strong>Resource Management</strong>: Godot-specific asset handling</li></ul><h2 id=-quick-start>🚀 Quick Start</h2><h3 id=1-project-setup>1. Project Setup</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Your project structure</span>
+</span></span><span style=display:flex><span>your_project/
+</span></span><span style=display:flex><span>├── addons/
+</span></span><span style=display:flex><span>│   └── grid_building/
+</span></span><span style=display:flex><span>│       ├── plugin.cfg
+</span></span><span style=display:flex><span>│       ├── GridBuilding.csproj
+</span></span><span style=display:flex><span>│       ├── Core/
+</span></span><span style=display:flex><span>│       │   └── StateBridge.cs
+</span></span><span style=display:flex><span>│       ├── Systems/
+</span></span><span style=display:flex><span>│       │   └── <span style=color:#ff7b72;font-weight:700>[</span>Godot systems<span style=color:#ff7b72;font-weight:700>]</span>
+</span></span><span style=display:flex><span>│       └── addons/
+</span></span><span style=display:flex><span>│           └── grid_building/
+</span></span><span style=display:flex><span>│               └── bin/
+</span></span><span style=display:flex><span>│                   └── GridBuilding.Core.dll  ← Compiled Core DLL
+</span></span></code></pre></td></tr></table></div></div><h3 id=2-basic-usage>2. Basic Usage</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">30
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// In your Godot C# script</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>using</span> <span style=color:#ff7b72>Godot</span>;
+</span></span><span style=display:flex><span><span style=color:#ff7b72>using</span> <span style=color:#ff7b72>GridBuilding.Godot.Core</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>BuildingController</span> : Node
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>private</span> StateBridge _stateBridge;
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>override</span> <span style=color:#ff7b72>void</span> _Ready()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Initialize the state bridge</span>
+</span></span><span style=display:flex><span>        _stateBridge = GetNode&lt;StateBridge&gt;(<span style=color:#a5d6ff>&#34;/root/StateBridge&#34;</span>);
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Connect to building events</span>
+</span></span><span style=display:flex><span>        _stateBridge.BuildingPlaced += OnBuildingPlaced;
+</span></span><span style=display:flex><span>        _stateBridge.BuildingRemoved += OnBuildingRemoved;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>private</span> <span style=color:#ff7b72>void</span> OnBuildingPlaced(<span style=color:#ff7b72>string</span> buildingType, Vector2I position, <span style=color:#ff7b72>string</span> instanceId)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        GD.Print(<span style=color:#a5d6ff>$&#34;Building {buildingType} placed at {position}&#34;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Update UI, play sounds, etc.</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> PlaceBuilding(<span style=color:#ff7b72>string</span> type, Vector2I position)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// This uses the Core DLL through the StateBridge</span>
+</span></span><span style=display:flex><span>        _stateBridge.PlaceBuilding(type, position);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h3 id=3-gdscript-integration>3. GDScript Integration</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># In your GDScript</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>extends</span> <span style=color:#f0883e;font-weight:700>Node</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#d2a8ff;font-weight:700>@onready</span> <span style=color:#ff7b72>var</span> state_bridge <span style=color:#ff7b72;font-weight:700>=</span> $StateBridge
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>_ready</span>():
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Connect to signals (converted from C# events)</span>
+</span></span><span style=display:flex><span>    state_bridge<span style=color:#ff7b72;font-weight:700>.</span>building_placed<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>connect</span>(_on_building_placed)
+</span></span><span style=display:flex><span>    state_bridge<span style=color:#ff7b72;font-weight:700>.</span>building_removed<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>connect</span>(_on_building_removed)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>_on_building_placed</span>(building_type, position, instance_id):
+</span></span><span style=display:flex><span>    print(<span style=color:#a5d6ff>&#34;Building placed: &#34;</span>, building_type, <span style=color:#a5d6ff>&#34; at &#34;</span>, position)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_tower</span>():
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Place building using the bridge</span>
+</span></span><span style=display:flex><span>    state_bridge<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>place_building</span>(<span style=color:#a5d6ff>&#34;tower&#34;</span>, <span style=color:#f0883e;font-weight:700>Vector2i</span>(<span style=color:#a5d6ff>5</span>, <span style=color:#a5d6ff>5</span>))
+</span></span></code></pre></td></tr></table></div></div><h2 id=-event-system-integration>🔄 Event System Integration</h2><h3 id=c-events--godot-signals>C# Events → Godot Signals</h3><p>The StateBridge automatically converts Core C# events to Godot signals:</p><table><thead><tr><th>C# Event (Core DLL)</th><th>Godot Signal (StateBridge)</th><th>Parameters</th></tr></thead><tbody><tr><td><code>BuildingPlacedEvent</code></td><td><code>building_placed</code></td><td><code>building_type: String</code>, <code>position: Vector2i</code>, <code>instance_id: String</code></td></tr><tr><td><code>BuildingRemovedEvent</code></td><td><code>building_removed</code></td><td><code>building_type: String</code>, <code>position: Vector2i</code>, <code>instance_id: String</code></td></tr><tr><td><code>BuildingDamagedEvent</code></td><td><code>building_damaged</code></td><td><code>instance_id: String</code>, <code>damage: float</code>, <code>current_health: float</code></td></tr><tr><td><code>BuildingDestroyedEvent</code></td><td><code>building_destroyed</code></td><td><code>instance_id: String</code></td></tr><tr><td><code>BuildingRepairedEvent</code></td><td><code>building_repaired</code></td><td><code>instance_id: String</code>, <code>repair_amount: float</code>, <code>new_health: float</code></td></tr><tr><td><code>BuildingHealthChangedEvent</code></td><td><code>building_health_changed</code></td><td><code>instance_id: String</code>, <code>previous_health: float</code>, <code>current_health: float</code></td></tr></tbody></table><h3 id=event-flow-example>Event Flow Example</h3><pre tabindex=0><code>User Action → StateBridge.PlaceBuilding()
+         ↓
+Core DLL BuildingService.PlaceBuilding()
+         ↓
+Core DLL EventDispatcher.Publish(BuildingPlacedEvent)
+         ↓
+StateBridge.OnBuildingPlaced() (event handler)
+         ↓
+StateBridge.EmitSignal(Signal.BuildingPlaced)
+         ↓
+Godot Signal System → Connected GDScript/C# handlers
+</code></pre><h2 id=-core-dll-api-reference>🛠️ Core DLL API Reference</h2><h3 id=buildingservice>BuildingService</h3><h4 id=place-building>Place Building</h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#ff7b72>public</span> BuildingState PlaceBuilding(<span style=color:#ff7b72>string</span> buildingType, Vector2I gridPosition, <span style=color:#ff7b72>string</span> ownerId = <span style=color:#a5d6ff>&#34;&#34;</span>)
+</span></span></code></pre></td></tr></table></div></div><p><strong>Validation Rules:</strong></p><ul><li>Position coordinates must be non-negative</li><li>Position must not be occupied</li><li>Building type must be valid</li><li>Special rules (towers: Y ≥ 5, walls: even coordinates)</li></ul><p><strong>Returns:</strong> <code>BuildingState</code> with generated InstanceId</p><h4 id=remove-building>Remove Building</h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>bool</span> RemoveBuilding(<span style=color:#ff7b72>string</span> buildingId)
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>true</code> if building was found and removed</p><h4 id=apply-damage>Apply Damage</h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>bool</span> ApplyDamage(<span style=color:#ff7b72>string</span> buildingId, <span style=color:#ff7b72>float</span> damageAmount)
+</span></span></code></pre></td></tr></table></div></div><p><strong>Effects:</strong></p><ul><li>Reduces building health</li><li>Changes status to Damaged if health &lt; max</li><li>Triggers BuildingDamagedEvent</li><li>Triggers BuildingDestroyedEvent if health ≤ 0</li></ul><h4 id=repair-building>Repair Building</h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>bool</span> RepairBuilding(<span style=color:#ff7b72>string</span> buildingId, <span style=color:#ff7b72>float</span> repairAmount)
+</span></span></code></pre></td></tr></table></div></div><p><strong>Effects:</strong></p><ul><li>Increases building health (up to max)</li><li>Changes status from Damaged to Operational</li><li>Triggers BuildingRepairedEvent</li></ul><h3 id=buildingstate-properties>BuildingState Properties</h3><table><thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>BuildingType</code></td><td><code>string</code></td><td>Type of building (basic, tower, wall, etc.)</td></tr><tr><td><code>GridPosition</code></td><td><code>Vector2I</code></td><td>Position on the grid</td></tr><tr><td><code>InstanceId</code></td><td><code>string</code></td><td>Unique identifier (GUID)</td></tr><tr><td><code>OwnerId</code></td><td><code>string</code></td><td>Owner of the building</td></tr><tr><td><code>Status</code></td><td><code>BuildingStatus</code></td><td>Current state (Placed, Damaged, Destroyed, etc.)</td></tr><tr><td><code>Health</code></td><td><code>float</code></td><td>Current health points</td></tr><tr><td><code>MaxHealth</code></td><td><code>float</code></td><td>Maximum health points</td></tr></tbody></table><h3 id=buildingstatus-enum>BuildingStatus Enum</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">9
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>enum</span> BuildingStatus
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    Placed,
+</span></span><span style=display:flex><span>    UnderConstruction,
+</span></span><span style=display:flex><span>    Operational,
+</span></span><span style=display:flex><span>    Damaged,
+</span></span><span style=display:flex><span>    Destroyed,
+</span></span><span style=display:flex><span>    Repairing
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h2 id=-testing-integration>🧪 Testing Integration</h2><h3 id=unit-testing-core-dll>Unit Testing Core DLL</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Test]
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> BuildingService_CanPlaceAndRemoveBuilding()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> service = <span style=color:#ff7b72>new</span> BuildingService();
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> building = service.PlaceBuilding(<span style=color:#a5d6ff>&#34;basic&#34;</span>, <span style=color:#ff7b72>new</span> Vector2I(<span style=color:#a5d6ff>5</span>, <span style=color:#a5d6ff>10</span>));
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    Assert.NotNull(building);
+</span></span><span style=display:flex><span>    Assert.Equal(<span style=color:#a5d6ff>&#34;basic&#34;</span>, building.BuildingType);
+</span></span><span style=display:flex><span>    Assert.Equal(<span style=color:#a5d6ff>1</span>, service.GetAllBuildings().Count());
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> removed = service.RemoveBuilding(building.InstanceId);
+</span></span><span style=display:flex><span>    Assert.True(removed);
+</span></span><span style=display:flex><span>    Assert.Equal(<span style=color:#a5d6ff>0</span>, service.GetAllBuildings().Count());
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h3 id=integration-testing-with-godot>Integration Testing with Godot</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Test]
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> StateBridge_ConvertsEventsToSignals()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// This requires Godot test environment</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> stateBridge = <span style=color:#ff7b72>new</span> StateBridge();
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> signalReceived = <span style=color:#79c0ff>false</span>;
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    stateBridge.BuildingPlaced += () =&gt; signalReceived = <span style=color:#79c0ff>true</span>;
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Trigger Core DLL event</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> building = service.PlaceBuilding(<span style=color:#a5d6ff>&#34;tower&#34;</span>, <span style=color:#ff7b72>new</span> Vector2I(<span style=color:#a5d6ff>3</span>, <span style=color:#a5d6ff>7</span>));
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    Assert.True(signalReceived);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h2 id=-advanced-configuration>🔧 Advanced Configuration</h2><h3 id=custom-validation-rules>Custom Validation Rules</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Extend BuildingService validation</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>CustomBuildingService</span> : BuildingService
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>protected</span> <span style=color:#ff7b72>override</span> List&lt;<span style=color:#ff7b72>string</span>&gt; ValidateBuildingPlacement(Vector2I position, <span style=color:#ff7b72>string</span> buildingType)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> errors = <span style=color:#ff7b72>base</span>.ValidateBuildingPlacement(position, buildingType);
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Add custom rules</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> (buildingType == <span style=color:#a5d6ff>&#34;special&#34;</span> &amp;&amp; position.X &lt; <span style=color:#a5d6ff>10</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            errors.Add(<span style=color:#a5d6ff>&#34;Special buildings must be placed at X ≥ 10&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> errors;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h3 id=custom-event-handlers>Custom Event Handlers</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">9
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// In StateBridge</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>protected</span> <span style=color:#ff7b72>override</span> <span style=color:#ff7b72>void</span> OnBuildingPlaced(<span style=color:#ff7b72>object?</span> sender, BuildingPlacedEvent e)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>base</span>.OnBuildingPlaced(sender, e);
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Add custom logic</span>
+</span></span><span style=display:flex><span>    LogBuildingPlacement(e.Building);
+</span></span><span style=display:flex><span>    UpdateStatistics(e.Building);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h3 id=thread-safety-considerations>Thread Safety Considerations</h3><p>The Core DLL uses <code>ReaderWriterLockSlim</code> for thread safety:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Thread-safe operations are automatic</span>
+</span></span><span style=display:flex><span>Parallel.ForEach(positions, pos =&gt; {
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> building = service.PlaceBuilding(<span style=color:#a5d6ff>&#34;basic&#34;</span>, pos);
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// No additional synchronization needed</span>
+</span></span><span style=display:flex><span>});
+</span></span></code></pre></td></tr></table></div></div><h2 id=-error-handling>🚨 Error Handling</h2><h3 id=exception-types>Exception Types</h3><table><thead><tr><th>Exception</th><th>When Thrown</th><th>How to Handle</th></tr></thead><tbody><tr><td><code>BuildingPlacementException</code></td><td>Validation fails</td><td>Show error message to user</td></tr><tr><td><code>ArgumentException</code></td><td>Invalid parameters</td><td>Validate user input</td></tr><tr><td><code>InvalidOperationException</code></td><td>Duplicate placement</td><td>Check position first</td></tr></tbody></table><h3 id=error-handling-pattern>Error Handling Pattern</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#ff7b72>try</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> building = _stateBridge.PlaceBuilding(buildingType, position);
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Success - update UI</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#ff7b72>catch</span> (BuildingPlacementException ex)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Show validation error to user</span>
+</span></span><span style=display:flex><span>    ShowError(<span style=color:#a5d6ff>$&#34;Cannot place building: {ex.Message}&#34;</span>);
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#ff7b72>catch</span> (Exception ex)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Log unexpected errors</span>
+</span></span><span style=display:flex><span>    GD.PrintErr(<span style=color:#a5d6ff>$&#34;Unexpected error: {ex.Message}&#34;</span>);
+</span></span><span style=display:flex><span>    ShowError(<span style=color:#a5d6ff>&#34;An unexpected error occurred&#34;</span>);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h2 id=-performance-considerations>📊 Performance Considerations</h2><h3 id=memory-management>Memory Management</h3><ul><li>Core DLL uses efficient Dictionary-based lookup</li><li>Event subscriptions are automatically cleaned up</li><li>Building states are lightweight structs</li></ul><h3 id=thread-performance>Thread Performance</h3><ul><li>Read operations use read locks (concurrent access)</li><li>Write operations use write locks (exclusive access)</li><li>Event publishing creates handler copies to avoid deadlocks</li></ul><h3 id=optimization-tips>Optimization Tips</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Good: Batch operations</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> buildings = <span style=color:#ff7b72>new</span> List&lt;BuildingState&gt;();
+</span></span><span style=display:flex><span><span style=color:#ff7b72>foreach</span> (<span style=color:#ff7b72>var</span> pos <span style=color:#ff7b72>in</span> positions)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    buildings.Add(service.PlaceBuilding(<span style=color:#a5d6ff>&#34;basic&#34;</span>, pos));
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Avoid: Excessive individual calls</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// foreach (var pos in positions)</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// {</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>//     service.PlaceBuilding(&#34;basic&#34;, pos); // Creates many events</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// }</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=-debugging>🔍 Debugging</h2><h3 id=core-dll-debugging>Core DLL Debugging</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Enable console logging</span>
+</span></span><span style=display:flex><span>Console.WriteLine(<span style=color:#a5d6ff>$&#34;[BuildingService] Placed {buildingType} at {position}&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Check event subscriptions</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> subscriberCount = EventDispatcher.Instance.GetSubscriberCount&lt;BuildingPlacedEvent&gt;();
+</span></span><span style=display:flex><span>GD.Print(<span style=color:#a5d6ff>$&#34;BuildingPlacedEvent subscribers: {subscriberCount}&#34;</span>);
+</span></span></code></pre></td></tr></table></div></div><h3 id=godot-integration-debugging>Godot Integration Debugging</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Check signal connections</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>if</span> (!stateBridge.IsConnected(<span style=color:#a5d6ff>&#34;building_placed&#34;</span>, Callable(OnBuildingPlaced)))
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    GD.PrintErr(<span style=color:#a5d6ff>&#34;Building placed signal not connected!&#34;</span>);
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Verify Core DLL is loaded</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>if</span> (!File.Exists(<span style=color:#a5d6ff>&#34;res://addons/grid_building/bin/GridBuilding.Core.dll&#34;</span>))
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    GD.PrintErr(<span style=color:#a5d6ff>&#34;Core DLL not found!&#34;</span>);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h2 id=-integration-checklist>✅ Integration Checklist</h2><h3 id=setup>Setup</h3><ul><li><input disabled type=checkbox> Core DLL copied to <code>addons/grid_building/bin/</code></li><li><input disabled type=checkbox> Godot project references Core DLL</li><li><input disabled type=checkbox> StateBridge added to scene tree</li><li><input disabled type=checkbox> Plugin configuration updated</li></ul><h3 id=testing>Testing</h3><ul><li><input disabled type=checkbox> Core DLL builds successfully</li><li><input disabled type=checkbox> Building placement works</li><li><input disabled type=checkbox> Events convert to signals</li><li><input disabled type=checkbox> Error handling works</li><li><input disabled type=checkbox> Thread safety verified</li></ul><h3 id=performance>Performance</h3><ul><li><input disabled type=checkbox> No memory leaks in event system</li><li><input disabled type=checkbox> Acceptable placement performance</li><li><input disabled type=checkbox> UI remains responsive during operations</li></ul><h3 id=documentation>Documentation</h3><ul><li><input disabled type=checkbox> API documentation updated</li><li><input disabled type=checkbox> Integration examples provided</li><li><input disabled type=checkbox> Troubleshooting guide created</li></ul><h2 id=-success>🎉 Success!</h2><p>Your GridBuilding plugin is now using the new Core/Godot DLL architecture! You have:</p><ul><li>✅ <strong>Engine-agnostic core logic</strong> that can be tested independently</li><li>✅ <strong>Robust event system</strong> with automatic signal conversion</li><li>✅ <strong>Thread-safe operations</strong> for concurrent access</li><li>✅ <strong>Comprehensive error handling</strong> with detailed validation</li><li>✅ <strong>Better performance</strong> with optimized C# implementation</li></ul><h3 id=next-steps>Next Steps</h3><ol><li><strong>Explore the Core DLL</strong> - Try unit testing your building logic</li><li><strong>Custom validation</strong> - Add game-specific building rules</li><li><strong>Performance optimization</strong> - Profile and optimize for your use case</li><li><strong>Contribute back</strong> - Share improvements with the community</li></ol><hr><p><strong>Need help?</strong> Check the troubleshooting section or create an issue on GitHub.</p></div></main><aside class=gb-toc><div class=gb-toc-title>On this page</div><nav id=TableOfContents><ul><li><a href=#-architecture-overview>🏗️ Architecture Overview</a><ul><li><a href=#two-layer-architecture>Two-Layer Architecture</a></li><li><a href=#key-components>Key Components</a><ul><li><a href=#core-dll-gridbuildingcoredll>Core DLL (<code>GridBuilding.Core.dll</code>)</a></li><li><a href=#godot-integration-layer>Godot Integration Layer</a></li></ul></li></ul></li><li><a href=#-quick-start>🚀 Quick Start</a><ul><li><a href=#1-project-setup>1. Project Setup</a></li><li><a href=#2-basic-usage>2. Basic Usage</a></li><li><a href=#3-gdscript-integration>3. GDScript Integration</a></li></ul></li><li><a href=#-event-system-integration>🔄 Event System Integration</a><ul><li><a href=#c-events--godot-signals>C# Events → Godot Signals</a></li><li><a href=#event-flow-example>Event Flow Example</a></li></ul></li><li><a href=#-core-dll-api-reference>🛠️ Core DLL API Reference</a><ul><li><a href=#buildingservice>BuildingService</a><ul><li><a href=#place-building>Place Building</a></li><li><a href=#remove-building>Remove Building</a></li><li><a href=#apply-damage>Apply Damage</a></li><li><a href=#repair-building>Repair Building</a></li></ul></li><li><a href=#buildingstate-properties>BuildingState Properties</a></li><li><a href=#buildingstatus-enum>BuildingStatus Enum</a></li></ul></li><li><a href=#-testing-integration>🧪 Testing Integration</a><ul><li><a href=#unit-testing-core-dll>Unit Testing Core DLL</a></li><li><a href=#integration-testing-with-godot>Integration Testing with Godot</a></li></ul></li><li><a href=#-advanced-configuration>🔧 Advanced Configuration</a><ul><li><a href=#custom-validation-rules>Custom Validation Rules</a></li><li><a href=#custom-event-handlers>Custom Event Handlers</a></li><li><a href=#thread-safety-considerations>Thread Safety Considerations</a></li></ul></li><li><a href=#-error-handling>🚨 Error Handling</a><ul><li><a href=#exception-types>Exception Types</a></li><li><a href=#error-handling-pattern>Error Handling Pattern</a></li></ul></li><li><a href=#-performance-considerations>📊 Performance Considerations</a><ul><li><a href=#memory-management>Memory Management</a></li><li><a href=#thread-performance>Thread Performance</a></li><li><a href=#optimization-tips>Optimization Tips</a></li></ul></li><li><a href=#-debugging>🔍 Debugging</a><ul><li><a href=#core-dll-debugging>Core DLL Debugging</a></li><li><a href=#godot-integration-debugging>Godot Integration Debugging</a></li></ul></li><li><a href=#-integration-checklist>✅ Integration Checklist</a><ul><li><a href=#setup>Setup</a></li><li><a href=#testing>Testing</a></li><li><a href=#performance>Performance</a></li><li><a href=#documentation>Documentation</a></li></ul></li><li><a href=#-success>🎉 Success!</a><ul><li><a href=#next-steps>Next Steps</a></li></ul></li></ul></nav></aside><footer class=gb-footer><p>&copy; 2025 Chris Tutorials. All rights reserved.</p><p>Built with <a href=https://gohugo.io/ target=_blank>Hugo</a> and
+<a href=https://godotengine.org/ target=_blank>Godot</a>.</p></footer></div></body></html>

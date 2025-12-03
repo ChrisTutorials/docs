@@ -1,0 +1,201 @@
+{{ define "main" }}
+{{ $content := .Content }}
+{{ $hasH1 := ge (len (findRE "^# " $content)) 1 }}
+<article id="main-content" class="gb-article">
+  <header class="gb-article-header">
+    {{ if not $hasH1 }}
+    <h1>{{ .Title }}</h1>
+    {{ end }}
+    {{ if .Description }}
+    <p class="gb-article-description">{{ .Description }}</p>
+    {{ end }}
+    <div class="gb-article-meta">
+      <span class="gb-article-date">
+        <i class="fas fa-calendar"></i>
+        {{ .Lastmod.Format "January 2, 2006" }}
+      </span>
+      {{ if .Params.weight }}
+      <span class="gb-article-weight">
+        <i class="fas fa-sort"></i>
+        Weight: {{ .Params.weight }}
+      </span>
+      {{ end }}
+    </div>
+  </header>
+
+  <div class="gb-article-content">
+    {{ .Content }}
+  </div>
+
+  <footer class="gb-article-footer">
+    <div class="gb-article-navigation">
+      {{ if .PrevInSection }}
+      <a href="{{ .PrevInSection.Permalink }}" class="gb-nav-link gb-nav-link-prev">
+        <i class="fas fa-arrow-left"></i>
+        <span>{{ .PrevInSection.Title }}</span>
+      </a>
+      {{ end }}
+
+      {{ if .NextInSection }}
+      <a href="{{ .NextInSection.Permalink }}" class="gb-nav-link gb-nav-link-next">
+        <span>{{ .NextInSection.Title }}</span>
+        <i class="fas fa-arrow-right"></i>
+      </a>
+      {{ end }}
+    </div>
+
+    <div class="gb-article-actions">
+      <a href="{{ .Permalink }}" class="gb-action-link" target="_blank" rel="noopener">
+        <i class="fas fa-link"></i>
+        Copy link
+      </a>
+    </div>
+  </footer>
+</article>
+
+<style>
+  .gb-article {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    line-height: 1.7;
+  }
+
+  .gb-article-header {
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--gb-border);
+  }
+
+  .gb-article-header h1 {
+    margin: 0 0 1rem 0;
+    font-size: 2.5rem;
+    color: var(--gb-primary);
+  }
+
+  .gb-article-description {
+    font-size: 1.25rem;
+    color: var(--gb-text-secondary);
+    margin: 0 0 1rem 0;
+    font-style: italic;
+  }
+
+  .gb-article-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.875rem;
+    color: var(--gb-text-muted);
+  }
+
+  .gb-article-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .gb-article-content {
+    margin-bottom: 3rem;
+  }
+
+  .gb-article-content h2 {
+    margin-top: 3rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--gb-border);
+  }
+
+  .gb-article-content h3 {
+    margin-top: 2.5rem;
+  }
+
+  .gb-article-footer {
+    padding-top: 2rem;
+    border-top: 1px solid var(--gb-border);
+  }
+
+  .gb-article-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    gap: 1rem;
+  }
+
+  .gb-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: var(--gb-surface);
+    border: 1px solid var(--gb-border);
+    border-radius: 0.5rem;
+    color: var(--gb-text-primary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    min-width: 120px;
+  }
+
+  .gb-nav-link:hover {
+    background: var(--gb-surface-hover);
+    border-color: var(--gb-primary);
+    color: var(--gb-primary);
+    transform: translateY(-1px);
+  }
+
+  .gb-nav-link-prev {
+    justify-content: flex-start;
+  }
+
+  .gb-nav-link-next {
+    justify-content: flex-end;
+    margin-left: auto;
+  }
+
+  .gb-article-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .gb-action-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--gb-surface);
+    border: 1px solid var(--gb-border);
+    border-radius: 0.375rem;
+    color: var(--gb-text-secondary);
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+  }
+
+  .gb-action-link:hover {
+    background: var(--gb-primary);
+    color: white;
+    border-color: var(--gb-primary);
+  }
+
+  @media (max-width: 768px) {
+    .gb-article {
+      padding: 1rem;
+    }
+
+    .gb-article-header h1 {
+      font-size: 2rem;
+    }
+
+    .gb-article-description {
+      font-size: 1.125rem;
+    }
+
+    .gb-article-navigation {
+      flex-direction: column;
+    }
+
+    .gb-nav-link {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+{{ end }}

@@ -1,0 +1,199 @@
+# GitLab CI/CD for Item Drops Hugo Site with Subdomain Staging
+# Uses multiple Cloudflare Pages projects for true subdomain staging
+
+stages:
+  - build
+  - deploy
+
+variables:
+  HUGO_VERSION: "0.146.5"
+
+# Build Hugo site
+build:
+  stage: build
+  image: klakegg/hugo:ext-alpine
+  script:
+    - echo "🔨 Building Item Drops Hugo site..."
+    - echo "🌍 Branch: $CI_COMMIT_REF_NAME"
+    - echo "🏷️  Commit: $CI_COMMIT_SHORT_SHA"
+    - hugo --minify --gc
+    - echo "✅ Build completed"
+    - echo "📊 Build size:"
+    - du -sh public
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 hour
+  only:
+    - main
+    - staging
+    - develop
+
+# Deploy to Production (main branch) - item-drops.pages.dev
+deploy_production:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache curl tar
+  script:
+    - |
+      echo "🌐 Deploying to PRODUCTION..."
+      echo "🏷️  Branch: $CI_COMMIT_REF_NAME"
+      echo "🔗 URL: https://item-drops.pages.dev"
+      
+      # Check required variables
+      if [[ -z "$CLOUDFLARE_API_TOKEN" || -z "$CLOUDFLARE_ACCOUNT_ID" ]]; then
+        echo "❌ Missing Cloudflare credentials"
+        exit 1
+      fi
+      
+      # Create deployment package
+      cd public
+      tar -czf ../deployment.tar.gz .
+      
+      # Deploy to production project
+      CLOUDFLARE_PROJECT_NAME="item-drops"
+      DEPLOYMENT_RESPONSE=$(curl -s -X POST \
+        "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects/${CLOUDFLARE_PROJECT_NAME}/deployments" \
+        -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+        -H "Content-Type: application/octet-stream" \
+        --data-binary @"../deployment.tar.gz")
+      
+      # Check response
+      if echo "$DEPLOYMENT_RESPONSE" | grep -q '"success":true'; then
+        echo "✅ Production deployment successful!"
+        echo "🌐 Live at: https://item-drops.pages.dev"
+        
+        # Extract deployment URL for details
+        DEPLOYMENT_URL=$(echo "$DEPLOYMENT_RESPONSE" | grep -o '"url":"[^"]*"' | cut -d'"' -f4)
+        echo "📊 Details: ${DEPLOYMENT_URL}"
+        
+        echo "🎉 Item Drops production deployed!"
+      else
+        echo "❌ Production deployment failed:"
+        echo "$DEPLOYMENT_RESPONSE"
+        exit 1
+      fi
+      
+      # Cleanup
+      rm -f ../deployment.tar.gz
+  dependencies:
+    - build
+  only:
+    - main
+  environment:
+    name: production
+    url: https://item-drops.pages.dev
+  when: manual  # Require manual approval for production
+
+# Deploy to Staging (staging branch) - staging.item-drops.pages.dev
+deploy_staging:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache curl tar
+  script:
+    - |
+      echo "🌐 Deploying to STAGING..."
+      echo "🏷️  Branch: $CI_COMMIT_REF_NAME"
+      echo "🔗 URL: https://staging.item-drops.pages.dev"
+      
+      # Check required variables
+      if [[ -z "$CLOUDFLARE_API_TOKEN" || -z "$CLOUDFLARE_ACCOUNT_ID" ]]; then
+        echo "❌ Missing Cloudflare credentials"
+        exit 1
+      fi
+      
+      # Create deployment package
+      cd public
+      tar -czf ../deployment.tar.gz .
+      
+      # Deploy to same project (uses custom domains)
+      CLOUDFLARE_PROJECT_NAME="item-drops"
+      DEPLOYMENT_RESPONSE=$(curl -s -X POST \
+        "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects/${CLOUDFLARE_PROJECT_NAME}/deployments" \
+        -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+        -H "Content-Type: application/octet-stream" \
+        --data-binary @"../deployment.tar.gz")
+      
+      # Check response
+      if echo "$DEPLOYMENT_RESPONSE" | grep -q '"success":true'; then
+        echo "✅ Staging deployment successful!"
+        echo "🌐 Staging: https://staging.item-drops.pages.dev"
+        
+        # Extract deployment URL for details
+        DEPLOYMENT_URL=$(echo "$DEPLOYMENT_RESPONSE" | grep -o '"url":"[^"]*"' | cut -d'"' -f4)
+        echo "📊 Details: ${DEPLOYMENT_URL}"
+        
+        echo "🔄 Staging deployed - ready for review!"
+      else
+        echo "❌ Staging deployment failed:"
+        echo "$DEPLOYMENT_RESPONSE"
+        exit 1
+      fi
+      
+      # Cleanup
+      rm -f ../deployment.tar.gz
+  dependencies:
+    - build
+  only:
+    - staging
+  environment:
+    name: staging
+    url: https://staging.item-drops.pages.dev
+
+# Deploy to Development (develop branch) - dev.item-drops.pages.dev
+deploy_development:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache curl tar
+  script:
+    - |
+      echo "🌐 Deploying to DEVELOPMENT..."
+      echo "🏷️  Branch: $CI_COMMIT_REF_NAME"
+      echo "🔗 URL: https://dev.item-drops.pages.dev"
+      
+      # Check required variables
+      if [[ -z "$CLOUDFLARE_API_TOKEN" || -z "$CLOUDFLARE_ACCOUNT_ID" ]]; then
+        echo "❌ Missing Cloudflare credentials"
+        exit 1
+      fi
+      
+      # Create deployment package
+      cd public
+      tar -czf ../deployment.tar.gz .
+      
+      # Deploy to same project (uses custom domains)
+      CLOUDFLARE_PROJECT_NAME="item-drops"
+      DEPLOYMENT_RESPONSE=$(curl -s -X POST \
+        "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects/${CLOUDFLARE_PROJECT_NAME}/deployments" \
+        -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+        -H "Content-Type: application/octet-stream" \
+        --data-binary @"../deployment.tar.gz")
+      
+      # Check response
+      if echo "$DEPLOYMENT_RESPONSE" | grep -q '"success":true'; then
+        echo "✅ Development deployment successful!"
+        echo "🌐 Development: https://dev.item-drops.pages.dev"
+        
+        # Extract deployment URL for details
+        DEPLOYMENT_URL=$(echo "$DEPLOYMENT_RESPONSE" | grep -o '"url":"[^"]*"' | cut -d'"' -f4)
+        echo "📊 Details: ${DEPLOYMENT_URL}"
+        
+        echo "⚡ Development deployed - quick iteration ready!"
+      else
+        echo "❌ Development deployment failed:"
+        echo "$DEPLOYMENT_RESPONSE"
+        exit 1
+      fi
+      
+      # Cleanup
+      rm -f ../deployment.tar.gz
+  dependencies:
+    - build
+  only:
+    - develop
+  environment:
+    name: development
+    url: https://dev.item-drops.pages.dev

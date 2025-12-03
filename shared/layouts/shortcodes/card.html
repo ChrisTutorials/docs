@@ -1,0 +1,97 @@
+{{ $title := .Get "title" }}
+{{ $icon := .Get "icon" }}
+{{ $description := .Get "description" }}
+{{ $link := .Get "link" }}
+{{ $color := .Get "color" | default "#3b82f6" }}
+
+<div class="gb-card" style="
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+">
+  {{ if $color }}
+  <div class="card-accent" style="
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: {{ $color }};
+  "></div>
+  {{ end }}
+  
+  <div class="card-content" style="margin-top: 0.5rem;">
+    {{ if $icon }}
+    <div class="card-icon" style="
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: {{ $color }};
+    ">
+      {{ $icon }}
+    </div>
+    {{ end }}
+    
+    <h3 class="card-title" style="
+      margin: 0 0 0.75rem 0;
+      color: #1e293b;
+      font-size: 1.25rem;
+      font-weight: 600;
+    ">
+      {{ if $link }}
+      <a href="{{ $link }}" style="color: inherit; text-decoration: none;">{{ $title }}</a>
+      {{ else }}
+      {{ $title }}
+      {{ end }}
+    </h3>
+    
+    {{ if $description }}
+    <p class="card-description" style="
+      margin: 0;
+      color: #64748b;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    ">
+      {{ $description }}
+    </p>
+    {{ end }}
+    
+    <div class="card-inner" style="margin-top: 1rem;">
+      {{ .Inner }}
+    </div>
+  </div>
+  
+  {{ if $link }}
+  <div class="card-footer" style="
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f1f5f9;
+  ">
+    <a href="{{ $link }}" style="
+      color: {{ $color }};
+      text-decoration: none;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    ">
+      Learn more →
+    </a>
+  </div>
+  {{ end }}
+</div>
+
+<style>
+.gb-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+}
+
+.gb-card a:hover {
+  text-decoration: underline;
+}
+</style>

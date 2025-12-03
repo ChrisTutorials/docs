@@ -1,0 +1,74 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Service-Based Architecture | GridBuilding Plugin</title>
+<meta name=description content="Understanding the Core C# Service-Based Architecture of GridBuilding v5.1"><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel=stylesheet><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css><link rel=stylesheet href=/css/custom.css><meta name=generator content="Hugo 0.146.5"></head><body><div class=gb-layout><header class=gb-header><a href=/ class=gb-brand><i class="fas fa-cubes" style=color:var(--gb-primary)></i>
+<span>GridBuilding Plugin</span></a><div class=gb-search><i class="fas fa-search"></i>
+<input type=text placeholder="Search documentation..." aria-label=Search></div><nav class=gb-nav><a href=/ class=gb-nav-link>Home
+</a><a href=/v5.1/overview/ class=gb-nav-link>Documentation
+</a><a href=/v5.1/overview/ class=gb-nav-link>Grid Building Plugin Overview
+</a><a href=/v5.1/api/ class=gb-nav-link>API Reference
+</a><a href=/v5.1/guides/ class=gb-nav-link>Getting Started Guides
+</a><a href=/v5.1/examples/ class=gb-nav-link>Examples
+</a><a href=/v5.1/examples/ class=gb-nav-link>Code Examples
+</a><a href=/community/ class=gb-nav-link>Community</a></nav></header><aside class=gb-sidebar><nav class=gb-sidebar-nav><div class=gb-sidebar-section><div class=gb-sidebar-title>GridBuilding Plugin</div><a href=/gridbuilding/getting_started/ class=gb-sidebar-link>Getting Started with GridBuilding
+</a><a href=/gridbuilding/csharp_state_integration/ class=gb-sidebar-link>C# State Integration with Godot Frontend
+</a><a href=/gridbuilding/api_reference/ class=gb-sidebar-link>API Reference
+</a><a href=/gridbuilding/troubleshooting/ class=gb-sidebar-link>Troubleshooting Guide
+</a><a href=/gridbuilding/godot_integration_example/ class=gb-sidebar-link>Godot Integration Example
+</a><a href=/gridbuilding/service_based_architecture/ class=gb-sidebar-link>Service-Based Architecture</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.1.0</div><a href=/v5.1/overview/ class=gb-sidebar-link>Grid Building Plugin Overview
+</a><a href=/v5.1/guides/ class=gb-sidebar-link>Getting Started Guides
+</a><a href=/v5.1/api/ class=gb-sidebar-link>C# API Reference
+</a><a href=/v5.1/examples/ class=gb-sidebar-link>Code Examples
+</a><a href=/v5.1/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.1/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.1/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.1/validation/ class=gb-sidebar-link>Validation Tools</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.0.0</div><a href=/v5.0/api/ class=gb-sidebar-link>GDScript API Reference
+</a><a href=/v5.0/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.0/overview/ class=gb-sidebar-link>Grid Building Plugin v5.0.0
+</a><a href=/v5.0/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.0/guides/ class=gb-sidebar-link>Plugin Overview
+</a><a href=/v5.0/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.0/validation/ class=gb-sidebar-link>Validation Tools</a></div></nav></aside><main class=gb-main><div class=gb-content><h1>Service-Based Architecture</h1><p>GridBuilding v5.1 introduces a robust <strong>Service-Based Architecture</strong> implemented in pure C#. This architecture separates data (State), logic (Services), and engine integration (Godot Layers) to provide a testable, maintainable, and performant foundation.</p><h2 id=-core-design-pattern>🎯 Core Design Pattern</h2><p>The architecture follows a strict unidirectional data flow pattern:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+</span></span><span style=display:flex><span>│   Godot Layer   │    │  Service Layer  │    │   State Layer   │
+</span></span><span style=display:flex><span>│                 │    │                 │    │                 │
+</span></span><span style=display:flex><span>│ User Input      │───▶│ InputService   │───▶│ UserState       │
+</span></span><span style=display:flex><span>│ (Mouse/Key)     │    │                 │    │                 │
+</span></span><span style=display:flex><span>│                 │    │                 │    │                 │
+</span></span><span style=display:flex><span>│ UI Updates      │◀───│ BuildingEvents │◀───│ BuildingState   │
+</span></span><span style=display:flex><span>│ (Visuals)       │    │                 │    │                 │
+</span></span><span style=display:flex><span>│                 │    │                 │    │                 │
+</span></span><span style=display:flex><span>│ Godot Nodes     │───▶│ BuildingService│───▶│ BuildingState   │
+</span></span><span style=display:flex><span>│ (Scene/Nodes)   │    │                 │    │                 │
+</span></span><span style=display:flex><span>└─────────────────┘    └─────────────────┘    └─────────────────┘
+</span></span></code></pre></td></tr></table></div></div><h3 id=key-components>Key Components</h3><ol><li><p><strong>State Layer (Pure Data)</strong></p><ul><li>Contains only data and data-manipulation methods.</li><li>Serializable and completely decoupled from the game engine.</li><li><em>Examples:</em> <code>BuildingState</code>, <code>UserState</code>, <code>GridState</code>.</li></ul></li><li><p><strong>Service Layer (Business Logic)</strong></p><ul><li>Handles all game logic and rules.</li><li>Dispatches events when state changes.</li><li>Accepts commands from the Engine Layer.</li><li><em>Examples:</em> <code>BuildingService</code>, <code>InputService</code>, <code>ValidationService</code>.</li></ul></li><li><p><strong>Engine Layer (Integration)</strong></p><ul><li>Handles user input, rendering, and scene management.</li><li>Calls Services to perform actions.</li><li>Listens to Service events to update the view.</li><li><em>Examples:</em> <code>BuildingSystem (Node)</code>, <code>GridVisualizer</code>.</li></ul></li></ol><h2 id=-communication-flow>🔄 Communication Flow</h2><ol><li><strong>Godot → Service</strong>: The engine calls methods on services (e.g., <code>BuildingService.SelectPlaceable()</code>).</li><li><strong>Service → State</strong>: The service updates the state (e.g., sets the current placeable).</li><li><strong>Service → Godot</strong>: The service fires an event (e.g., <code>OnPlaceableSelected</code>).</li><li><strong>Godot Updates</strong>: The engine listens to the event and updates the UI or visuals.</li></ol><p><strong>Crucially, the Engine Layer never modifies the State directly.</strong></p><h2 id=-system-structure>📂 System Structure</h2><p>The Core logic is organized by <strong>Systems</strong>, reflecting the domain model of grid building:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>Core/
+</span></span><span style=display:flex><span>├── Systems/
+</span></span><span style=display:flex><span>│   ├── Building/              # Building orchestration
+</span></span><span style=display:flex><span>│   ├── Collision/             # Collision rules and detection
+</span></span><span style=display:flex><span>│   ├── Grid/                  # Grid math and management
+</span></span><span style=display:flex><span>│   ├── Input/                 # Input handling
+</span></span><span style=display:flex><span>│   ├── Manipulation/          # Moving/Rotating objects
+</span></span><span style=display:flex><span>│   ├── Placement/             # Placement validation
+</span></span><span style=display:flex><span>│   ├── State/                 # State containers
+</span></span><span style=display:flex><span>│   └── Validation/            # Rule validation logic
+</span></span></code></pre></td></tr></table></div></div><h3 id=service-interfaces>Service Interfaces</h3><p>All interaction happens through interfaces, allowing for easy mocking and testing:</p><ul><li><code>IBuildingService</code>: Manage build mode and placement.</li><li><code>IManipulationService</code>: Handle object transformations.</li><li><code>IInputService</code>: Process input commands.</li><li><code>IValidationService</code>: Check placement rules.</li></ul><h2 id=-benefits-for-developers>🚀 Benefits for Developers</h2><ul><li><strong>Testability</strong>: Logic can be tested without running Godot.</li><li><strong>Stability</strong>: Strict separation prevents &ldquo;spaghetti code&rdquo; state mutations.</li><li><strong>Performance</strong>: Pure C# logic runs independently of the engine&rsquo;s node overhead.</li></ul></div></main><aside class=gb-toc><div class=gb-toc-title>On this page</div><nav id=TableOfContents><ul><li><a href=#-core-design-pattern>🎯 Core Design Pattern</a><ul><li><a href=#key-components>Key Components</a></li></ul></li><li><a href=#-communication-flow>🔄 Communication Flow</a></li><li><a href=#-system-structure>📂 System Structure</a><ul><li><a href=#service-interfaces>Service Interfaces</a></li></ul></li><li><a href=#-benefits-for-developers>🚀 Benefits for Developers</a></li></ul></nav></aside><footer class=gb-footer><p>&copy; 2025 Chris Tutorials. All rights reserved.</p><p>Built with <a href=https://gohugo.io/ target=_blank>Hugo</a> and
+<a href=https://godotengine.org/ target=_blank>Godot</a>.</p></footer></div></body></html>

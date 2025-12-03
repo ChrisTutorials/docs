@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1315&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> | ItemDrops Plugin</title>
+
+    <meta name="description"
+        content="">
+
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    
+    <link rel="stylesheet" href="/css/custom.css">
+
+    <meta name="generator" content="Hugo 0.146.5">
+</head>
+
+<body>
+    <div class="gb-layout">
+        <header class="gb-header">
+    <a href="/" class="gb-brand">
+        <i class="fas fa-cubes" style="color: var(--gb-primary);"></i>
+        <span>Grid Building</span>
+    </a>
+
+    <div class="gb-search">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search documentation..." aria-label="Search">
+    </div>
+
+    <nav class="gb-nav">
+        
+        
+        <a href="/itemdrops/getting-started/" class="gb-nav-link ">
+            Getting Started
+        </a>
+        
+        <a href="/itemdrops/api-reference/" class="gb-nav-link ">
+            API Reference
+        </a>
+        
+        <a href="/itemdrops/examples/" class="gb-nav-link ">
+            Examples
+        </a>
+        
+        <a href="/itemdrops/migration/" class="gb-nav-link ">
+            Migration
+        </a>
+        
+    </nav>
+</header>
+
+        
+        <aside class="gb-sidebar">
+    <nav class="gb-sidebar-nav">
+        
+
+        
+        
+
+        
+
+        
+        <div class="gb-sidebar-section">
+            <div class="gb-sidebar-title">ItemDrops Plugin</div>
+            
+            <a href="/itemdrops/architecture/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/itemdrops/configuration/data-driven/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/itemdrops/configuration/migration/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/itemdrops/examples/basic-usage/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/itemdrops/feature_suggestions/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/itemdrops/getting-started/quick-start-guide/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/itemdrops/getting-started/quick-start/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/itemdrops/godot-integration/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/itemdrops/implementation/data-driven-implementation/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/itemdrops/improvements/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/itemdrops/integration_guide/"
+                class="gb-sidebar-link active">
+                
+            </a>
+            
+            <a href="/itemdrops/readme/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/itemdrops/reference/schema/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/itemdrops/unity-integration/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+        </div>
+        
+    </nav>
+</aside>
+        
+
+        <main class="gb-main">
+            
+            <div class="gb-content">
+                <h1></h1>
+                <h1 id="itemdrops-integration-guide">ItemDrops Integration Guide</h1>
+<h2 id="overview">Overview</h2>
+<p>The ItemDrops plugin is designed to work agnostically with any inventory or item database system through clean interface boundaries. This guide shows how to integrate ItemDrops with your game&rsquo;s existing systems.</p>
+<h2 id="architecture">Architecture</h2>
+<h3 id="core-interfaces">Core Interfaces</h3>
+<p>The integration is built around several key interfaces:</p>
+<ul>
+<li><strong><code>IItemDatabase</code></strong> - Provides item metadata and information</li>
+<li><strong><code>IItemIdResolver</code></strong> - Maps ItemDrops IDs to system-specific IDs</li>
+<li><strong><code>IInventoryIntegration</code></strong> - Handles adding drops to inventory systems</li>
+<li><strong><code>IItemDropsGameIntegration</code></strong> - Main boundary interface for game glue code</li>
+</ul>
+<h3 id="data-flow">Data Flow</h3>
+<pre tabindex="0"><code>ItemDrops Core → Game Integration → Inventory System
+     ↓                ↓                ↓
+  Drop Instance → Customized Drop → Added to Inventory
+</code></pre><h2 id="quick-start">Quick Start</h2>
+<h3 id="1-implement-iitemdatabase">1. Implement IItemDatabase</h3>
+<p>Create your own item database implementation:</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">GameItemDatabase</span> <span style="color:#1f2328">:</span> IItemDatabase
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">string</span> Id <span style="color:#1f2328">=&gt;</span> <span style="color:#0a3069">&#34;GameDatabase&#34;</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">string</span> Name <span style="color:#1f2328">=&gt;</span> <span style="color:#0a3069">&#34;My Game Items&#34;</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">string</span> Description <span style="color:#1f2328">=&gt;</span> <span style="color:#0a3069">&#34;Main game item database&#34;</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> IItemInfo<span style="color:#1f2328">?</span> GetItemInfo<span style="color:#1f2328">(</span><span style="color:#cf222e">string</span> itemId<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a">// Look up item in your game&#39;s item system</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> GetItemFromGameSystem<span style="color:#1f2328">(</span>itemId<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> IItemData<span style="color:#1f2328">?</span> GetItemData<span style="color:#1f2328">(</span><span style="color:#cf222e">string</span> itemId<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a">// Get detailed item data</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> GetDetailedItemData<span style="color:#1f2328">(</span>itemId<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Implement other methods...</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="2-implement-iitemidresolver-optional">2. Implement IItemIdResolver (Optional)</h3>
+<p>If you need to map between different ID systems:</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">GameIdResolver</span> <span style="color:#1f2328">:</span> IItemIdResolver
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">string?</span> ResolveToSystemId<span style="color:#1f2328">(</span><span style="color:#cf222e">string</span> itemDropsId<span style="color:#1f2328">,</span> <span style="color:#cf222e">string</span> targetSystem<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a">// Map ItemDrops ID to your inventory system ID</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> itemDropsId <span style="color:#cf222e">switch</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;sword_iron&#34;</span> <span style="color:#1f2328">=&gt;</span> <span style="color:#0a3069">&#34;item_001&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;potion_health&#34;</span> <span style="color:#1f2328">=&gt;</span> <span style="color:#0a3069">&#34;item_002&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            _ <span style="color:#1f2328">=&gt;</span> itemDropsId <span style="color:#57606a">// Fallback to original ID</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">};</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Implement other methods...</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="3-implement-iinventoryintegration">3. Implement IInventoryIntegration</h3>
+<p>Connect to your inventory system:</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">GameInventoryIntegration</span> <span style="color:#1f2328">:</span> IInventoryIntegration
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> <span style="color:#cf222e">readonly</span> GameInventory _gameInventory<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">bool</span> CanAcceptDrops<span style="color:#1f2328">(</span>IEnumerable<span style="color:#1f2328">&lt;</span>DropInstance<span style="color:#1f2328">&gt;</span> drops<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> _gameInventory<span style="color:#1f2328">.</span>HasSpace<span style="color:#1f2328">(</span>drops<span style="color:#1f2328">.</span>Sum<span style="color:#1f2328">(</span>d <span style="color:#1f2328">=&gt;</span> d<span style="color:#1f2328">.</span>Quantity<span style="color:#1f2328">));</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> InventoryAddResult AddDrops<span style="color:#1f2328">(</span>IEnumerable<span style="color:#1f2328">&lt;</span>DropInstance<span style="color:#1f2328">&gt;</span> drops<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">var</span> result <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> InventoryAddResult <span style="color:#1f2328">{</span> Success <span style="color:#1f2328">=</span> <span style="color:#cf222e">true</span> <span style="color:#1f2328">};</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">foreach</span> <span style="color:#1f2328">(</span><span style="color:#cf222e">var</span> drop <span style="color:#cf222e">in</span> drops<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">var</span> systemId <span style="color:#1f2328">=</span> ResolveToGameItemId<span style="color:#1f2328">(</span>drop<span style="color:#1f2328">.</span>ItemId<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>_gameInventory<span style="color:#1f2328">.</span>AddItem<span style="color:#1f2328">(</span>systemId<span style="color:#1f2328">,</span> drop<span style="color:#1f2328">.</span>Quantity<span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                result<span style="color:#1f2328">.</span>ItemsAdded<span style="color:#1f2328">++;</span>
+</span></span><span style="display:flex;"><span>                result<span style="color:#1f2328">.</span>AddedItems<span style="color:#1f2328">.</span>Add<span style="color:#1f2328">(</span>drop<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">else</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                result<span style="color:#1f2328">.</span>ItemsRejected<span style="color:#1f2328">++;</span>
+</span></span><span style="display:flex;"><span>                result<span style="color:#1f2328">.</span>RejectedItems<span style="color:#1f2328">.</span>Add<span style="color:#1f2328">(</span>drop<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> result<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Implement other methods...</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="4-create-game-integration">4. Create Game Integration</h3>
+<p>Tie everything together:</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">56
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">57
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">58
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">60
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">61
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">62
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">GameItemDropsIntegration</span> <span style="color:#1f2328">:</span> IItemDropsGameIntegration
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> IItemDatabase ItemDatabase <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> IItemIdResolver IdResolver <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> IInventoryIntegration InventoryIntegration <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> GameItemDropsIntegration<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        ItemDatabase <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> GameItemDatabase<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>        IdResolver <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> GameIdResolver<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>        InventoryIntegration <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> GameInventoryIntegration<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> IEnumerable<span style="color:#1f2328">&lt;</span>DropInstance<span style="color:#1f2328">&gt;</span> ProcessDrops<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        IEnumerable<span style="color:#1f2328">&lt;</span>DropInstance<span style="color:#1f2328">&gt;</span> drops<span style="color:#1f2328">,</span> 
+</span></span><span style="display:flex;"><span>        DropContext context<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">var</span> processedDrops <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> List<span style="color:#1f2328">&lt;</span>DropInstance<span style="color:#1f2328">&gt;();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">foreach</span> <span style="color:#1f2328">(</span><span style="color:#cf222e">var</span> drop <span style="color:#cf222e">in</span> drops<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a">// Apply game-specific modifications</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">var</span> customizedDrop <span style="color:#1f2328">=</span> CustomizeDrop<span style="color:#1f2328">(</span>drop<span style="color:#1f2328">,</span> context<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a">// Only keep drops that can be added to inventory</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>InventoryIntegration<span style="color:#1f2328">.</span>CanAcceptDrops<span style="color:#1f2328">(</span><span style="color:#cf222e">new</span><span style="color:#1f2328">[]</span> <span style="color:#1f2328">{</span> customizedDrop <span style="color:#1f2328">}))</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                processedDrops<span style="color:#1f2328">.</span>Add<span style="color:#1f2328">(</span>customizedDrop<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> processedDrops<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> DropInstance CustomizeDrop<span style="color:#1f2328">(</span>DropInstance drop<span style="color:#1f2328">,</span> DropContext context<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a">// Add game-specific metadata</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">var</span> metadata <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> Dictionary<span style="color:#1f2328">&lt;</span><span style="color:#cf222e">string</span><span style="color:#1f2328">,</span> <span style="color:#cf222e">object</span><span style="color:#1f2328">&gt;(</span>drop<span style="color:#1f2328">.</span>Metadata<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">            [&#34;DropTime&#34;]</span> <span style="color:#1f2328">=</span> DateTime<span style="color:#1f2328">.</span>UtcNow<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">            [&#34;PlayerLevel&#34;]</span> <span style="color:#1f2328">=</span> context<span style="color:#1f2328">.</span>GetData<span style="color:#1f2328">&lt;</span><span style="color:#cf222e">int</span><span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;PlayerLevel&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">1</span><span style="color:#1f2328">),</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">            [&#34;Location&#34;]</span> <span style="color:#1f2328">=</span> context<span style="color:#1f2328">.</span>GetData<span style="color:#1f2328">&lt;</span><span style="color:#cf222e">string</span><span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;Location&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;Unknown&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">};</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> <span style="color:#cf222e">new</span> DropInstance<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>            drop<span style="color:#1f2328">.</span>ItemId<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            drop<span style="color:#1f2328">.</span>ItemName<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            drop<span style="color:#1f2328">.</span>ItemType<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            drop<span style="color:#1f2328">.</span>Quantity<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            drop<span style="color:#1f2328">.</span>Rarity<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            drop<span style="color:#1f2328">.</span>Weight<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            metadata
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">bool</span> IsValid<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> ItemDatabase<span style="color:#1f2328">.</span>IsValid<span style="color:#1f2328">()</span> <span style="color:#1f2328">&amp;&amp;</span> 
+</span></span><span style="display:flex;"><span>               IdResolver<span style="color:#1f2328">.</span>IsValid<span style="color:#1f2328">()</span> <span style="color:#1f2328">&amp;&amp;</span> 
+</span></span><span style="display:flex;"><span>               InventoryIntegration<span style="color:#1f2328">.</span>IsValid<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="usage-examples">Usage Examples</h2>
+<h3 id="basic-drop-generation">Basic Drop Generation</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// Set up the integration</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> gameIntegration <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> GameItemDropsIntegration<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Create drop tables with database integration</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> swordDrop <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> ItemDrop<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;sword_iron&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">10.0f</span><span style="color:#1f2328">,</span> ItemRarity<span style="color:#1f2328">.</span>Common<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>WithItemDatabase<span style="color:#1f2328">(</span>gameIntegration<span style="color:#1f2328">.</span>ItemDatabase<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>WithIdResolver<span style="color:#1f2328">(</span>gameIntegration<span style="color:#1f2328">.</span>IdResolver<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>WithQuantity<span style="color:#1f2328">(</span><span style="color:#0550ae">1</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">1</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> potionDrop <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> ItemDrop<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;potion_health&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">15.0f</span><span style="color:#1f2328">,</span> ItemRarity<span style="color:#1f2328">.</span>Common<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>WithItemDatabase<span style="color:#1f2328">(</span>gameIntegration<span style="color:#1f2328">.</span>ItemDatabase<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>WithIdResolver<span style="color:#1f2328">(</span>gameIntegration<span style="color:#1f2328">.</span>IdResolver<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>WithQuantity<span style="color:#1f2328">(</span><span style="color:#0550ae">1</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">3</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Create drop table</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> dropTable <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> DropTable<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;enemy_loot&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;Enemy Loot Table&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>WithDrops<span style="color:#1f2328">(</span><span style="color:#cf222e">new</span><span style="color:#1f2328">[]</span> <span style="color:#1f2328">{</span> swordDrop<span style="color:#1f2328">,</span> potionDrop <span style="color:#1f2328">});</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Generate drops</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> context <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> DropContext<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>context<span style="color:#1f2328">.</span>SetData<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;PlayerLevel&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">5</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>context<span style="color:#1f2328">.</span>SetData<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Location&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;Forest&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> dropResult <span style="color:#1f2328">=</span> dropTable<span style="color:#1f2328">.</span>GenerateDrops<span style="color:#1f2328">(</span>context<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Process drops through game integration</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> processedDrops <span style="color:#1f2328">=</span> gameIntegration<span style="color:#1f2328">.</span>ProcessDrops<span style="color:#1f2328">(</span>dropResult<span style="color:#1f2328">.</span>Drops<span style="color:#1f2328">,</span> context<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Add to inventory</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">foreach</span> <span style="color:#1f2328">(</span><span style="color:#cf222e">var</span> drop <span style="color:#cf222e">in</span> processedDrops<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    gameIntegration<span style="color:#1f2328">.</span>InventoryIntegration<span style="color:#1f2328">.</span>AddDrop<span style="color:#1f2328">(</span>drop<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="advanced-configuration">Advanced Configuration</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// Create conditional drops</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> rareDrop <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> ItemDrop<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;armor_diamond&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">5.0f</span><span style="color:#1f2328">,</span> ItemRarity<span style="color:#1f2328">.</span>Legendary<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>WithItemDatabase<span style="color:#1f2328">(</span>gameIntegration<span style="color:#1f2328">.</span>ItemDatabase<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>WithCondition<span style="color:#1f2328">(</span><span style="color:#cf222e">new</span> MinimumLevelCondition<span style="color:#1f2328">(</span><span style="color:#0550ae">10</span><span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>WithCondition<span style="color:#1f2328">(</span><span style="color:#cf222e">new</span> RandomChanceCondition<span style="color:#1f2328">(</span><span style="color:#0550ae">0.1f</span><span style="color:#1f2328">));</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Create modifiers</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> luckModifier <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> QuantityModifier<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;luck_bonus&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">1.5f</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>WithCondition<span style="color:#1f2328">(</span><span style="color:#cf222e">new</span> PlayerLuckCondition<span style="color:#1f2328">(</span><span style="color:#0550ae">50</span><span style="color:#1f2328">));</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Apply modifiers to drops</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> enhancedDrop <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> ItemDrop<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;sword_iron&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">10.0f</span><span style="color:#1f2328">,</span> ItemRarity<span style="color:#1f2328">.</span>Common<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>WithItemDatabase<span style="color:#1f2328">(</span>gameIntegration<span style="color:#1f2328">.</span>ItemDatabase<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>WithModifier<span style="color:#1f2328">(</span>luckModifier<span style="color:#1f2328">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="integration-patterns">Integration Patterns</h2>
+<h3 id="1-unity-integration">1. Unity Integration</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">UnityItemDropsManager</span> <span style="color:#1f2328">:</span> MonoBehaviour
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [SerializeField]</span> <span style="color:#cf222e">private</span> ItemDatabaseSO _itemDatabase<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [SerializeField]</span> <span style="color:#cf222e">private</span> InventoryManager _inventoryManager<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> IItemDropsGameIntegration _integration<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> <span style="color:#cf222e">void</span> Awake<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        _integration <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> UnityGameIntegration<span style="color:#1f2328">(</span>_itemDatabase<span style="color:#1f2328">,</span> _inventoryManager<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">void</span> GenerateLoot<span style="color:#1f2328">(</span>GameObject source<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">var</span> context <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> DropContext<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>        context<span style="color:#1f2328">.</span>SetData<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;PlayerLevel&#34;</span><span style="color:#1f2328">,</span> Player<span style="color:#1f2328">.</span>Instance<span style="color:#1f2328">.</span>Level<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        context<span style="color:#1f2328">.</span>SetData<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Location&#34;</span><span style="color:#1f2328">,</span> currentScene<span style="color:#1f2328">.</span>name<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        context<span style="color:#1f2328">.</span>SetData<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Source&#34;</span><span style="color:#1f2328">,</span> source<span style="color:#1f2328">.</span>name<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">var</span> drops <span style="color:#1f2328">=</span> GetDropTableForSource<span style="color:#1f2328">(</span>source<span style="color:#1f2328">).</span>GenerateDrops<span style="color:#1f2328">(</span>context<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">var</span> processedDrops <span style="color:#1f2328">=</span> _integration<span style="color:#1f2328">.</span>ProcessDrops<span style="color:#1f2328">(</span>drops<span style="color:#1f2328">.</span>Drops<span style="color:#1f2328">,</span> context<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">foreach</span> <span style="color:#1f2328">(</span><span style="color:#cf222e">var</span> drop <span style="color:#cf222e">in</span> processedDrops<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            _inventoryManager<span style="color:#1f2328">.</span>AddItem<span style="color:#1f2328">(</span>drop<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="2-godot-integration">2. Godot Integration</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">partial</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">ItemDropsManager</span> <span style="color:#1f2328">:</span> Node
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">private</span> ItemDatabaseResource _itemDatabase<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">private</span> InventorySystem _inventory<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> IItemDropsGameIntegration _integration<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">override</span> <span style="color:#cf222e">void</span> _Ready<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        _integration <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> GodotGameIntegration<span style="color:#1f2328">(</span>_itemDatabase<span style="color:#1f2328">,</span> _inventory<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">void</span> GenerateEnemyLoot<span style="color:#1f2328">(</span>Node enemy<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">var</span> context <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> DropContext<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>        context<span style="color:#1f2328">.</span>SetData<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;PlayerLevel&#34;</span><span style="color:#1f2328">,</span> GameState<span style="color:#1f2328">.</span>PlayerLevel<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        context<span style="color:#1f2328">.</span>SetData<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Location&#34;</span><span style="color:#1f2328">,</span> GetTree<span style="color:#1f2328">().</span>CurrentScene<span style="color:#1f2328">.</span>Name<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        context<span style="color:#1f2328">.</span>SetData<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Source&#34;</span><span style="color:#1f2328">,</span> enemy<span style="color:#1f2328">.</span>Name<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">var</span> drops <span style="color:#1f2328">=</span> GetDropTableForEnemy<span style="color:#1f2328">(</span>enemy<span style="color:#1f2328">).</span>GenerateDrops<span style="color:#1f2328">(</span>context<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">var</span> processedDrops <span style="color:#1f2328">=</span> _integration<span style="color:#1f2328">.</span>ProcessDrops<span style="color:#1f2328">(</span>drops<span style="color:#1f2328">.</span>Drops<span style="color:#1f2328">,</span> context<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">foreach</span> <span style="color:#1f2328">(</span><span style="color:#cf222e">var</span> drop <span style="color:#cf222e">in</span> processedDrops<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            _inventory<span style="color:#1f2328">.</span>AddItem<span style="color:#1f2328">(</span>drop<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="best-practices">Best Practices</h2>
+<h3 id="1-lazy-loading">1. Lazy Loading</h3>
+<p>Load item data only when needed:</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">LazyItemDatabase</span> <span style="color:#1f2328">:</span> IItemDatabase
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> <span style="color:#cf222e">readonly</span> Dictionary<span style="color:#1f2328">&lt;</span><span style="color:#cf222e">string</span><span style="color:#1f2328">,</span> IItemData<span style="color:#1f2328">&gt;</span> _cache <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span><span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> <span style="color:#cf222e">readonly</span> IItemLoader _loader<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> IItemData<span style="color:#1f2328">?</span> GetItemData<span style="color:#1f2328">(</span><span style="color:#cf222e">string</span> itemId<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>_cache<span style="color:#1f2328">.</span>TryGetValue<span style="color:#1f2328">(</span>itemId<span style="color:#1f2328">,</span> <span style="color:#cf222e">out</span> <span style="color:#cf222e">var</span> cached<span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">return</span> cached<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">var</span> itemData <span style="color:#1f2328">=</span> _loader<span style="color:#1f2328">.</span>LoadItem<span style="color:#1f2328">(</span>itemId<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>itemData <span style="color:#1f2328">!=</span> <span style="color:#cf222e">null</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            _cache<span style="color:#1f2328">[</span>itemId<span style="color:#1f2328">]</span> <span style="color:#1f2328">=</span> itemData<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> itemData<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="2-validation">2. Validation</h3>
+<p>Always validate integrations:</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">void</span> ValidateIntegration<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">if</span> <span style="color:#1f2328">(!</span>_gameIntegration<span style="color:#1f2328">.</span>IsValid<span style="color:#1f2328">())</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        Debug<span style="color:#1f2328">.</span>LogError<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Game integration is not valid!&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Test with a sample drop</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">var</span> testDrop <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> ItemDrop<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;test_item&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">1.0f</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">var</span> testContext <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> DropContext<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">if</span> <span style="color:#1f2328">(!</span>testDrop<span style="color:#1f2328">.</span>CanDrop<span style="color:#1f2328">(</span>testContext<span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        Debug<span style="color:#1f2328">.</span>LogWarning<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Test drop failed validation&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="3-performance">3. Performance</h3>
+<p>Optimize for high-frequency operations:</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">OptimizedGameIntegration</span> <span style="color:#1f2328">:</span> IItemDropsGameIntegration
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> <span style="color:#cf222e">readonly</span> Dictionary<span style="color:#1f2328">&lt;</span><span style="color:#cf222e">string</span><span style="color:#1f2328">,</span> IItemInfo<span style="color:#1f2328">&gt;</span> _itemInfoCache <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span><span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> DropInstance CustomizeDrop<span style="color:#1f2328">(</span>DropInstance drop<span style="color:#1f2328">,</span> DropContext context<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a">// Use cached item info</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#1f2328">(!</span>_itemInfoCache<span style="color:#1f2328">.</span>TryGetValue<span style="color:#1f2328">(</span>drop<span style="color:#1f2328">.</span>ItemId<span style="color:#1f2328">,</span> <span style="color:#cf222e">out</span> <span style="color:#cf222e">var</span> itemInfo<span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            itemInfo <span style="color:#1f2328">=</span> ItemDatabase<span style="color:#1f2328">.</span>GetItemInfo<span style="color:#1f2328">(</span>drop<span style="color:#1f2328">.</span>ItemId<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>            _itemInfoCache<span style="color:#1f2328">[</span>drop<span style="color:#1f2328">.</span>ItemId<span style="color:#1f2328">]</span> <span style="color:#1f2328">=</span> itemInfo<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a">// Fast customization with cached data</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> CustomizeDropFast<span style="color:#1f2328">(</span>drop<span style="color:#1f2328">,</span> context<span style="color:#1f2328">,</span> itemInfo<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="common-issues">Common Issues</h3>
+<ol>
+<li>
+<p><strong>Items not found in database</strong></p>
+<ul>
+<li>Ensure item IDs match between ItemDrops and your database</li>
+<li>Check that <code>HasItem()</code> returns true for your items</li>
+</ul>
+</li>
+<li>
+<p><strong>ID resolution failures</strong></p>
+<ul>
+<li>Verify mappings are registered in <code>IItemIdResolver</code></li>
+<li>Check system names match between resolver and calls</li>
+</ul>
+</li>
+<li>
+<p><strong>Inventory rejections</strong></p>
+<ul>
+<li>Ensure <code>CanAcceptDrops()</code> properly checks capacity</li>
+<li>Verify <code>AddDrops()</code> handles all edge cases</li>
+</ul>
+</li>
+</ol>
+<h3 id="debugging">Debugging</h3>
+<p>Enable debug logging:</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">DebugGameIntegration</span> <span style="color:#1f2328">:</span> IItemDropsGameIntegration
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> IEnumerable<span style="color:#1f2328">&lt;</span>DropInstance<span style="color:#1f2328">&gt;</span> ProcessDrops<span style="color:#1f2328">(</span>IEnumerable<span style="color:#1f2328">&lt;</span>DropInstance<span style="color:#1f2328">&gt;</span> drops<span style="color:#1f2328">,</span> DropContext context<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        Debug<span style="color:#1f2328">.</span>Log<span style="color:#1f2328">(</span><span style="color:#0a3069">$&#34;Processing {drops.Count()} drops in context: {context}&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">foreach</span> <span style="color:#1f2328">(</span><span style="color:#cf222e">var</span> drop <span style="color:#cf222e">in</span> drops<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            Debug<span style="color:#1f2328">.</span>Log<span style="color:#1f2328">(</span><span style="color:#0a3069">$&#34;Processing drop: {drop.ItemId} x{drop.Quantity}&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">var</span> processed <span style="color:#1f2328">=</span> <span style="color:#cf222e">base</span><span style="color:#1f2328">.</span>ProcessDrops<span style="color:#1f2328">(</span>drops<span style="color:#1f2328">,</span> context<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        Debug<span style="color:#1f2328">.</span>Log<span style="color:#1f2328">(</span><span style="color:#0a3069">$&#34;Processed {processed.Count()} drops successfully&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> processed<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="migration-from-existing-systems">Migration from Existing Systems</h2>
+<p>If you have an existing drop system:</p>
+<ol>
+<li><strong>Map existing item IDs</strong> to ItemDrops IDs using <code>IItemIdResolver</code></li>
+<li><strong>Create adapters</strong> for your existing inventory system</li>
+<li><strong>Gradually migrate</strong> drop tables to use ItemDrops configuration</li>
+<li><strong>Test thoroughly</strong> with existing save data</li>
+</ol>
+<h2 id="conclusion">Conclusion</h2>
+<p>The ItemDrops integration system provides a clean, flexible boundary between drop generation and inventory management. By implementing the core interfaces, you can connect ItemDrops to any existing system while maintaining separation of concerns and testability.</p>
+<p>The key benefits are:</p>
+<ul>
+<li><strong>Agnostic integration</strong> - Works with any inventory system</li>
+<li><strong>Clean boundaries</strong> - Clear separation between systems</li>
+<li><strong>Extensible</strong> - Easy to add new features and modifiers</li>
+<li><strong>Testable</strong> - Each component can be tested independently</li>
+</ul>
+
+            </div>
+            
+        </main>
+
+        
+        <aside class="gb-toc">
+            <div class="gb-toc-title">On this page</div>
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#architecture">Architecture</a>
+      <ul>
+        <li><a href="#core-interfaces">Core Interfaces</a></li>
+        <li><a href="#data-flow">Data Flow</a></li>
+      </ul>
+    </li>
+    <li><a href="#quick-start">Quick Start</a>
+      <ul>
+        <li><a href="#1-implement-iitemdatabase">1. Implement IItemDatabase</a></li>
+        <li><a href="#2-implement-iitemidresolver-optional">2. Implement IItemIdResolver (Optional)</a></li>
+        <li><a href="#3-implement-iinventoryintegration">3. Implement IInventoryIntegration</a></li>
+        <li><a href="#4-create-game-integration">4. Create Game Integration</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage-examples">Usage Examples</a>
+      <ul>
+        <li><a href="#basic-drop-generation">Basic Drop Generation</a></li>
+        <li><a href="#advanced-configuration">Advanced Configuration</a></li>
+      </ul>
+    </li>
+    <li><a href="#integration-patterns">Integration Patterns</a>
+      <ul>
+        <li><a href="#1-unity-integration">1. Unity Integration</a></li>
+        <li><a href="#2-godot-integration">2. Godot Integration</a></li>
+      </ul>
+    </li>
+    <li><a href="#best-practices">Best Practices</a>
+      <ul>
+        <li><a href="#1-lazy-loading">1. Lazy Loading</a></li>
+        <li><a href="#2-validation">2. Validation</a></li>
+        <li><a href="#3-performance">3. Performance</a></li>
+      </ul>
+    </li>
+    <li><a href="#troubleshooting">Troubleshooting</a>
+      <ul>
+        <li><a href="#common-issues">Common Issues</a></li>
+        <li><a href="#debugging">Debugging</a></li>
+      </ul>
+    </li>
+    <li><a href="#migration-from-existing-systems">Migration from Existing Systems</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+        </aside>
+        
+
+        <footer class="gb-footer">
+    <p>&copy; 2025 Chris Tutorials. All rights reserved.</p>
+    <p>
+        Built with <a href="https://gohugo.io/" target="_blank">Hugo</a> and
+        <a href="https://godotengine.org/" target="_blank">Godot</a>.
+    </p>
+</footer>
+    </div>
+</body>
+
+</html>

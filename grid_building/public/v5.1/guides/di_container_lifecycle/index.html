@@ -1,0 +1,150 @@
+<!doctype html><html lang=en-us><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1316&amp;path=livereload" data-no-instant defer></script><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>DI container lifecycle | GridBuilding Plugin</title>
+<meta name=description content><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel=stylesheet><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css><link rel=stylesheet href=/css/custom.css><meta name=generator content="Hugo 0.146.5"></head><body><div class=gb-layout><header class=gb-header><a href=/ class=gb-brand><i class="fas fa-cubes" style=color:var(--gb-primary)></i>
+<span>GridBuilding Plugin</span></a><div class=gb-search><i class="fas fa-search"></i>
+<input type=text placeholder="Search documentation..." aria-label=Search></div><nav class=gb-nav><a href=/ class=gb-nav-link>Home
+</a><a href=/v5.1/overview/ class=gb-nav-link>Documentation
+</a><a href=/v5.1/overview/ class=gb-nav-link>Grid Building Plugin Overview
+</a><a href=/v5.1/api/ class=gb-nav-link>API Reference
+</a><a href=/v5.1/examples/ class=gb-nav-link>Examples
+</a><a href=/v5.1/examples/ class=gb-nav-link>Code Examples
+</a><a href=/community/ class=gb-nav-link>Community</a></nav></header><aside class=gb-sidebar><nav class=gb-sidebar-nav><div class=gb-sidebar-section><div class=gb-sidebar-title>GridBuilding Plugin</div><a href=/gridbuilding/getting_started/ class=gb-sidebar-link>Getting Started with GridBuilding
+</a><a href=/gridbuilding/csharp_state_integration/ class=gb-sidebar-link>C# State Integration with Godot Frontend
+</a><a href=/gridbuilding/api_reference/ class=gb-sidebar-link>API Reference
+</a><a href=/gridbuilding/troubleshooting/ class=gb-sidebar-link>Troubleshooting Guide
+</a><a href=/gridbuilding/godot_integration_example/ class=gb-sidebar-link>Godot Integration Example
+</a><a href=/gridbuilding/service_based_architecture/ class=gb-sidebar-link>Service-Based Architecture</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.1.0</div><a href=/v5.1/overview/ class=gb-sidebar-link>Grid Building Plugin Overview
+</a><a href=/v5.1/guides/migration-5-0-to-5-1/ class=gb-sidebar-link>Migration Guide: 5.0.0 to 5.1.0
+</a><a href=/v5.1/guides/migration-cheatsheet/ class=gb-sidebar-link>Migration Cheat Sheet
+</a><a href=/v5.1/guides/service_architecture/ class=gb-sidebar-link>Service-Based Architecture
+</a><a href=/v5.1/guides/migration-configuration/ class=gb-sidebar-link>Migration Configuration Guide
+</a><a href=/v5.1/api/ class=gb-sidebar-link>C# API Reference
+</a><a href=/v5.1/examples/ class=gb-sidebar-link>Code Examples
+</a><a href=/v5.1/guides/migrating_to_v5_1/ class=gb-sidebar-link>v5.0 to v5.1 Migration Guide
+</a><a href=/v5.1/guides/gdscript_to_csharp_migration/ class=gb-sidebar-link>GDScript to C# Migration Guide
+</a><a href=/v5.1/guides/breaking-changes/ class=gb-sidebar-link>Breaking Changes
+</a><a href=/v5.1/guides/building_system_process/ class=gb-sidebar-link>Building System Process
+</a><a href=/v5.1/guides/migration/ class=gb-sidebar-link>Changes in v5.0.1
+</a><a href=/v5.1/guides/collision_mapping/ class=gb-sidebar-link>Collision Mapping
+</a><a href=/v5.1/guides/configuration_and_settings/ class=gb-sidebar-link>Configuration & Settings
+</a><a href=/v5.1/guides/context_and_state/ class=gb-sidebar-link>Context & State
+</a><a href=/v5.1/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.1/guides/dependency_injection/ class=gb-sidebar-link>Dependency Injection System
+</a><a href=/v5.1/guides/di_container_lifecycle/ class="gb-sidebar-link active">DI container lifecycle
+</a><a href=/v5.1/guides/extending-plugin/ class=gb-sidebar-link>Extending the Plugin
+</a><a href=/v5.1/guides/grid_targeting/ class=gb-sidebar-link>Grid Targeting
+</a><a href=/v5.1/guides/indicator_setup_report/ class=gb-sidebar-link>Indicator Setup Report
+</a><a href=/v5.1/guides/input_and_actions/ class=gb-sidebar-link>Input Actions Configuration
+</a><a href=/v5.1/guides/isometric-implementation/ class=gb-sidebar-link>Isometric Implementation
+</a><a href=/v5.1/guides/manipulation_system/ class=gb-sidebar-link>Manipulation System
+</a><a href=/v5.1/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.1/guides/mode_toggle_behavior/ class=gb-sidebar-link>Mode Toggle Behavior
+</a><a href=/v5.1/guides/placement_chain/ class=gb-sidebar-link>Placement Chain
+</a><a href=/v5.1/guides/placement-persistence/ class=gb-sidebar-link>Placement Persistence
+</a><a href=/v5.1/guides/placement_rules/ class=gb-sidebar-link>Placement Rules
+</a><a href=/v5.1/guides/ class=gb-sidebar-link>Plugin Overview
+</a><a href=/v5.1/guides/project_architecture/ class=gb-sidebar-link>Project Architecture
+</a><a href=/v5.1/guides/gdunit-testing/ class=gb-sidebar-link>Running Tests (Optional)
+</a><a href=/v5.1/guides/target_informer/ class=gb-sidebar-link>TargetInformer UI Component
+</a><a href=/v5.1/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.1/guides/ui_selection_components/ class=gb-sidebar-link>UI Selection Components
+</a><a href=/v5.1/validation/ class=gb-sidebar-link>Validation Tools</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.0.0</div><a href=/v5.0/api/ class=gb-sidebar-link>GDScript API Reference
+</a><a href=/v5.0/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.0/overview/ class=gb-sidebar-link>Grid Building Plugin v5.0.0
+</a><a href=/v5.0/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.0/guides/ class=gb-sidebar-link>Plugin Overview
+</a><a href=/v5.0/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.0/validation/ class=gb-sidebar-link>Validation Tools</a></div></nav></aside><main class=gb-main><div class=gb-content><h1>DI container lifecycle</h1><p>This page documents the recommended lifecycle, ownership, and integration patterns for the <a href=../api/GBCompositionContainer/>GBCompositionContainer</a> when used as a per-player (per-character) container in the Grid Building Plugin.</p><h2 id=overview>Overview</h2><p>The intended model: each player (or character) that can build independently gets its own <a href=../api/GBCompositionContainer/>GBCompositionContainer</a>, plus an associated <a href=../api/GBInjectorSystem/>GBInjectorSystem</a> and local systems (for example, <a href=../api/IndicatorManager/>IndicatorManager</a>). This keeps state isolated, simplifies testing, and supports multiplayer / multi‑tenant scenarios.</p><h2 id=ownership-and-lifecycle-rules>Ownership and lifecycle rules</h2><ul><li>The <a href=../api/GBOwner/>GBOwner</a> (or player root) owns the container and the injector. Create the container when the player joins or when the level spawns the player, and free it when the player leaves.</li><li>The container lifetime should match the player&rsquo;s game lifetime. Avoid putting a player container under a global root.</li><li>The container should have a stable id or owner reference to make logs and validation messages clear (for example: <code>container.owner_id</code> or <code>container.owner_name</code>).</li></ul><h2 id=injector-placement-and-injection-roots>Injector placement and injection roots</h2><ul><li>Put the <a href=../api/GBInjectorSystem/>GBInjectorSystem</a> as a child of the player subtree (for example <code>player_node/Systems/GBInjectorSystem</code>).</li><li>Configure <code>injection_roots</code>, or rely on the injector being under the player subtree so injection scans are scoped to that player only. Do not use a single global injector unless you intentionally want shared wiring.</li><li>For dynamically created nodes, either:<ul><li>Create them under the player subtree so the injector will catch them; or</li><li>Call an explicit helper: <code>injector.inject_node(node)</code> after instantiation.</li></ul></li></ul><h2 id=construction-factory-recommended>Construction factory (recommended)</h2><p>Provide a single factory that assembles the per-player composition container, injector, and core systems. Examples:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#f85149>```</span>gdscript
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Pseudo-code factory</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>create_player_container</span>(player_node: <span style=color:#f0883e;font-weight:700>Node</span>) <span style=color:#ff7b72;font-weight:700>-&gt;</span> GBInjectorSystem:
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> container <span style=color:#ff7b72;font-weight:700>:=</span> GBCompositionContainer<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>new</span>()
+</span></span><span style=display:flex><span>    container<span style=color:#ff7b72;font-weight:700>.</span>owner_id <span style=color:#ff7b72;font-weight:700>=</span> player_node<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get_name</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> system_root <span style=color:#ff7b72;font-weight:700>:=</span> <span style=color:#f0883e;font-weight:700>Node</span><span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>new</span>()
+</span></span><span style=display:flex><span>    system_root<span style=color:#ff7b72;font-weight:700>.</span>name <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>&#34;GridBuildingSystem&#34;</span>
+</span></span><span style=display:flex><span>    player_node<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>add_child</span>(system_root)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> comp <span style=color:#ff7b72;font-weight:700>:=</span> preload(<span style=color:#a5d6ff>&#34;res://addons/grid_building/resources/gb_composition_container.gd&#34;</span>)<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>new</span>()
+</span></span><span style=display:flex><span>    system_root<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>add_child</span>(comp)
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Assign a prepared GBConfig resource to the container&#39;s `config` property.</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Prefer direct assignment to keep the runtime API small and explicit.</span>
+</span></span><span style=display:flex><span>    comp<span style=color:#ff7b72;font-weight:700>.</span>config <span style=color:#ff7b72;font-weight:700>=</span> prepared_config
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> injector <span style=color:#ff7b72;font-weight:700>:=</span> preload(<span style=color:#a5d6ff>&#34;res://addons/grid_building/systems/injection/gb_injector_system.gd&#34;</span>)<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>new</span>()
+</span></span><span style=display:flex><span>    injector<span style=color:#ff7b72;font-weight:700>.</span>composition_container <span style=color:#ff7b72;font-weight:700>=</span> comp
+</span></span><span style=display:flex><span>    system_root<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>add_child</span>(injector)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Initialize once the container is assigned and the injector is parented.</span>
+</span></span><span style=display:flex><span>    injector<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>initialize</span>(comp) <span style=color:#8b949e;font-style:italic># or call in _ready() / from the factory</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> injector
+</span></span></code></pre></td></tr></table></div></div><pre tabindex=0><code>
+Use this factory both in gameplay code and tests (prefer `GodotTestFactory` for core helpers, or `EnvironmentTestFactory` / `PlaceableTestFactory` for full scene-based test environments). The older `UnifiedTestFactory` pattern is deprecated.
+
+## Initialization ordering and signals
+
+- Standardize on a single initialization point. Call `injector.initialize(container)` once the container is assigned and systems are parented.
+- After validation, emit a `container_ready` (or similarly named) signal. Systems should listen for that signal rather than assuming dependencies are available immediately in `_ready()`.
+
+## Injection API &amp; recommended workflow
+
+The runtime DI surface is intentionally small and centered on three behaviors:
+
+- `GBInjectorSystem.initialize(container)` — assign the [GBCompositionContainer](../api/GBCompositionContainer/) and start the injector&#39;s initial scan. Call this once the composition container and injector are parented so that the initial injection pass runs with a stable scene hierarchy.
+- `GBInjectorSystem.inject_node(node)` — explicitly inject dependencies into nodes that are created dynamically or instantiated outside the normal player subtree. Prefer creating nodes under the player subtree so the injector picks them up automatically; use `inject_node` when that is not possible.
+- `resolve_gb_dependencies(p_container: GBCompositionContainer)` — the conventional method implemented by scripts that want dependencies injected. The injector calls this on nodes it finds; implement this on your nodes to pull only the services they need (for example, `_logger := p_container.get_logger()`).
+
+Recommended pattern:
+
+1. Factory creates [GBCompositionContainer](../api/GBCompositionContainer/) and [GBInjectorSystem](../api/GBInjectorSystem/), parents them under the player&#39;s subtree.
+2. Call `injector.initialize(container)` once the container is set and systems are parented.
+3. After any validation passes, emit a `container_ready` (or similar) signal from the factory or container owner.
+4. Nodes that are created later should either be parented under the player subtree or explicitly passed to `injector.inject_node(node)`.
+
+This keeps the runtime API stable and avoids exposing or encouraging direct mutation of the container internals.
+
+## Testing guidance
+
+- Use factory helpers (see `GodotTestFactory` or `EnvironmentTestFactory`) to create per-player containers and injectors for isolated tests.
+- Add a test that creates two containers and asserts lookups return different instances to guard against accidental singletons.
+
+Note: [IndicatorManager](../api/IndicatorManager/) uses `GridTargetingState.get_runtime_issues()` (non‑mutating) to guard indicator setup; prefer calling `get_runtime_issues()` when only diagnostics are required.
+
+## Checklist (quick)
+
+- [ ] Container created per player and freed on player leave.
+- [ ] Injector placed under the player subtree (scoped scans).
+- [ ] Use factory to assemble container, injector, and systems.
+- [ ] Call `injector.initialize(container)` after parenting; emit `container_ready` after validation.
+- [ ] Use `injector.inject_node(node)` for dynamic nodes that cannot be parented under the player subtree.
+- [ ] Tests covering multi-container isolation.
+
+## notes
+
+ - Prefer passing small services (logger, states) rather than persisting the full container on every node. Document this rule in PRs and code comments.
+ - Shared resources (templates, .tres assets) may remain global; runtime systems and states should be per‑container.
+
+If you want, I can add a small runtime helper in a follow-up PR, but the recommended pattern is to prefer the explicit `config` assignment and the injector APIs described above. A small unit test verifying container isolation already exists in the test suite; extend it if you&#39;d like the helper added later.
+</code></pre></div></main><aside class=gb-toc><div class=gb-toc-title>On this page</div><nav id=TableOfContents><ul><li><a href=#overview>Overview</a></li><li><a href=#ownership-and-lifecycle-rules>Ownership and lifecycle rules</a></li><li><a href=#injector-placement-and-injection-roots>Injector placement and injection roots</a></li><li><a href=#construction-factory-recommended>Construction factory (recommended)</a></li></ul></nav></aside><footer class=gb-footer><p>&copy; 2025 Chris Tutorials. All rights reserved.</p><p>Built with <a href=https://gohugo.io/ target=_blank>Hugo</a> and
+<a href=https://godotengine.org/ target=_blank>Godot</a>.</p></footer></div></body></html>

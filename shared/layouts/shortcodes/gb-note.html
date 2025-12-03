@@ -1,0 +1,124 @@
+{{ $type := .Get "type" | default "note" }}
+{{ $title := .Get "title" | default (cond (eq $type "note") "Note" (cond (eq $type "tip") "Tip" (cond (eq $type "warning") "Warning" (cond (eq $type "caution") "Caution" (cond (eq $type "info") "Info" "Note"))))) }}
+
+{{ if eq $type "note" }}
+<div class="gb-note gb-note-info" style="
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  border-left: 4px solid #1d4ed8;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+">
+  <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+    <span style="font-size: 1.25rem; margin-top: 0.125rem;">📝</span>
+    <div>
+      <strong style="font-weight: 600;">{{ $title }}</strong>
+      <div style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.95; line-height: 1.5;">
+        {{ .Inner }}
+      </div>
+    </div>
+  </div>
+</div>
+{{ else if eq $type "tip" }}
+<div class="gb-note gb-note-tip" style="
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  border-left: 4px solid #047857;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+">
+  <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+    <span style="font-size: 1.25rem; margin-top: 0.125rem;">💡</span>
+    <div>
+      <strong style="font-weight: 600;">{{ $title }}</strong>
+      <div style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.95; line-height: 1.5;">
+        {{ .Inner }}
+      </div>
+    </div>
+  </div>
+</div>
+{{ else if eq $type "warning" }}
+<div class="gb-note gb-note-warning" style="
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  border-left: 4px solid #dc2626;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+">
+  <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+    <span style="font-size: 1.25rem; margin-top: 0.125rem;">⚠️</span>
+    <div>
+      <strong style="font-weight: 600;">{{ $title }}</strong>
+      <div style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.95; line-height: 1.5;">
+        {{ .Inner }}
+      </div>
+    </div>
+  </div>
+</div>
+{{ else if eq $type "caution" }}
+<div class="gb-note gb-note-caution" style="
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  border-left: 4px solid #b91c1c;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+">
+  <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+    <span style="font-size: 1.25rem; margin-top: 0.125rem;">⚠️</span>
+    <div>
+      <strong style="font-weight: 600;">{{ $title }}</strong>
+      <div style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.95; line-height: 1.5;">
+        {{ .Inner }}
+      </div>
+    </div>
+  </div>
+</div>
+{{ else if eq $type "info" }}
+<div class="gb-note gb-note-info" style="
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  border-left: 4px solid #4338ca;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+">
+  <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+    <span style="font-size: 1.25rem; margin-top: 0.125rem;">ℹ️</span>
+    <div>
+      <strong style="font-weight: 600;">{{ $title }}</strong>
+      <div style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.95; line-height: 1.5;">
+        {{ .Inner }}
+      </div>
+    </div>
+  </div>
+</div>
+{{ else }}
+<div class="gb-note gb-note-default" style="
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  border-left: 4px solid #374151;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+">
+  <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+    <span style="font-size: 1.25rem; margin-top: 0.125rem;">📋</span>
+    <div>
+      <strong style="font-weight: 600;">{{ $title }}</strong>
+      <div style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.95; line-height: 1.5;">
+        {{ .Inner }}
+      </div>
+    </div>
+  </div>
+</div>
+{{ end }}

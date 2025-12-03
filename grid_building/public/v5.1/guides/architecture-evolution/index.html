@@ -1,0 +1,992 @@
+<!doctype html><html lang=en-us><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1316&amp;path=livereload" data-no-instant defer></script><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Architecture Evolution: GDScript to POCS | GridBuilding Plugin</title>
+<meta name=description content="How GridBuilding evolved from pure GDScript to clean POCS architecture"><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel=stylesheet><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css><link rel=stylesheet href=/css/custom.css><meta name=generator content="Hugo 0.146.5"></head><body><div class=gb-layout><header class=gb-header><a href=/ class=gb-brand><i class="fas fa-cubes" style=color:var(--gb-primary)></i>
+<span>GridBuilding Plugin</span></a><div class=gb-search><i class="fas fa-search"></i>
+<input type=text placeholder="Search documentation..." aria-label=Search></div><nav class=gb-nav><a href=/ class=gb-nav-link>Home
+</a><a href=/v5.1/overview/ class=gb-nav-link>Documentation
+</a><a href=/v5.1/overview/ class=gb-nav-link>Grid Building Plugin Overview
+</a><a href=/v5.1/api/ class=gb-nav-link>API Reference
+</a><a href=/v5.1/guides/ class=gb-nav-link>Getting Started Guides
+</a><a href=/v5.1/examples/ class=gb-nav-link>Examples
+</a><a href=/v5.1/examples/ class=gb-nav-link>Code Examples
+</a><a href=/community/ class=gb-nav-link>Community
+</a><a href=/v5.1/architecture-diagrams/ class=gb-nav-link>Architecture Diagrams</a></nav></header><aside class=gb-sidebar><nav class=gb-sidebar-nav><div class=gb-sidebar-section><div class=gb-sidebar-title>GridBuilding Plugin</div><a href=/gridbuilding/getting_started/ class=gb-sidebar-link>Getting Started with GridBuilding
+</a><a href=/gridbuilding/csharp_state_integration/ class=gb-sidebar-link>C# State Integration with Godot Frontend
+</a><a href=/gridbuilding/api_reference/ class=gb-sidebar-link>API Reference
+</a><a href=/gridbuilding/troubleshooting/ class=gb-sidebar-link>Troubleshooting Guide
+</a><a href=/gridbuilding/godot_integration_example/ class=gb-sidebar-link>Godot Integration Example
+</a><a href=/gridbuilding/service_based_architecture/ class=gb-sidebar-link>Service-Based Architecture</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.1.0</div><a href=/v5.1/overview/ class=gb-sidebar-link>Grid Building Plugin Overview
+</a><a href=/v5.1/guides/ class=gb-sidebar-link>Getting Started Guides
+</a><a href=/v5.1/api/ class=gb-sidebar-link>C# API Reference
+</a><a href=/v5.1/examples/ class=gb-sidebar-link>Code Examples
+</a><a href=/v5.1/architecture-diagrams/ class=gb-sidebar-link>Architecture Diagrams
+</a><a href=/v5.1/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.1/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.1/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.1/validation/ class=gb-sidebar-link>Validation Tools</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.0.0</div><a href=/v5.0/api/ class=gb-sidebar-link>GDScript API Reference
+</a><a href=/v5.0/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.0/overview/ class=gb-sidebar-link>Grid Building Plugin v5.0.0
+</a><a href=/v5.0/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.0/guides/ class=gb-sidebar-link>Plugin Overview
+</a><a href=/v5.0/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.0/validation/ class=gb-sidebar-link>Validation Tools</a></div></nav></aside><main class=gb-main><div class=gb-content><h1>Architecture Evolution: GDScript to POCS</h1><h2 id=the-transformation>The Transformation</h2><p>GridBuilding has undergone a major architectural evolution from GDScript-heavy, Godot-dependent code to a clean POCS (Pure C# Core Services) architecture with thin Godot wrappers.</p><h2 id=before-pure-gdscript-architecture>Before: Pure GDScript Architecture</h2><h3 id=what-it-looked-like>What It Looked Like</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">48
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Old: Everything in GDScript, Godot-dependent</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>extends</span> <span style=color:#f0883e;font-weight:700>Node</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>class_name</span> <span style=color:#f0883e;font-weight:700>BuildingSystem</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> buildings <span style=color:#ff7b72;font-weight:700>=</span> {}
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> grid_data <span style=color:#ff7b72;font-weight:700>=</span> {}
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> collision_map <span style=color:#ff7b72;font-weight:700>=</span> {}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>_ready</span>():
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>setup_grid</span>()
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>load_buildings</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_building</span>(building_type, position):
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># All logic in GDScript - 50+ lines</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> <span style=color:#d2a8ff;font-weight:700>validate_placement</span>(building_type, position):
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> <span style=color:#79c0ff>false</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Manual scene management</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> scene <span style=color:#ff7b72;font-weight:700>=</span> load(<span style=color:#a5d6ff>&#34;res://buildings/&#34;</span> <span style=color:#ff7b72;font-weight:700>+</span> building_type <span style=color:#ff7b72;font-weight:700>+</span> <span style=color:#a5d6ff>&#34;.tscn&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> building <span style=color:#ff7b72;font-weight:700>=</span> scene<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>instantiate</span>()
+</span></span><span style=display:flex><span>    building<span style=color:#ff7b72;font-weight:700>.</span>position <span style=color:#ff7b72;font-weight:700>=</span> position
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>add_child</span>(building)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Manual state tracking</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> building_id <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#d2a8ff;font-weight:700>generate_id</span>()
+</span></span><span style=display:flex><span>    buildings[building_id] <span style=color:#ff7b72;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a5d6ff>&#34;node&#34;</span>: building,
+</span></span><span style=display:flex><span>        <span style=color:#a5d6ff>&#34;type&#34;</span>: building_type,
+</span></span><span style=display:flex><span>        <span style=color:#a5d6ff>&#34;position&#34;</span>: position,
+</span></span><span style=display:flex><span>        <span style=color:#a5d6ff>&#34;health&#34;</span>: <span style=color:#a5d6ff>100</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Manual grid updates</span>
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>update_grid_data</span>(position, building_type)
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>update_collision_map</span>(position, building_type)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> <span style=color:#79c0ff>true</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>validate_placement</span>(building_type, position):
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Complex validation logic in GDScript</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> grid_data<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>has</span>(position):
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> <span style=color:#79c0ff>false</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> collision_map<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>has</span>(position):
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> <span style=color:#79c0ff>false</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># 20+ lines of validation...</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> <span style=color:#79c0ff>true</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=problems-with-old-architecture>Problems with Old Architecture</h3><p><strong>Note:</strong> The GDScript version performed fine for typical use cases. Performance wasn&rsquo;t noticeably problematic, but the architecture had other challenges:</p><h4 id=1-testing-challenges>1. Testing Challenges</h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Old: Hard to test GDScript code</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>test_building_placement</span>():
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Need full Godot environment</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> scene <span style=color:#ff7b72;font-weight:700>=</span> preload(<span style=color:#a5d6ff>&#34;res://tests/test_scene.tscn&#34;</span>)<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>instantiate</span>()
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>add_child</span>(scene)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> building_system <span style=color:#ff7b72;font-weight:700>=</span> scene<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get_node</span>(<span style=color:#a5d6ff>&#34;BuildingSystem&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> result <span style=color:#ff7b72;font-weight:700>=</span> building_system<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>place_building</span>(<span style=color:#a5d6ff>&#34;house&#34;</span>, <span style=color:#f0883e;font-weight:700>Vector2</span>(<span style=color:#a5d6ff>5</span>, <span style=color:#a5d6ff>5</span>))
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Complex setup and teardown</span>
+</span></span><span style=display:flex><span>    scene<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>queue_free</span>()
+</span></span></code></pre></td></tr></table></div></div><h4 id=2-code-maintenance>2. Code Maintenance</h4><ul><li><strong>Mixed Concerns</strong>: Building logic, UI, and state all mixed together</li><li><strong>Godot Dependencies</strong>: Everything tied to Godot Node system</li><li><strong>Hard to Extend</strong>: Adding new features required touching many files</li></ul><h4 id=3-limited-reusability>3. Limited Reusability</h4><ul><li><strong>Godot Lock-in</strong>: Code only worked in Godot</li><li><strong>No Engine Portability</strong>: Couldn&rsquo;t reuse for Unity or other engines</li><li><strong>Monolithic Design</strong>: Large, interconnected classes</li></ul><h2 id=after-pocs-architecture>After: POCS Architecture</h2><h3 id=what-it-looks-like-now>What It Looks Like Now</h3><h4 id=core-services-pure-c---no-godot-dependencies>Core Services (Pure C# - No Godot Dependencies)</h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// New: Pure C# business logic</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>PlacementService</span> : IPlacementService
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>private</span> <span style=color:#ff7b72>readonly</span> IPlacementValidator _validator;
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>private</span> <span style=color:#ff7b72>readonly</span> ICollisionCalculator _collisionCalculator;
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> PlacementResult ExecutePlacement(Placeable placeable, Vector2 position, GBOwner placer)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Fast C# validation</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> validationResult = _validator.ValidatePlacement(placeable, position, placer);
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> (!validationResult.IsValid)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> PlacementResult.Failed(validationResult.ErrorMessage);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Optimized collision detection</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> collisionResult = _collisionCalculator.CheckCollisions(placeable, position);
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> (collisionResult.HasCollision)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> PlacementResult.Failed(<span style=color:#a5d6ff>&#34;Position occupied&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> PlacementResult.Success(position, placeable.Type);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h4 id=state-objects-pure-data>State Objects (Pure Data)</h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// New: Clean data objects</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>BuildingState</span> : IRuntimeState
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>string</span> BuildingId { <span style=color:#ff7b72>get</span>; <span style=color:#ff7b72>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>string</span> BuildingType { <span style=color:#ff7b72>get</span>; <span style=color:#ff7b72>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> Vector2I GridPosition { <span style=color:#ff7b72>get</span>; <span style=color:#ff7b72>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> BuildingStatus Status { <span style=color:#ff7b72>get</span>; <span style=color:#ff7b72>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>int</span> Health { <span style=color:#ff7b72>get</span>; <span style=color:#ff7b72>set</span>; }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// No business logic - just data</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> UpdateTimestamp() { }
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> SetCustomData(<span style=color:#ff7b72>string</span> key, <span style=color:#ff7b72>object</span> <span style=color:#ff7b72>value</span>) { }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h4 id=godot-wrappers-thin-adapters>Godot Wrappers (Thin Adapters)</h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># New: Thin Godot wrapper</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>extends</span> <span style=color:#f0883e;font-weight:700>Node</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>class_name</span> <span style=color:#f0883e;font-weight:700>PlacementSystem</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Just forwards to C# service</span>
+</span></span><span style=display:flex><span><span style=color:#d2a8ff;font-weight:700>@onready</span> <span style=color:#ff7b72>var</span> placement_service <span style=color:#ff7b72;font-weight:700>=</span> ServiceRegistry<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get_placement_service</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_building</span>(building_type, position):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> result <span style=color:#ff7b72;font-weight:700>=</span> placement_service<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>execute_placement</span>(
+</span></span><span style=display:flex><span>        Placeable<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>new</span>(building_type), 
+</span></span><span style=display:flex><span>        position, 
+</span></span><span style=display:flex><span>        GBOwner<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>new</span>(<span style=color:#a5d6ff>&#34;player&#34;</span>)
+</span></span><span style=display:flex><span>    )
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> result<span style=color:#ff7b72;font-weight:700>.</span>success:
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic># Handle Godot-specific stuff</span>
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>spawn_building_visual</span>(result)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> result<span style=color:#ff7b72;font-weight:700>.</span>success
+</span></span></code></pre></td></tr></table></div></div><h2 id=key-improvements>Key Improvements</h2><h3 id=1-better-architecture--testing>1. Better Architecture & Testing</h3><h4 id=before-gdscript>Before (GDScript)</h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">8
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># GDScript validation</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>validate_placement</span>(building_type, position):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>for</span> x <span style=color:#ff7b72;font-weight:700>in</span> range(building_size<span style=color:#ff7b72;font-weight:700>.</span>x):
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>for</span> y <span style=color:#ff7b72;font-weight:700>in</span> range(building_size<span style=color:#ff7b72;font-weight:700>.</span>y):
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> check_pos <span style=color:#ff7b72;font-weight:700>=</span> position <span style=color:#ff7b72;font-weight:700>+</span> <span style=color:#f0883e;font-weight:700>Vector2i</span>(x, y)
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>if</span> collision_map<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>has</span>(check_pos):
+</span></span><span style=display:flex><span>                <span style=color:#ff7b72>return</span> <span style=color:#79c0ff>false</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> <span style=color:#79c0ff>true</span>
+</span></span></code></pre></td></tr></table></div></div><h4 id=after-c>After (C#)</h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// C# validation with clean architecture</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> ValidationResult ValidatePlacement(Placeable placeable, Vector2 position, GBOwner placer)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Clean separation of concerns</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> occupiedTiles = _collisionCalculator.GetOccupiedTiles(position, placeable.Size);
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> (occupiedTiles.Count &gt; <span style=color:#a5d6ff>0</span>)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> ValidationResult.Failed(<span style=color:#a5d6ff>$&#34;Position occupied: {string.Join(&#34;</span>, <span style=color:#a5d6ff>&#34;, occupiedTiles)}&#34;</span>);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> ValidationResult.Success();
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><p><strong>Architecture Improvements:</strong></p><ul><li><strong>Clean separation</strong> of concerns with dedicated services</li><li><strong>Better testability</strong> with pure C# unit tests</li><li><strong>Improved maintainability</strong> with focused, single-purpose classes</li></ul><h3 id=2-testing-revolution>2. Testing Revolution</h3><h4 id=before-complex-gdscript-tests>Before (Complex GDScript Tests)</h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Old: Required full Godot environment</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>extends</span> <span style=color:#f85149>&#34;</span><span style=color:#f0883e;font-weight:700>res</span>:<span style=color:#ff7b72;font-weight:700>//</span>addons<span style=color:#ff7b72;font-weight:700>/</span>gdunit<span style=color:#ff7b72;font-weight:700>/</span>test<span style=color:#ff7b72;font-weight:700>.</span>gd<span style=color:#a5d6ff>&#34;
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>func test_building_placement():
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>    # Complex setup
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>    var test_scene = preload(&#34;</span>res:<span style=color:#ff7b72;font-weight:700>//</span>tests<span style=color:#ff7b72;font-weight:700>/</span>test_scenes<span style=color:#ff7b72;font-weight:700>/</span>building_test<span style=color:#ff7b72;font-weight:700>.</span>tscn<span style=color:#a5d6ff>&#34;).instantiate()
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>    add_child(test_scene)
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>    
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>    var building_system = test_scene.get_node(&#34;</span>BuildingSystem<span style=color:#a5d6ff>&#34;)
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>    var result = building_system.place_building(&#34;</span>house<span style=color:#a5d6ff>&#34;, Vector2(5, 5))
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>    
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>    # Manual assertions
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>    assert(result == true, &#34;</span>Building should place<span style=color:#a5d6ff>&#34;)
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>    
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>    # Complex teardown
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>    test_scene.queue_free()
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>    await get_tree().process_frame
+</span></span></span></code></pre></td></tr></table></div></div><h4 id=after-simple-c-tests>After (Simple C# Tests)</h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// New: Pure C# unit tests</span>
+</span></span><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> PlacementService_ValidPlaceable_ReturnsSuccess()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Simple setup - no Godot needed</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> validator = <span style=color:#ff7b72>new</span> Mock&lt;IPlacementValidator&gt;();
+</span></span><span style=display:flex><span>    validator.Setup(v =&gt; v.ValidatePlacement(It.IsAny&lt;Placeable&gt;(), It.IsAny&lt;Vector2&gt;(), It.IsAny&lt;GBOwner&gt;()))
+</span></span><span style=display:flex><span>        .Returns(ValidationResult.Success());
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> service = <span style=color:#ff7b72>new</span> PlacementService(validator.Object, ...);
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> result = service.ExecutePlacement(placeable, position, placer);
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>    Assert.True(result.IsSuccess);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><p><strong>Testing Benefits:</strong></p><ul><li><strong>Faster test execution</strong> without Godot dependencies</li><li><strong>Simple setup</strong> - no complex scene preparation</li><li><strong>Easy mocking</strong> of dependencies</li><li><strong>CI/CD compatible</strong> - can run on any system</li></ul><h3 id=3-code-organization>3. Code Organization</h3><h4 id=before-mixed-concerns>Before (Mixed Concerns)</h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Old: Everything mixed together</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>extends</span> <span style=color:#f0883e;font-weight:700>Node</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>class_name</span> <span style=color:#f0883e;font-weight:700>BuildingManager</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Building logic</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_building</span>(type, pos): <span style=color:#8b949e;font-style:italic># ...</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># UI logic  </span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>update_building_ui</span>(): <span style=color:#8b949e;font-style:italic># ...</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Save/load logic</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>save_buildings</span>(): <span style=color:#8b949e;font-style:italic># ...</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Network logic</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>sync_buildings</span>(): <span style=color:#8b949e;font-style:italic># ...</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Sound effects</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>play_building_sound</span>(): <span style=color:#8b949e;font-style:italic># ...</span>
+</span></span></code></pre></td></tr></table></div></div><h4 id=after-clean-separation>After (Clean Separation)</h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// New: Single responsibility services</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>PlacementService</span>     <span style=color:#8b949e;font-style:italic>// Building placement only</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>ManipulationService</span>  <span style=color:#8b949e;font-style:italic>// Building removal only  </span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>SaveService</span>          <span style=color:#8b949e;font-style:italic>// Save/load only</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>NetworkService</span>       <span style=color:#8b949e;font-style:italic>// Network sync only</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>AudioService</span>         <span style=color:#8b949e;font-style:italic>// Sound effects only</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=4-engine-portability>4. Engine Portability</h3><h4 id=before-godot-lock-in>Before (Godot Lock-in)</h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Old: Only works in Godot</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>extends</span> <span style=color:#f0883e;font-weight:700>Node</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_building</span>(type, pos):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> scene <span style=color:#ff7b72;font-weight:700>=</span> load(<span style=color:#a5d6ff>&#34;res://buildings/&#34;</span> <span style=color:#ff7b72;font-weight:700>+</span> type <span style=color:#ff7b72;font-weight:700>+</span> <span style=color:#a5d6ff>&#34;.tscn&#34;</span>)  <span style=color:#8b949e;font-style:italic># Godot-specific</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> building <span style=color:#ff7b72;font-weight:700>=</span> scene<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>instantiate</span>()                     <span style=color:#8b949e;font-style:italic># Godot-specific</span>
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>add_child</span>(building)                                     <span style=color:#8b949e;font-style:italic># Godot-specific</span>
+</span></span></code></pre></td></tr></table></div></div><h4 id=after-engine-agnostic>After (Engine Agnostic)</h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">32
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// New: Works with any engine</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>PlacementService</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> PlacementResult ExecutePlacement(Placeable placeable, Vector2 position, GBOwner placer)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Pure C# - works in Godot, Unity, or any engine</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> ValidateAndPlace(placeable, position, placer);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Engine-specific adapters</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>GodotPlacementAdapter</span> : Node
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> HandlePlacementResult(PlacementResult result)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Godot-specific implementation</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> scene = GD.Load&lt;PackedScene&gt;(result.ScenePath);
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> node = scene.Instantiate();
+</span></span><span style=display:flex><span>        AddChild(node);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>UnityPlacementAdapter</span> : MonoBehaviour
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> HandlePlacementResult(PlacementResult result)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Unity-specific implementation</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> prefab = Resources.Load&lt;GameObject&gt;(result.ScenePath);
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> instance = Instantiate(prefab);
+</span></span><span style=display:flex><span>        instance.transform.position = result.Position.ToUnity();
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h2 id=migration-benefits-for-developers>Migration Benefits for Developers</h2><h3 id=1-simpler-gdscript-code>1. Simpler GDScript Code</h3><p>Your game code becomes much cleaner:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Before: Complex GDScript</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>extends</span> <span style=color:#f0883e;font-weight:700>Node</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_building</span>(type, pos):
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># 50+ lines of complex logic</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> <span style=color:#d2a8ff;font-weight:700>validate_grid</span>(pos):
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> <span style=color:#79c0ff>false</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> <span style=color:#d2a8ff;font-weight:700>check_resources</span>(type):
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> <span style=color:#79c0ff>false</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> <span style=color:#d2a8ff;font-weight:700>check_collision</span>(pos):
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> <span style=color:#79c0ff>false</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># ... more logic</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> scene <span style=color:#ff7b72;font-weight:700>=</span> load(<span style=color:#a5d6ff>&#34;res://buildings/&#34;</span> <span style=color:#ff7b72;font-weight:700>+</span> type <span style=color:#ff7b72;font-weight:700>+</span> <span style=color:#a5d6ff>&#34;.tscn&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> building <span style=color:#ff7b72;font-weight:700>=</span> scene<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>instantiate</span>()
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>add_child</span>(building)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># After: Clean service calls</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>extends</span> <span style=color:#f0883e;font-weight:700>Node</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_building</span>(type, pos):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> result <span style=color:#ff7b72;font-weight:700>=</span> $PlacementSystem<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>place_building</span>(type, pos)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> result<span style=color:#ff7b72;font-weight:700>.</span>success:
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>show_success_effect</span>()
+</span></span></code></pre></td></tr></table></div></div><h3 id=2-better-error-handling>2. Better Error Handling</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Before: Manual error checking</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_building</span>(type, pos):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> result <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#d2a8ff;font-weight:700>complex_placement_logic</span>(type, pos)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> result <span style=color:#ff7b72;font-weight:700>==</span> <span style=color:#ff7b72>null</span>:
+</span></span><span style=display:flex><span>        print(<span style=color:#a5d6ff>&#34;Something went wrong&#34;</span>)  <span style=color:#8b949e;font-style:italic># Vague error</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>elif</span> <span style=color:#ff7b72;font-weight:700>not</span> result<span style=color:#ff7b72;font-weight:700>.</span>success:
+</span></span><span style=display:flex><span>        print(<span style=color:#a5d6ff>&#34;Failed&#34;</span>)  <span style=color:#8b949e;font-style:italic># Still vague</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># After: Clear error messages</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_building</span>(type, pos):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> result <span style=color:#ff7b72;font-weight:700>=</span> $PlacementSystem<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>place_building</span>(type, pos)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> result<span style=color:#ff7b72;font-weight:700>.</span>success:
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>match</span> result<span style=color:#ff7b72;font-weight:700>.</span>error_type:
+</span></span><span style=display:flex><span>            <span style=color:#a5d6ff>&#34;POSITION_OCCUPIED&#34;</span>:
+</span></span><span style=display:flex><span>                <span style=color:#d2a8ff;font-weight:700>show_error</span>(<span style=color:#a5d6ff>&#34;This position is already occupied!&#34;</span>)
+</span></span><span style=display:flex><span>            <span style=color:#a5d6ff>&#34;INSUFFICIENT_RESOURCES&#34;</span>:
+</span></span><span style=display:flex><span>                <span style=color:#d2a8ff;font-weight:700>show_error</span>(<span style=color:#a5d6ff>&#34;Need &#34;</span> <span style=color:#ff7b72;font-weight:700>+</span> str(result<span style=color:#ff7b72;font-weight:700>.</span>required_resources) <span style=color:#a5d6ff>&#34; more resources&#34;</span>)
+</span></span><span style=display:flex><span>            <span style=color:#a5d6ff>&#34;INVALID_POSITION&#34;</span>:
+</span></span><span style=display:flex><span>                <span style=color:#d2a8ff;font-weight:700>show_error</span>(<span style=color:#a5d6ff>&#34;Cannot build outside the grid!&#34;</span>)
+</span></span></code></pre></td></tr></table></div></div><h3 id=3-easier-debugging>3. Easier Debugging</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Before: Hard to debug GDScript</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_building</span>(type, pos):
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Which part failed? Who knows!</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> complex_result <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#d2a8ff;font-weight:700>do_complex_stuff</span>(type, pos)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> complex_result
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># After: Clear debugging info</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_building</span>(type, pos):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> result <span style=color:#ff7b72;font-weight:700>=</span> $PlacementSystem<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>place_building</span>(type, pos)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Rich debugging information</span>
+</span></span><span style=display:flex><span>    print(<span style=color:#a5d6ff>&#34;Placement attempt: &#34;</span>, result<span style=color:#ff7b72;font-weight:700>.</span>debug_info)
+</span></span><span style=display:flex><span>    print(<span style=color:#a5d6ff>&#34;Validation time: &#34;</span>, result<span style=color:#ff7b72;font-weight:700>.</span>performance<span style=color:#ff7b72;font-weight:700>.</span>validation_time_ms, <span style=color:#a5d6ff>&#34;ms&#34;</span>)
+</span></span><span style=display:flex><span>    print(<span style=color:#a5d6ff>&#34;Collision checks: &#34;</span>, result<span style=color:#ff7b72;font-weight:700>.</span>performance<span style=color:#ff7b72;font-weight:700>.</span>collision_checks_count)
+</span></span></code></pre></td></tr></table></div></div><h2 id=real-world-performance-comparison>Real-World Performance Comparison</h2><h3 id=building-100-buildings>Building 100 Buildings</h3><h4 id=before-gdscript-1>Before (GDScript)</h4><pre tabindex=0><code>Performance: Generally fine for normal use cases
+Code Organization: Complex mixed concerns in single classes
+Testing: Difficult to test without full Godot environment
+</code></pre><h4 id=after-pocs>After (POCS)</h4><pre tabindex=0><code>Performance: Maintains good performance with cleaner code
+Code Organization: Clean separation of services and responsibilities
+Testing: Easy unit testing without Godot dependencies
+</code></pre><h3 id=startup-time>Startup Time</h3><h4 id=before-gdscript-2>Before (GDScript)</h4><pre tabindex=0><code>Initialization: Standard Godot node setup
+Code Organization: Everything in large monolithic classes
+Development: Complex debugging in mixed-concern code
+</code></pre><h4 id=after-pocs-1>After (POCS)</h4><pre tabindex=0><code>Initialization: Service registration and setup
+Code Organization: Clean, focused service classes
+Development: Easier debugging with separated concerns
+</code></pre><h2 id=future-benefits>Future Benefits</h2><h3 id=1-easy-feature-addition>1. Easy Feature Addition</h3><p>Adding new building features is now simple:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">8
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Add new service for new feature</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>BuildingUpgradeService</span> : IBuildingUpgradeService
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> UpgradeResult UpgradeBuilding(<span style=color:#ff7b72>string</span> buildingId, UpgradeType upgrade)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Clean, isolated logic</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h3 id=2-multi-engine-support>2. Multi-Engine Support</h3><p>Same core services can power different engines:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">8
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Core logic shared</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> placementService = <span style=color:#ff7b72>new</span> PlacementService(...);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Godot adapter</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> godotAdapter = <span style=color:#ff7b72>new</span> GodotPlacementAdapter(placementService);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Unity adapter  </span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> unityAdapter = <span style=color:#ff7b72>new</span> UnityPlacementAdapter(placementService);
+</span></span></code></pre></td></tr></table></div></div><h3 id=3-advanced-testing>3. Advanced Testing</h3><p>Complex scenarios are easy to test:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> StressTest_1000Placements_CompletesUnder1Second()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> service = <span style=color:#ff7b72>new</span> PlacementService(...);
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> stopwatch = Stopwatch.StartNew();
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>for</span> (<span style=color:#ff7b72>int</span> i = <span style=color:#a5d6ff>0</span>; i &lt; <span style=color:#a5d6ff>1000</span>; i++)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> result = service.ExecutePlacement(placeable, position, placer);
+</span></span><span style=display:flex><span>        Assert.True(result.IsSuccess);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    stopwatch.Stop();
+</span></span><span style=display:flex><span>    Assert.True(stopwatch.ElapsedMilliseconds &lt; <span style=color:#a5d6ff>1000</span>);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h2 id=migration-summary>Migration Summary</h2><table><thead><tr><th>Aspect</th><th>Before (GDScript)</th><th>After (POCS)</th><th>Improvement</th></tr></thead><tbody><tr><td><strong>Performance</strong></td><td>GDScript execution speed</td><td>Optimized C# services</td><td>Improved performance with better algorithms</td></tr><tr><td><strong>Testing</strong></td><td>Complex GDUnit setup</td><td>Simple C# unit tests</td><td>Easier and faster testing</td></tr><tr><td><strong>Code Quality</strong></td><td>Mixed concerns in large classes</td><td>Clean service separation</td><td>Better maintainability</td></tr><tr><td><strong>Engine Support</strong></td><td>Godot-only implementation</td><td>Engine-agnostic core</td><td>Multi-engine compatibility</td></tr><tr><td><strong>Error Handling</strong></td><td>Manual error checking</td><td>Rich error information</td><td>Better debugging experience</td></tr><tr><td><strong>Memory Usage</strong></td><td>GDScript memory management</td><td>Optimized C# collections</td><td>More efficient memory usage</td></tr><tr><td><strong>Development Speed</strong></td><td>Complex GDScript debugging</td><td>Simplified service calls</td><td>Faster development workflow</td></tr></tbody></table><h2 id=what-this-means-for-you>What This Means for You</h2><h3 id=immediate-benefits>Immediate Benefits</h3><ul><li><strong>Faster Development</strong>: Your GDScript code is simpler and cleaner</li><li><strong>Better Performance</strong>: Improved algorithms and optimized data structures</li><li><strong>Easier Debugging</strong>: Clear error messages and better error information</li><li><strong>Reliable Building</strong>: Cleaner architecture reduces bugs and edge cases</li></ul><h3 id=long-term-benefits>Long-term Benefits</h3><ul><li><strong>Future-Proof</strong>: Easy to add new features and engines</li><li><strong>Professional Quality</strong>: Industry-standard architecture</li><li><strong>Team Ready</strong>: Easy for other developers to understand</li><li><strong>Scalable</strong>: Handles large projects without performance issues</li></ul><p>The evolution from GDScript-heavy to POCS architecture represents a fundamental improvement in how building systems are developed. You get the power and performance of C# while keeping your Godot code simple and focused on game logic.</p><p>This isn&rsquo;t just an architectural change - it&rsquo;s a complete transformation in development experience and code quality!</p><h2 id=state-management-migration-owner-context-to-service-instance>State Management Migration: Owner Context to Service Instance</h2><h3 id=the-problem-with-owner-context-pattern>The Problem with Owner Context Pattern</h3><h4 id=before-owner-context-dependencies>Before: Owner Context Dependencies</h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Old: State with problematic owner context</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>GridTargetingState</span> : IGridTargetingState
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>private</span> IOwnerContext? _ownerContext;  <span style=color:#8b949e;font-style:italic>// ❌ Non-existent interface</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>private</span> <span style=color:#ff7b72>object?</span> _collider;
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>private</span> <span style=color:#ff7b72>object?</span> _target;
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Constructor required owner context</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> GridTargetingState(IOwnerContext ownerContext)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        _ownerContext = ownerContext;  <span style=color:#8b949e;font-style:italic>// ❌ Creates tight coupling</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Methods depended on owner context</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>bool</span> ValidateState()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> _ownerContext != <span style=color:#79c0ff>null</span> &amp;&amp; _targetMap != <span style=color:#79c0ff>null</span>;  <span style=color:#8b949e;font-style:italic>// ❌ brittle</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><p><strong>Problems with Owner Context:</strong></p><ul><li><strong>Tight Coupling</strong>: State objects bound to specific owner implementations</li><li><strong>Testing Complexity</strong>: Need to mock or create owner contexts for tests</li><li><strong>Engine Dependencies</strong>: Owner contexts often contain engine-specific data</li><li><strong>Scope Confusion</strong>: Unclear which &ldquo;owner&rdquo; applies in complex scenarios</li></ul><h3 id=the-solution-service-instance-scoping>The Solution: Service Instance Scoping</h3><h4 id=after-service-instance-pattern>After: Service Instance Pattern</h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">39
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// New: Clean state without owner dependencies</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>GridTargetingState</span> : IGridTargetingState
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// ✅ Pure data - no owner context needed</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>private</span> <span style=color:#ff7b72>object?</span> _collider;
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>private</span> <span style=color:#ff7b72>object?</span> _target;
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>private</span> Vector2I _currentTargetTile = Vector2I.Zero;
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>private</span> <span style=color:#ff7b72>bool</span> _isManualTargetingActive = <span style=color:#79c0ff>false</span>;
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// ✅ Simple constructor</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> GridTargetingState()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        _lastUpdated = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// ✅ Clean validation without owner dependencies</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>bool</span> ValidateState()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> _targetMap != <span style=color:#79c0ff>null</span>;  <span style=color:#8b949e;font-style:italic>// Simple, testable</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Service manages scope through instance isolation</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>GridTargetingService</span> : IGridTargetingService
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// ✅ Service instance = scope boundary</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>private</span> <span style=color:#ff7b72>readonly</span> Dictionary&lt;<span style=color:#ff7b72>object</span>, Vector2I&gt; _componentStates = <span style=color:#ff7b72>new</span>();
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>private</span> Vector2I _currentTargetTile = Vector2I.Zero;
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// ✅ Component-based tracking instead of owner context</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> SetTargetTile(Vector2I position)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> oldTarget = _currentTargetTile;
+</span></span><span style=display:flex><span>        _currentTargetTile = position;
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// ✅ Event-driven state changes</span>
+</span></span><span style=display:flex><span>        TargetingStateChanged?.Invoke(<span style=color:#ff7b72>this</span>, <span style=color:#ff7b72>new</span> TargetingStateChangedEventArgs(...));
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h3 id=migration-benefits>Migration Benefits</h3><h4 id=1-cleaner-architecture>1. <strong>Cleaner Architecture</strong></h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Before: Complex owner relationships</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> state = <span style=color:#ff7b72>new</span> GridTargetingState(someComplexOwnerContext);
+</span></span><span style=display:flex><span>state.SetTarget(someTarget); <span style=color:#8b949e;font-style:italic>// Owner context affects behavior</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// After: Simple service scoping</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> targetingService = <span style=color:#ff7b72>new</span> GridTargetingService(); <span style=color:#8b949e;font-style:italic>// Service = scope</span>
+</span></span><span style=display:flex><span>targetingService.SetTargetTile(position); <span style=color:#8b949e;font-style:italic>// Clear, predictable behavior</span>
+</span></span></code></pre></td></tr></table></div></div><h4 id=2-better-testing>2. <strong>Better Testing</strong></h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Before: Complex test setup</span>
+</span></span><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> TestTargetingState()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> mockOwner = <span style=color:#ff7b72>new</span> Mock&lt;IOwnerContext&gt;(); <span style=color:#8b949e;font-style:italic>// Complex mocking</span>
+</span></span><span style=display:flex><span>    mockOwner.Setup(o =&gt; o.IsValid).Returns(<span style=color:#79c0ff>true</span>);
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> state = <span style=color:#ff7b72>new</span> GridTargetingState(mockOwner.Object);
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// ... complex setup continues</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// After: Simple test setup</span>
+</span></span><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> TestTargetingState()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> state = <span style=color:#ff7b72>new</span> GridTargetingState(); <span style=color:#8b949e;font-style:italic>// ✅ Simple construction</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> result = state.SetTarget(target);  <span style=color:#8b949e;font-style:italic>// ✅ Direct testing</span>
+</span></span><span style=display:flex><span>    Assert.Equal(target, result);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h4 id=3-engine-agnostic-design>3. <strong>Engine Agnostic Design</strong></h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Before: Owner context tied to engine</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>interface</span> <span style=color:#f0883e;font-weight:700>IOwnerContext</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    Godot.Node GetGodotNode();  <span style=color:#8b949e;font-style:italic>// ❌ Engine-specific</span>
+</span></span><span style=display:flex><span>    Unity.MonoBehaviour GetUnityComponent(); <span style=color:#8b949e;font-style:italic>// ❌ Engine-specific</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// After: Service pattern works with any engine</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>GridTargetingService</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>private</span> <span style=color:#ff7b72>readonly</span> Dictionary&lt;<span style=color:#ff7b72>object</span>, Vector2I&gt; _componentStates;
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// ✅ Works with Godot, Unity, or any engine</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> RegisterComponent(<span style=color:#ff7b72>object</span> component, Vector2I position)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        _componentStates[component] = position;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h4 id=4-clear-scope-management>4. <strong>Clear Scope Management</strong></h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">9
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Before: Unclear scope boundaries</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> owner1 = <span style=color:#ff7b72>new</span> PlayerOwnerContext();
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> owner2 = <span style=color:#ff7b72>new</span> AIOwnerContext();
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> state = <span style=color:#ff7b72>new</span> GridTargetingState(owner1); <span style=color:#8b949e;font-style:italic>// Which scope applies?</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// After: Clear service instance boundaries</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> playerTargeting = <span style=color:#ff7b72>new</span> GridTargetingService(); <span style=color:#8b949e;font-style:italic>// Player scope</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> aiTargeting = <span style=color:#ff7b72>new</span> GridTargetingService();     <span style=color:#8b949e;font-style:italic>// AI scope</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Each service manages its own state independently</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=implementation-patterns>Implementation Patterns</h3><h4 id=1-service-instance--scope>1. <strong>Service Instance = Scope</strong></h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Each service instance provides natural isolation</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>GridTargetingService</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Service-level state management</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>private</span> <span style=color:#ff7b72>readonly</span> Dictionary&lt;<span style=color:#ff7b72>object</span>, Vector2I&gt; _componentStates = <span style=color:#ff7b72>new</span>();
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Multiple services = multiple scopes</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>static</span> GridTargetingService CreatePlayerScope() =&gt; <span style=color:#ff7b72>new</span>();
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>static</span> GridTargetingService CreateAIScope() =&gt; <span style=color:#ff7b72>new</span>();
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h4 id=2-component-based-tracking>2. <strong>Component-Based Tracking</strong></h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Track components by object reference, not owner hierarchy</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>private</span> <span style=color:#ff7b72>readonly</span> Dictionary&lt;<span style=color:#ff7b72>object</span>, Vector2I&gt; _componentStates = <span style=color:#ff7b72>new</span>();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Works with any component type</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> RegisterComponent(<span style=color:#ff7b72>object</span> component, Vector2I position)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    _componentStates[component] = position;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Engine-agnostic component identification</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> Vector2I GetComponentPosition(<span style=color:#ff7b72>object</span> component)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> _componentStates.TryGetValue(component, <span style=color:#ff7b72>out</span> <span style=color:#ff7b72>var</span> pos) ? pos : Vector2I.Zero;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h4 id=3-event-driven-updates>3. <strong>Event-Driven Updates</strong></h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// State changes communicated through events</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>event</span> EventHandler&lt;TargetingStateChangedEventArgs&gt;? TargetingStateChanged;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> SetTargetTile(Vector2I position)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> oldTarget = _currentTargetTile;
+</span></span><span style=display:flex><span>    _currentTargetTile = position;
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Notify interested parties without owner coupling</span>
+</span></span><span style=display:flex><span>    TargetingStateChanged?.Invoke(<span style=color:#ff7b72>this</span>, <span style=color:#ff7b72>new</span> TargetingStateChangedEventArgs(oldTarget, _currentTargetTile));
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h3 id=migration-checklist>Migration Checklist</h3><h4 id=-what-we-fixed>✅ <strong>What We Fixed</strong></h4><ul><li>Removed <code>IOwnerContext</code> dependency from <code>GridTargetingState</code></li><li>Implemented explicit interface methods for property conflicts</li><li>Added proper event implementations</li><li>Simplified validation logic</li></ul><h4 id=-architecture-consistency>✅ <strong>Architecture Consistency</strong></h4><ul><li>All Core states now follow same pattern: pure data containers</li><li>Service instances provide scope boundaries</li><li>Component-based tracking replaces owner hierarchies</li><li>Event-driven communication replaces direct owner calls</li></ul><h4 id=-testing-improvements>✅ <strong>Testing Improvements</strong></h4><ul><li>Simple construction without complex dependencies</li><li>Direct method testing without mocking</li><li>Clear isolation between test scenarios</li><li>Engine-agnostic test setup</li></ul><h3 id=real-world-impact>Real-World Impact</h3><h4 id=before-migration>Before Migration</h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Complex, tightly coupled code</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> ownerContext = <span style=color:#ff7b72>new</span> ComplexOwnerContext(player, grid, ui, network);
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> state = <span style=color:#ff7b72>new</span> GridTargetingState(ownerContext);
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> result = state.ValidateState(); <span style=color:#8b949e;font-style:italic>// Depends on multiple systems</span>
+</span></span></code></pre></td></tr></table></div></div><h4 id=after-migration>After Migration</h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Simple, decoupled code</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> targetingService = <span style=color:#ff7b72>new</span> GridTargetingService(); <span style=color:#8b949e;font-style:italic>// Service = scope</span>
+</span></span><span style=display:flex><span>targetingService.UpdateGridNavigation(gridData);   <span style=color:#8b949e;font-style:italic>// Clear dependencies</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> result = targetingService.ValidatePosition(position); <span style=color:#8b949e;font-style:italic>// Predictable behavior</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>Key Insight</strong>: <strong>Service instance boundaries provide cleaner scope management than owner context hierarchies.</strong></p><p>This migration represents a fundamental improvement in state management architecture - moving from complex owner relationships to simple, predictable service instance scoping that works across any engine or framework.</p></div></main><aside class=gb-toc><div class=gb-toc-title>On this page</div><nav id=TableOfContents><ul><li><a href=#the-transformation>The Transformation</a></li><li><a href=#before-pure-gdscript-architecture>Before: Pure GDScript Architecture</a><ul><li><a href=#what-it-looked-like>What It Looked Like</a></li><li><a href=#problems-with-old-architecture>Problems with Old Architecture</a><ul><li><a href=#1-testing-challenges>1. Testing Challenges</a></li><li><a href=#2-code-maintenance>2. Code Maintenance</a></li><li><a href=#3-limited-reusability>3. Limited Reusability</a></li></ul></li></ul></li><li><a href=#after-pocs-architecture>After: POCS Architecture</a><ul><li><a href=#what-it-looks-like-now>What It Looks Like Now</a><ul><li><a href=#core-services-pure-c---no-godot-dependencies>Core Services (Pure C# - No Godot Dependencies)</a></li><li><a href=#state-objects-pure-data>State Objects (Pure Data)</a></li><li><a href=#godot-wrappers-thin-adapters>Godot Wrappers (Thin Adapters)</a></li></ul></li></ul></li><li><a href=#key-improvements>Key Improvements</a><ul><li><a href=#1-better-architecture--testing>1. Better Architecture & Testing</a><ul><li><a href=#before-gdscript>Before (GDScript)</a></li><li><a href=#after-c>After (C#)</a></li></ul></li><li><a href=#2-testing-revolution>2. Testing Revolution</a><ul><li><a href=#before-complex-gdscript-tests>Before (Complex GDScript Tests)</a></li><li><a href=#after-simple-c-tests>After (Simple C# Tests)</a></li></ul></li><li><a href=#3-code-organization>3. Code Organization</a><ul><li><a href=#before-mixed-concerns>Before (Mixed Concerns)</a></li><li><a href=#after-clean-separation>After (Clean Separation)</a></li></ul></li><li><a href=#4-engine-portability>4. Engine Portability</a><ul><li><a href=#before-godot-lock-in>Before (Godot Lock-in)</a></li><li><a href=#after-engine-agnostic>After (Engine Agnostic)</a></li></ul></li></ul></li><li><a href=#migration-benefits-for-developers>Migration Benefits for Developers</a><ul><li><a href=#1-simpler-gdscript-code>1. Simpler GDScript Code</a></li><li><a href=#2-better-error-handling>2. Better Error Handling</a></li><li><a href=#3-easier-debugging>3. Easier Debugging</a></li></ul></li><li><a href=#real-world-performance-comparison>Real-World Performance Comparison</a><ul><li><a href=#building-100-buildings>Building 100 Buildings</a><ul><li><a href=#before-gdscript-1>Before (GDScript)</a></li><li><a href=#after-pocs>After (POCS)</a></li></ul></li><li><a href=#startup-time>Startup Time</a><ul><li><a href=#before-gdscript-2>Before (GDScript)</a></li><li><a href=#after-pocs-1>After (POCS)</a></li></ul></li></ul></li><li><a href=#future-benefits>Future Benefits</a><ul><li><a href=#1-easy-feature-addition>1. Easy Feature Addition</a></li><li><a href=#2-multi-engine-support>2. Multi-Engine Support</a></li><li><a href=#3-advanced-testing>3. Advanced Testing</a></li></ul></li><li><a href=#migration-summary>Migration Summary</a></li><li><a href=#what-this-means-for-you>What This Means for You</a><ul><li><a href=#immediate-benefits>Immediate Benefits</a></li><li><a href=#long-term-benefits>Long-term Benefits</a></li></ul></li><li><a href=#state-management-migration-owner-context-to-service-instance>State Management Migration: Owner Context to Service Instance</a><ul><li><a href=#the-problem-with-owner-context-pattern>The Problem with Owner Context Pattern</a><ul><li><a href=#before-owner-context-dependencies>Before: Owner Context Dependencies</a></li></ul></li><li><a href=#the-solution-service-instance-scoping>The Solution: Service Instance Scoping</a><ul><li><a href=#after-service-instance-pattern>After: Service Instance Pattern</a></li></ul></li><li><a href=#migration-benefits>Migration Benefits</a><ul><li><a href=#1-cleaner-architecture>1. <strong>Cleaner Architecture</strong></a></li><li><a href=#2-better-testing>2. <strong>Better Testing</strong></a></li><li><a href=#3-engine-agnostic-design>3. <strong>Engine Agnostic Design</strong></a></li><li><a href=#4-clear-scope-management>4. <strong>Clear Scope Management</strong></a></li></ul></li><li><a href=#implementation-patterns>Implementation Patterns</a><ul><li><a href=#1-service-instance--scope>1. <strong>Service Instance = Scope</strong></a></li><li><a href=#2-component-based-tracking>2. <strong>Component-Based Tracking</strong></a></li><li><a href=#3-event-driven-updates>3. <strong>Event-Driven Updates</strong></a></li></ul></li><li><a href=#migration-checklist>Migration Checklist</a><ul><li><a href=#-what-we-fixed>✅ <strong>What We Fixed</strong></a></li><li><a href=#-architecture-consistency>✅ <strong>Architecture Consistency</strong></a></li><li><a href=#-testing-improvements>✅ <strong>Testing Improvements</strong></a></li></ul></li><li><a href=#real-world-impact>Real-World Impact</a><ul><li><a href=#before-migration>Before Migration</a></li><li><a href=#after-migration>After Migration</a></li></ul></li></ul></li></ul></nav></aside><footer class=gb-footer><p>&copy; 2025 Chris Tutorials. All rights reserved.</p><p>Built with <a href=https://gohugo.io/ target=_blank>Hugo</a> and
+<a href=https://godotengine.org/ target=_blank>Godot</a>.</p></footer></div></body></html>

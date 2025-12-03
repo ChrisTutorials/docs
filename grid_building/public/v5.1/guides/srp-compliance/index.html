@@ -1,0 +1,968 @@
+<!doctype html><html lang=en-us><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1316&amp;path=livereload" data-no-instant defer></script><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Clean Code Principles | GridBuilding Plugin</title>
+<meta name=description content="How to write clean, maintainable code with GridBuilding"><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel=stylesheet><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css><link rel=stylesheet href=/css/custom.css><meta name=generator content="Hugo 0.146.5"></head><body><div class=gb-layout><header class=gb-header><a href=/ class=gb-brand><i class="fas fa-cubes" style=color:var(--gb-primary)></i>
+<span>GridBuilding Plugin</span></a><div class=gb-search><i class="fas fa-search"></i>
+<input type=text placeholder="Search documentation..." aria-label=Search></div><nav class=gb-nav><a href=/ class=gb-nav-link>Home
+</a><a href=/v5.1/overview/ class=gb-nav-link>Documentation
+</a><a href=/v5.1/overview/ class=gb-nav-link>Grid Building Plugin Overview
+</a><a href=/v5.1/api/ class=gb-nav-link>API Reference
+</a><a href=/v5.1/guides/ class=gb-nav-link>Getting Started Guides
+</a><a href=/v5.1/examples/ class=gb-nav-link>Examples
+</a><a href=/v5.1/examples/ class=gb-nav-link>Code Examples
+</a><a href=/community/ class=gb-nav-link>Community
+</a><a href=/v5.1/architecture-diagrams/ class=gb-nav-link>Architecture Diagrams</a></nav></header><aside class=gb-sidebar><nav class=gb-sidebar-nav><div class=gb-sidebar-section><div class=gb-sidebar-title>GridBuilding Plugin</div><a href=/gridbuilding/getting_started/ class=gb-sidebar-link>Getting Started with GridBuilding
+</a><a href=/gridbuilding/csharp_state_integration/ class=gb-sidebar-link>C# State Integration with Godot Frontend
+</a><a href=/gridbuilding/api_reference/ class=gb-sidebar-link>API Reference
+</a><a href=/gridbuilding/troubleshooting/ class=gb-sidebar-link>Troubleshooting Guide
+</a><a href=/gridbuilding/godot_integration_example/ class=gb-sidebar-link>Godot Integration Example
+</a><a href=/gridbuilding/service_based_architecture/ class=gb-sidebar-link>Service-Based Architecture</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.1.0</div><a href=/v5.1/overview/ class=gb-sidebar-link>Grid Building Plugin Overview
+</a><a href=/v5.1/guides/ class=gb-sidebar-link>Getting Started Guides
+</a><a href=/v5.1/api/ class=gb-sidebar-link>C# API Reference
+</a><a href=/v5.1/examples/ class=gb-sidebar-link>Code Examples
+</a><a href=/v5.1/architecture-diagrams/ class=gb-sidebar-link>Architecture Diagrams
+</a><a href=/v5.1/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.1/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.1/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.1/validation/ class=gb-sidebar-link>Validation Tools</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.0.0</div><a href=/v5.0/api/ class=gb-sidebar-link>GDScript API Reference
+</a><a href=/v5.0/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.0/overview/ class=gb-sidebar-link>Grid Building Plugin v5.0.0
+</a><a href=/v5.0/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.0/guides/ class=gb-sidebar-link>Plugin Overview
+</a><a href=/v5.0/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.0/validation/ class=gb-sidebar-link>Validation Tools</a></div></nav></aside><main class=gb-main><div class=gb-content><h1>Clean Code Principles</h1><h1 id=clean-code-principles>Clean Code Principles</h1><h2 id=overview>Overview</h2><p>GridBuilding is built with clean code principles to make your development easier. This guide shows you how to write clean, maintainable code when using the building system.</p><h2 id=what-this-means-for-you>What This Means for You</h2><h3 id=simple-godot-scripts>Simple Godot Scripts</h3><p>Your code stays focused on game logic, not building system complexity:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ✅ GOOD: Clean, focused code</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>extends</span> <span style=color:#f0883e;font-weight:700>Node</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_building</span>(building_type, position):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> result <span style=color:#ff7b72;font-weight:700>=</span> $PlacementSystem<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>place_building</span>(building_type, position, <span style=color:#a5d6ff>&#34;player&#34;</span>)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> result<span style=color:#ff7b72;font-weight:700>.</span>success:
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>show_success_effect</span>(position)
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>update_resources</span>(<span style=color:#ff7b72;font-weight:700>-</span><span style=color:#d2a8ff;font-weight:700>get_building_cost</span>(building_type))
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>else</span>:
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>show_error</span>(result<span style=color:#ff7b72;font-weight:700>.</span>error)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ❌ AVOID: Complex mixed concerns</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>extends</span> <span style=color:#f0883e;font-weight:700>Node</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_building</span>(building_type, position):
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Don&#39;t mix building logic with game logic</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> <span style=color:#d2a8ff;font-weight:700>validate_grid_position</span>(position):
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> <span style=color:#79c0ff>false</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> <span style=color:#d2a8ff;font-weight:700>check_player_resources</span>(<span style=color:#d2a8ff;font-weight:700>get_building_cost</span>(building_type)):
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> <span style=color:#79c0ff>false</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> <span style=color:#d2a8ff;font-weight:700>check_building_unlocked</span>(building_type):
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> <span style=color:#79c0ff>false</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># 20+ lines of building system logic...</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=key-principles>Key Principles</h2><h3 id=1-single-responsibility>1. Single Responsibility</h3><p>Each function does one thing well:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">33
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ✅ GOOD: Single purpose functions</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>handle_building_placement</span>(building_type, position):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> result <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#d2a8ff;font-weight:700>attempt_placement</span>(building_type, position)
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>handle_placement_result</span>(result)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>attempt_placement</span>(building_type, position):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> $PlacementSystem<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>place_building</span>(building_type, position, <span style=color:#a5d6ff>&#34;player&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>handle_placement_result</span>(result):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> result<span style=color:#ff7b72;font-weight:700>.</span>success:
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>celebrate_placement</span>()
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>else</span>:
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>show_placement_error</span>(result<span style=color:#ff7b72;font-weight:700>.</span>error)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ❌ AVOID: Functions doing too much</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>handle_building_placement</span>(building_type, position):
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Validation, placement, UI updates, resource management...</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> <span style=color:#d2a8ff;font-weight:700>validate_grid_position</span>(position):
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>show_error</span>(<span style=color:#a5d6ff>&#34;Invalid position&#34;</span>)
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> <span style=color:#d2a8ff;font-weight:700>check_resources</span>(building_type):
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>show_error</span>(<span style=color:#a5d6ff>&#34;Not enough resources&#34;</span>)
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> result <span style=color:#ff7b72;font-weight:700>=</span> $PlacementSystem<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>place_building</span>(building_type, position, <span style=color:#a5d6ff>&#34;player&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> result<span style=color:#ff7b72;font-weight:700>.</span>success:
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>update_ui</span>()
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>play_sound</span>()
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>show_particles</span>()
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>save_game</span>()
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>unlock_achievements</span>()
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic># ... more mixed concerns</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=2-clear-naming>2. Clear Naming</h3><p>Use descriptive names that explain what code does:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ✅ GOOD: Clear, descriptive names</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>can_player_afford_building</span>(building_type):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> resource_manager<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get_resources</span>() <span style=color:#ff7b72;font-weight:700>&gt;=</span> <span style=color:#d2a8ff;font-weight:700>get_building_cost</span>(building_type)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>is_position_valid_for_building</span>(building_type, grid_position):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> $PlacementSystem<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>can_place_building</span>(building_type, grid_position)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>handle_successful_placement</span>(building_data):
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>spawn_placement_effects</span>(building_data<span style=color:#ff7b72;font-weight:700>.</span>position)
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>deduct_building_cost</span>(building_data<span style=color:#ff7b72;font-weight:700>.</span>type)
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>update_building_statistics</span>(building_data<span style=color:#ff7b72;font-weight:700>.</span>type)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ❌ AVOID: Unclear names</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>check</span>(type, pos):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> resource_manager<span style=color:#ff7b72;font-weight:700>.</span>gold <span style=color:#ff7b72;font-weight:700>&gt;=</span> costs[type] <span style=color:#ff7b72;font-weight:700>and</span> $PlacementSystem<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>validate</span>(pos)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>do_stuff</span>(result):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> result<span style=color:#ff7b72;font-weight:700>.</span>ok:
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>make_effects</span>()
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>take_money</span>()
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>update_stats</span>()
+</span></span></code></pre></td></tr></table></div></div><h3 id=3-small-functions>3. Small Functions</h3><p>Keep functions short and focused:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">44
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ✅ GOOD: Small, focused functions</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_building_at_cursor</span>(building_type):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> grid_pos <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#d2a8ff;font-weight:700>get_cursor_grid_position</span>()
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> <span style=color:#d2a8ff;font-weight:700>can_place_building_here</span>(building_type, grid_pos):
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>show_invalid_placement_feedback</span>()
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>place_building</span>(building_type, grid_pos)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>can_place_building_here</span>(building_type, grid_pos):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> <span style=color:#d2a8ff;font-weight:700>is_within_grid_bounds</span>(grid_pos) <span style=color:#ff7b72;font-weight:700>and</span> 
+</span></span><span style=display:flex><span>           $PlacementSystem<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>can_place_building</span>(building_type, grid_pos) <span style=color:#ff7b72;font-weight:700>and</span>
+</span></span><span style=display:flex><span>           <span style=color:#d2a8ff;font-weight:700>player_has_required_resources</span>(building_type)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>show_invalid_placement_feedback</span>():
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>play_error_sound</span>()
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>shake_camera</span>()
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>show_tooltip</span>(<span style=color:#a5d6ff>&#34;Cannot build here&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ❌ AVOID: Large functions</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_building_at_cursor</span>(building_type):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> grid_pos <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#d2a8ff;font-weight:700>get_cursor_grid_position</span>()
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Too much logic in one function</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> grid_pos<span style=color:#ff7b72;font-weight:700>.</span>x <span style=color:#ff7b72;font-weight:700>&lt;</span> <span style=color:#a5d6ff>0</span> <span style=color:#ff7b72;font-weight:700>or</span> grid_pos<span style=color:#ff7b72;font-weight:700>.</span>y <span style=color:#ff7b72;font-weight:700>&lt;</span> <span style=color:#a5d6ff>0</span> <span style=color:#ff7b72;font-weight:700>or</span> grid_pos<span style=color:#ff7b72;font-weight:700>.</span>x <span style=color:#ff7b72;font-weight:700>&gt;=</span> GRID_WIDTH <span style=color:#ff7b72;font-weight:700>or</span> grid_pos<span style=color:#ff7b72;font-weight:700>.</span>y <span style=color:#ff7b72;font-weight:700>&gt;=</span> GRID_HEIGHT:
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>play_error_sound</span>()
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>shake_camera</span>()
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>show_tooltip</span>(<span style=color:#a5d6ff>&#34;Out of bounds&#34;</span>)
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> $PlacementSystem<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>can_place_building</span>(building_type, grid_pos):
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>play_error_sound</span>()
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>shake_camera</span>()
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>show_tooltip</span>(<span style=color:#a5d6ff>&#34;Position occupied&#34;</span>)
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> resource_manager<span style=color:#ff7b72;font-weight:700>.</span>gold <span style=color:#ff7b72;font-weight:700>&lt;</span> building_costs[building_type]:
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>play_error_sound</span>()
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>shake_camera</span>()
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>show_tooltip</span>(<span style=color:#a5d6ff>&#34;Not enough gold&#34;</span>)
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># ... more logic</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=practical-examples>Practical Examples</h2><h3 id=building-manager-pattern>Building Manager Pattern</h3><h4 id=clean-building-manager>Clean Building Manager</h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">51
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">52
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">53
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">54
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">55
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">56
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">57
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">58
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#ff7b72>extends</span> <span style=color:#f0883e;font-weight:700>Node</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>class_name</span> <span style=color:#f0883e;font-weight:700>BuildingManager</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Service references</span>
+</span></span><span style=display:flex><span><span style=color:#d2a8ff;font-weight:700>@onready</span> <span style=color:#ff7b72>var</span> placement_service <span style=color:#ff7b72;font-weight:700>=</span> $PlacementService
+</span></span><span style=display:flex><span><span style=color:#d2a8ff;font-weight:700>@onready</span> <span style=color:#ff7b72>var</span> manipulation_service <span style=color:#ff7b72;font-weight:700>=</span> $ManipulationService
+</span></span><span style=display:flex><span><span style=color:#d2a8ff;font-weight:700>@onready</span> <span style=color:#ff7b72>var</span> resource_manager <span style=color:#ff7b72;font-weight:700>=</span> $ResourceManager
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Public interface - simple and clear</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>can_place_building</span>(building_type, position):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> <span style=color:#d2a8ff;font-weight:700>is_position_valid</span>(position) <span style=color:#ff7b72;font-weight:700>and</span> 
+</span></span><span style=display:flex><span>           <span style=color:#d2a8ff;font-weight:700>player_can_afford</span>(building_type) <span style=color:#ff7b72;font-weight:700>and</span>
+</span></span><span style=display:flex><span>           <span style=color:#d2a8ff;font-weight:700>building_is_unlocked</span>(building_type)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_building</span>(building_type, position):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> result <span style=color:#ff7b72;font-weight:700>=</span> placement_service<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>place_building</span>(building_type, position, <span style=color:#a5d6ff>&#34;player&#34;</span>)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> result<span style=color:#ff7b72;font-weight:700>.</span>success:
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>handle_successful_placement</span>(building_type, result)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>else</span>:
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>handle_placement_failure</span>(result)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> result<span style=color:#ff7b72;font-weight:700>.</span>success
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>remove_building</span>(building_node):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> result <span style=color:#ff7b72;font-weight:700>=</span> manipulation_service<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>remove_building</span>(building_node)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> result<span style=color:#ff7b72;font-weight:700>.</span>success:
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>handle_successful_removal</span>(building_node, result)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>else</span>:
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>handle_removal_failure</span>(result)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> result<span style=color:#ff7b72;font-weight:700>.</span>success
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Private helpers - focused on single tasks</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>is_position_valid</span>(position):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> placement_service<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>can_place_building</span>(<span style=color:#a5d6ff>&#34;&#34;</span>, position)  <span style=color:#8b949e;font-style:italic># Type-agnostic check</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>player_can_afford</span>(building_type):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> resource_manager<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>has_resources</span>(<span style=color:#d2a8ff;font-weight:700>get_building_cost</span>(building_type))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>building_is_unlocked</span>(building_type):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> unlock_manager<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>is_building_unlocked</span>(building_type)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>handle_successful_placement</span>(building_type, result):
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>deduct_resources</span>(building_type)
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>play_success_sound</span>()
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>show_placement_effect</span>(result<span style=color:#ff7b72;font-weight:700>.</span>position)
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>update_statistics</span>(building_type)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>handle_placement_failure</span>(result):
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>play_error_sound</span>()
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>show_error_message</span>(result<span style=color:#ff7b72;font-weight:700>.</span>error)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>handle_successful_removal</span>(building_node, result):
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>refund_building_cost</span>(building_node<span style=color:#ff7b72;font-weight:700>.</span>building_type)
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>play_removal_sound</span>()
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>show_removal_effect</span>(result<span style=color:#ff7b72;font-weight:700>.</span>position)
+</span></span></code></pre></td></tr></table></div></div><h3 id=ui-controller-pattern>UI Controller Pattern</h3><h4 id=clean-ui-controller>Clean UI Controller</h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">51
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">52
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#ff7b72>extends</span> <span style=color:#f0883e;font-weight:700>Control</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>class_name</span> <span style=color:#f0883e;font-weight:700>BuildingUIController</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># UI Elements</span>
+</span></span><span style=display:flex><span><span style=color:#d2a8ff;font-weight:700>@onready</span> <span style=color:#ff7b72>var</span> building_grid <span style=color:#ff7b72;font-weight:700>=</span> $BuildingGrid
+</span></span><span style=display:flex><span><span style=color:#d2a8ff;font-weight:700>@onready</span> <span style=color:#ff7b72>var</span> resource_display <span style=color:#ff7b72;font-weight:700>=</span> $ResourceDisplay
+</span></span><span style=display:flex><span><span style=color:#d2a8ff;font-weight:700>@onready</span> <span style=color:#ff7b72>var</span> placement_preview <span style=color:#ff7b72;font-weight:700>=</span> $PlacementPreview
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Game Systems</span>
+</span></span><span style=display:flex><span><span style=color:#d2a8ff;font-weight:700>@onready</span> <span style=color:#ff7b72>var</span> building_manager <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#f85149>$</span><span style=color:#a5d6ff>&#34;../BuildingManager&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#d2a8ff;font-weight:700>@onready</span> <span style=color:#ff7b72>var</span> grid_targeting <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#f85149>$</span><span style=color:#a5d6ff>&#34;../GridTargetingSystem&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>_ready</span>():
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>setup_ui_connections</span>()
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>update_ui_state</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>_process</span>(_delta):
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>update_placement_preview</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>setup_ui_connections</span>():
+</span></span><span style=display:flex><span>    building_grid<span style=color:#ff7b72;font-weight:700>.</span>building_selected<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>connect</span>(_on_building_selected)
+</span></span><span style=display:flex><span>    building_grid<span style=color:#ff7b72;font-weight:700>.</span>building_deselected<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>connect</span>(_on_building_deselected)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>update_ui_state</span>():
+</span></span><span style=display:flex><span>    resource_display<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>update_resources</span>()
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>update_building_grid_availability</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>update_placement_preview</span>():
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> <span style=color:#d2a8ff;font-weight:700>has_selected_building</span>():
+</span></span><span style=display:flex><span>        placement_preview<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>hide</span>()
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> grid_pos <span style=color:#ff7b72;font-weight:700>=</span> grid_targeting<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get_current_grid_position</span>()
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> can_place <span style=color:#ff7b72;font-weight:700>=</span> building_manager<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>can_place_building</span>(selected_building, grid_pos)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    placement_preview<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>show_at</span>(grid_pos, can_place)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>has_selected_building</span>():
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> selected_building <span style=color:#ff7b72;font-weight:700>!=</span> <span style=color:#a5d6ff>&#34;&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Event handlers - single responsibility each</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>_on_building_selected</span>(building_type):
+</span></span><span style=display:flex><span>    selected_building <span style=color:#ff7b72;font-weight:700>=</span> building_type
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>update_placement_preview</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>_on_building_deselected</span>():
+</span></span><span style=display:flex><span>    selected_building <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>&#34;&#34;</span>
+</span></span><span style=display:flex><span>    placement_preview<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>hide</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>_on_placement_requested</span>(position):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#d2a8ff;font-weight:700>has_selected_building</span>():
+</span></span><span style=display:flex><span>        building_manager<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>place_building</span>(selected_building, position)
+</span></span></code></pre></td></tr></table></div></div><h3 id=input-handler-pattern>Input Handler Pattern</h3><h4 id=clean-input-handler>Clean Input Handler</h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">51
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">52
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#ff7b72>extends</span> <span style=color:#f0883e;font-weight:700>Node</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>class_name</span> <span style=color:#f0883e;font-weight:700>BuildingInputHandler</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Dependencies</span>
+</span></span><span style=display:flex><span><span style=color:#d2a8ff;font-weight:700>@onready</span> <span style=color:#ff7b72>var</span> building_manager <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#f85149>$</span><span style=color:#a5d6ff>&#34;../BuildingManager&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#d2a8ff;font-weight:700>@onready</span> <span style=color:#ff7b72>var</span> ui_controller <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#f85149>$</span><span style=color:#a5d6ff>&#34;../BuildingUIController&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Input state</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> selected_building <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>&#34;&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> is_placement_mode <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#79c0ff>false</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>_ready</span>():
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>setup_input_actions</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>_input</span>(event):
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>handle_building_input</span>(event)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>setup_input_actions</span>():
+</span></span><span style=display:flex><span>    <span style=color:#f0883e;font-weight:700>InputMap</span><span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>add_action</span>(<span style=color:#a5d6ff>&#34;place_building&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#f0883e;font-weight:700>InputMap</span><span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>add_action</span>(<span style=color:#a5d6ff>&#34;cancel_placement&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#f0883e;font-weight:700>InputMap</span><span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>add_action</span>(<span style=color:#a5d6ff>&#34;remove_building&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>handle_building_input</span>(event):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> is_placement_mode:
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>handle_placement_input</span>(event)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>else</span>:
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>handle_selection_input</span>(event)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>handle_placement_input</span>(event):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> event<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>is_action_pressed</span>(<span style=color:#a5d6ff>&#34;place_building&#34;</span>):
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>attempt_placement_at_cursor</span>()
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>elif</span> event<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>is_action_pressed</span>(<span style=color:#a5d6ff>&#34;cancel_placement&#34;</span>):
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>exit_placement_mode</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>handle_selection_input</span>(event):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> event<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>is_action_pressed</span>(<span style=color:#a5d6ff>&#34;remove_building&#34;</span>):
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>start_removal_mode</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>attempt_placement_at_cursor</span>():
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> grid_pos <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#d2a8ff;font-weight:700>get_cursor_grid_position</span>()
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> building_manager<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>place_building</span>(selected_building, grid_pos):
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>exit_placement_mode</span>()  <span style=color:#8b949e;font-style:italic># Success - exit placement mode</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>else</span>:
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>shake_ui</span>()  <span style=color:#8b949e;font-style:italic># Failure - show feedback</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>exit_placement_mode</span>():
+</span></span><span style=display:flex><span>    is_placement_mode <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#79c0ff>false</span>
+</span></span><span style=display:flex><span>    ui_controller<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>hide_placement_preview</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>start_removal_mode</span>():
+</span></span><span style=display:flex><span>    ui_controller<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>show_removal_cursor</span>()
+</span></span></code></pre></td></tr></table></div></div><h2 id=error-handling-best-practices>Error Handling Best Practices</h2><h3 id=clear-error-messages>Clear Error Messages</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ✅ GOOD: Specific, actionable errors</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>handle_placement_result</span>(result):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> result<span style=color:#ff7b72;font-weight:700>.</span>success:
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>match</span> result<span style=color:#ff7b72;font-weight:700>.</span>error_type:
+</span></span><span style=display:flex><span>            <span style=color:#a5d6ff>&#34;POSITION_OCCUPIED&#34;</span>:
+</span></span><span style=display:flex><span>                <span style=color:#d2a8ff;font-weight:700>show_error</span>(<span style=color:#a5d6ff>&#34;This position is already occupied!&#34;</span>)
+</span></span><span style=display:flex><span>            <span style=color:#a5d6ff>&#34;INSUFFICIENT_RESOURCES&#34;</span>:
+</span></span><span style=display:flex><span>                <span style=color:#d2a8ff;font-weight:700>show_error</span>(<span style=color:#a5d6ff>&#34;Not enough resources! Need &#34;</span> <span style=color:#ff7b72;font-weight:700>+</span> str(result<span style=color:#ff7b72;font-weight:700>.</span>required_resources))
+</span></span><span style=display:flex><span>            <span style=color:#a5d6ff>&#34;INVALID_POSITION&#34;</span>:
+</span></span><span style=display:flex><span>                <span style=color:#d2a8ff;font-weight:700>show_error</span>(<span style=color:#a5d6ff>&#34;Cannot build at this location!&#34;</span>)
+</span></span><span style=display:flex><span>            <span style=color:#a5d6ff>&#34;BUILDING_LOCKED&#34;</span>:
+</span></span><span style=display:flex><span>                <span style=color:#d2a8ff;font-weight:700>show_error</span>(<span style=color:#a5d6ff>&#34;This building is not unlocked yet!&#34;</span>)
+</span></span><span style=display:flex><span>            _:
+</span></span><span style=display:flex><span>                <span style=color:#d2a8ff;font-weight:700>show_error</span>(<span style=color:#a5d6ff>&#34;Placement failed: &#34;</span> <span style=color:#ff7b72;font-weight:700>+</span> result<span style=color:#ff7b72;font-weight:700>.</span>error)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ❌ AVOID: Generic, unhelpful errors</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>handle_placement_result</span>(result):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> result<span style=color:#ff7b72;font-weight:700>.</span>success:
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>show_error</span>(<span style=color:#a5d6ff>&#34;Building placement failed&#34;</span>)
+</span></span></code></pre></td></tr></table></div></div><h3 id=graceful-error-recovery>Graceful Error Recovery</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ✅ GOOD: Graceful error handling</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_building_with_fallback</span>(building_type, position):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> result <span style=color:#ff7b72;font-weight:700>=</span> building_manager<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>place_building</span>(building_type, position)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> result<span style=color:#ff7b72;font-weight:700>.</span>success:
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic># Try to help the user</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> result<span style=color:#ff7b72;font-weight:700>.</span>error_type <span style=color:#ff7b72;font-weight:700>==</span> <span style=color:#a5d6ff>&#34;POSITION_OCCUPIED&#34;</span>:
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic># Find nearest valid position</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> nearest_valid <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#d2a8ff;font-weight:700>find_nearest_valid_position</span>(position)
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>if</span> nearest_valid:
+</span></span><span style=display:flex><span>                <span style=color:#d2a8ff;font-weight:700>show_suggestion</span>(<span style=color:#a5d6ff>&#34;Try placing at &#34;</span> <span style=color:#ff7b72;font-weight:700>+</span> str(nearest_valid))
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic># Show helpful feedback</span>
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>show_error_with_suggestion</span>(result<span style=color:#ff7b72;font-weight:700>.</span>error, <span style=color:#d2a8ff;font-weight:700>get_suggestion_for_error</span>(result<span style=color:#ff7b72;font-weight:700>.</span>error_type))
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> result<span style=color:#ff7b72;font-weight:700>.</span>success
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>get_suggestion_for_error</span>(error_type):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>match</span> error_type:
+</span></span><span style=display:flex><span>        <span style=color:#a5d6ff>&#34;POSITION_OCCUPIED&#34;</span>:
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> <span style=color:#a5d6ff>&#34;Try clearing the area first&#34;</span>
+</span></span><span style=display:flex><span>        <span style=color:#a5d6ff>&#34;INSUFFICIENT_RESOURCES&#34;</span>:
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> <span style=color:#a5d6ff>&#34;Gather more resources or choose a cheaper building&#34;</span>
+</span></span><span style=display:flex><span>        <span style=color:#a5d6ff>&#34;INVALID_POSITION&#34;</span>:
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> <span style=color:#a5d6ff>&#34;Build within the highlighted grid area&#34;</span>
+</span></span><span style=display:flex><span>        _:
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> <span style=color:#a5d6ff>&#34;Check building requirements&#34;</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=performance-tips>Performance Tips</h2><h3 id=efficient-ui-updates>Efficient UI Updates</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ✅ GOOD: Throttled UI updates</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> _last_ui_update <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>0</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>const</span> UI_UPDATE_RATE <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>0.1</span>  <span style=color:#8b949e;font-style:italic># 10 times per second</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>_process</span>(delta):
+</span></span><span style=display:flex><span>    _last_ui_update <span style=color:#ff7b72;font-weight:700>+=</span> delta
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> _last_ui_update <span style=color:#ff7b72;font-weight:700>&gt;=</span> UI_UPDATE_RATE:
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>update_ui_if_needed</span>()
+</span></span><span style=display:flex><span>        _last_ui_update <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>0</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>update_ui_if_needed</span>():
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#d2a8ff;font-weight:700>has_ui_changed</span>():
+</span></span><span style=display:flex><span>        resource_display<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>update_resources</span>()
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>update_building_buttons</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ❌ AVOID: Update every frame</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>_process</span>(_delta):
+</span></span><span style=display:flex><span>    resource_display<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>update_resources</span>()  <span style=color:#8b949e;font-style:italic># Expensive!</span>
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>update_building_buttons</span>()  <span style=color:#8b949e;font-style:italic># Expensive!</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=batch-operations>Batch Operations</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ✅ GOOD: Batch multiple operations</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_multiple_buildings</span>(buildings_data):
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Validate all first</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>for</span> building_data <span style=color:#ff7b72;font-weight:700>in</span> buildings_data:
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> building_manager<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>can_place_building</span>(building_data<span style=color:#ff7b72;font-weight:700>.</span>type, building_data<span style=color:#ff7b72;font-weight:700>.</span>position):
+</span></span><span style=display:flex><span>            <span style=color:#d2a8ff;font-weight:700>show_error</span>(<span style=color:#a5d6ff>&#34;Cannot place &#34;</span> <span style=color:#ff7b72;font-weight:700>+</span> building_data<span style=color:#ff7b72;font-weight:700>.</span>type <span style=color:#ff7b72;font-weight:700>+</span> <span style=color:#a5d6ff>&#34; at &#34;</span> <span style=color:#ff7b72;font-weight:700>+</span> str(building_data<span style=color:#ff7b72;font-weight:700>.</span>position))
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> <span style=color:#79c0ff>false</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Then place all at once</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>for</span> building_data <span style=color:#ff7b72;font-weight:700>in</span> buildings_data:
+</span></span><span style=display:flex><span>        building_manager<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>place_building</span>(building_data<span style=color:#ff7b72;font-weight:700>.</span>type, building_data<span style=color:#ff7b72;font-weight:700>.</span>position, <span style=color:#a5d6ff>&#34;player&#34;</span>)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> <span style=color:#79c0ff>true</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ❌ AVOID: Individual operations in loops</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_multiple_buildings</span>(buildings_data):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>for</span> building_data <span style=color:#ff7b72;font-weight:700>in</span> buildings_data:
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic># Each call does validation, UI updates, etc.</span>
+</span></span><span style=display:flex><span>        building_manager<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>place_building</span>(building_data<span style=color:#ff7b72;font-weight:700>.</span>type, building_data<span style=color:#ff7b72;font-weight:700>.</span>position, <span style=color:#a5d6ff>&#34;player&#34;</span>)
+</span></span></code></pre></td></tr></table></div></div><h2 id=testing-your-code>Testing Your Code</h2><h3 id=unit-testing-patterns>Unit Testing Patterns</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Test individual functions</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>test_can_place_building</span>():
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Arrange</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> building_type <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>&#34;house&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> valid_position <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#f0883e;font-weight:700>Vector2i</span>(<span style=color:#a5d6ff>5</span>, <span style=color:#a5d6ff>5</span>)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> invalid_position <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#f0883e;font-weight:700>Vector2i</span>(<span style=color:#ff7b72;font-weight:700>-</span><span style=color:#a5d6ff>1</span>, <span style=color:#ff7b72;font-weight:700>-</span><span style=color:#a5d6ff>1</span>)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Act &amp; Assert</span>
+</span></span><span style=display:flex><span>    assert(building_manager<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>can_place_building</span>(building_type, valid_position))
+</span></span><span style=display:flex><span>    assert(<span style=color:#ff7b72;font-weight:700>not</span> building_manager<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>can_place_building</span>(building_type, invalid_position))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Test error handling</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>test_error_messages</span>():
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> result <span style=color:#ff7b72;font-weight:700>=</span> building_manager<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>place_building</span>(<span style=color:#a5d6ff>&#34;invalid_type&#34;</span>, <span style=color:#f0883e;font-weight:700>Vector2i</span>(<span style=color:#ff7b72;font-weight:700>-</span><span style=color:#a5d6ff>1</span>, <span style=color:#ff7b72;font-weight:700>-</span><span style=color:#a5d6ff>1</span>))
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    assert(<span style=color:#ff7b72;font-weight:700>not</span> result<span style=color:#ff7b72;font-weight:700>.</span>success)
+</span></span><span style=display:flex><span>    assert(result<span style=color:#ff7b72;font-weight:700>.</span>error <span style=color:#ff7b72;font-weight:700>!=</span> <span style=color:#a5d6ff>&#34;&#34;</span>)
+</span></span><span style=display:flex><span>    assert(result<span style=color:#ff7b72;font-weight:700>.</span>error_type <span style=color:#ff7b72;font-weight:700>in</span> [<span style=color:#a5d6ff>&#34;UNKNOWN_BUILDING_TYPE&#34;</span>, <span style=color:#a5d6ff>&#34;INVALID_POSITION&#34;</span>])
+</span></span></code></pre></td></tr></table></div></div><h3 id=integration-testing>Integration Testing</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Test complete workflows</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>test_complete_building_workflow</span>():
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Select building</span>
+</span></span><span style=display:flex><span>    ui_controller<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>select_building</span>(<span style=color:#a5d6ff>&#34;house&#34;</span>)
+</span></span><span style=display:flex><span>    assert(ui_controller<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>has_selected_building</span>())
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Place building</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> position <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#f0883e;font-weight:700>Vector2i</span>(<span style=color:#a5d6ff>5</span>, <span style=color:#a5d6ff>5</span>)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> success <span style=color:#ff7b72;font-weight:700>=</span> building_manager<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>place_building</span>(<span style=color:#a5d6ff>&#34;house&#34;</span>, position)
+</span></span><span style=display:flex><span>    assert(success)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Verify building exists</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> building <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#d2a8ff;font-weight:700>find_building_at</span>(position)
+</span></span><span style=display:flex><span>    assert(building <span style=color:#ff7b72;font-weight:700>!=</span> <span style=color:#ff7b72>null</span>)
+</span></span><span style=display:flex><span>    assert(building<span style=color:#ff7b72;font-weight:700>.</span>building_type <span style=color:#ff7b72;font-weight:700>==</span> <span style=color:#a5d6ff>&#34;house&#34;</span>)
+</span></span></code></pre></td></tr></table></div></div><h2 id=code-review-checklist>Code Review Checklist</h2><h3 id=function-quality>Function Quality</h3><ul><li><input disabled type=checkbox> Function has single, clear purpose</li><li><input disabled type=checkbox> Function name describes what it does</li><li><input disabled type=checkbox> Function is short (&lt; 20 lines ideally)</li><li><input disabled type=checkbox> Function has minimal parameters (&lt; 5 ideally)</li></ul><h3 id=error-handling>Error Handling</h3><ul><li><input disabled type=checkbox> All service results are checked</li><li><input disabled type=checkbox> Error messages are clear and actionable</li><li><input disabled type=checkbox> Graceful fallbacks where appropriate</li><li><input disabled type=checkbox> User gets helpful feedback</li></ul><h3 id=performance>Performance</h3><ul><li><input disabled type=checkbox> UI updates are throttled</li><li><input disabled type=checkbox> Expensive operations are batched</li><li><input disabled type=checkbox> No unnecessary calculations in loops</li><li><input disabled type=checkbox> Resource cleanup where needed</li></ul><h3 id=maintainability>Maintainability</h3><ul><li><input disabled type=checkbox> Code is easy to read and understand</li><li><input disabled type=checkbox> Dependencies are clear and minimal</li><li><input disabled type=checkbox> Comments explain why, not what</li><li><input disabled type=checkbox> Consistent naming and style</li></ul><h2 id=common-anti-patterns-to-avoid>Common Anti-Patterns to Avoid</h2><h3 id=1-god-complex-functions>1. God Complex Functions</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ❌ AVOID: Functions that do everything</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>handle_everything</span>():
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Input handling</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#f0883e;font-weight:700>Input</span><span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>is_action_just_pressed</span>(<span style=color:#a5d6ff>&#34;click&#34;</span>):
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic># Building placement</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> <span style=color:#d2a8ff;font-weight:700>can_place_building</span>():
+</span></span><span style=display:flex><span>            <span style=color:#d2a8ff;font-weight:700>place_building</span>()
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic># UI updates</span>
+</span></span><span style=display:flex><span>            <span style=color:#d2a8ff;font-weight:700>update_ui</span>()
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic># Resource management</span>
+</span></span><span style=display:flex><span>            <span style=color:#d2a8ff;font-weight:700>deduct_resources</span>()
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic># Sound effects</span>
+</span></span><span style=display:flex><span>            <span style=color:#d2a8ff;font-weight:700>play_sound</span>()
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic># Save game</span>
+</span></span><span style=display:flex><span>            <span style=color:#d2a8ff;font-weight:700>save_game</span>()
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic># Statistics</span>
+</span></span><span style=display:flex><span>            <span style=color:#d2a8ff;font-weight:700>update_stats</span>()
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic># Achievements</span>
+</span></span><span style=display:flex><span>            <span style=color:#d2a8ff;font-weight:700>check_achievements</span>()
+</span></span></code></pre></td></tr></table></div></div><h3 id=2-magic-numbers-and-strings>2. Magic Numbers and Strings</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ❌ AVOID: Hard-coded values</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_building</span>():
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> player_gold <span style=color:#ff7b72;font-weight:700>&gt;=</span> <span style=color:#a5d6ff>100</span>:  <span style=color:#8b949e;font-style:italic># Magic number</span>
+</span></span><span style=display:flex><span>        building_type <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>&#34;house&#34;</span>  <span style=color:#8b949e;font-style:italic># Magic string</span>
+</span></span><span style=display:flex><span>        position <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#f0883e;font-weight:700>Vector2i</span>(<span style=color:#a5d6ff>5</span>, <span style=color:#a5d6ff>5</span>)  <span style=color:#8b949e;font-style:italic># Magic position</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ✅ GOOD: Named constants</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>const</span> HOUSE_COST <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>100</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>const</span> HOUSE_TYPE <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>&#34;house&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_building</span>():
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> player_gold <span style=color:#ff7b72;font-weight:700>&gt;=</span> HOUSE_COST:
+</span></span><span style=display:flex><span>        building_type <span style=color:#ff7b72;font-weight:700>=</span> HOUSE_TYPE
+</span></span><span style=display:flex><span>        position <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#d2a8ff;font-weight:700>get_default_building_position</span>()
+</span></span></code></pre></td></tr></table></div></div><h3 id=3-deep-nesting>3. Deep Nesting</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">31
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ❌ AVOID: Deep nesting</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>complex_function</span>():
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> condition1:
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> condition2:
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>if</span> condition3:
+</span></span><span style=display:flex><span>                <span style=color:#ff7b72>if</span> condition4:
+</span></span><span style=display:flex><span>                    <span style=color:#8b949e;font-style:italic># Do something</span>
+</span></span><span style=display:flex><span>                <span style=color:#ff7b72>else</span>:
+</span></span><span style=display:flex><span>                    <span style=color:#8b949e;font-style:italic># Handle else</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>else</span>:
+</span></span><span style=display:flex><span>                <span style=color:#8b949e;font-style:italic># Handle else</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>else</span>:
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic># Handle else</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>else</span>:
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic># Handle else</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ✅ GOOD: Early returns</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>complex_function</span>():
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> condition1:
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> <span style=color:#d2a8ff;font-weight:700>handle_else1</span>()
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> condition2:
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> <span style=color:#d2a8ff;font-weight:700>handle_else2</span>()
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> condition3:
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> <span style=color:#d2a8ff;font-weight:700>handle_else3</span>()
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> condition4:
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> <span style=color:#d2a8ff;font-weight:700>handle_else4</span>()
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Do something</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=benefits-of-clean-code>Benefits of Clean Code</h2><h3 id=for-you>For You</h3><ul><li><strong>Faster Development</strong>: Code is easier to write and modify</li><li><strong>Fewer Bugs</strong>: Clear code is easier to get right</li><li><strong>Better Performance</strong>: Optimized structure and patterns</li><li><strong>Easier Testing</strong>: Small, focused functions are easy to test</li></ul><h3 id=for-your-team>For Your Team</h3><ul><li><strong>Better Collaboration</strong>: Clean code is easy to understand</li><li><strong>Faster Onboarding</strong>: New developers can quickly understand the code</li><li><strong>Consistent Style</strong>: Everyone follows the same patterns</li><li><strong>Better Documentation</strong>: Self-documenting code needs less explanation</li></ul><h3 id=for-your-project>For Your Project</h3><ul><li><strong>Easier Maintenance</strong>: Changes are localized and predictable</li><li><strong>Better Performance</strong>: Optimized patterns and structures</li><li><strong>Future-Proof</strong>: Clean code adapts well to new requirements</li><li><strong>Professional Quality</strong>: Code that meets industry standards</li></ul><p>Clean code isn&rsquo;t just about making things work - it&rsquo;s about making things work well, be maintainable, and be enjoyable to work with. GridBuilding&rsquo;s architecture helps you write clean code by providing clear boundaries and responsibilities.</p><p>Start with these principles, and you&rsquo;ll see the benefits immediately in your development workflow!</p></div></main><aside class=gb-toc><div class=gb-toc-title>On this page</div><nav id=TableOfContents><ul><li><a href=#overview>Overview</a></li><li><a href=#what-this-means-for-you>What This Means for You</a><ul><li><a href=#simple-godot-scripts>Simple Godot Scripts</a></li></ul></li><li><a href=#key-principles>Key Principles</a><ul><li><a href=#1-single-responsibility>1. Single Responsibility</a></li><li><a href=#2-clear-naming>2. Clear Naming</a></li><li><a href=#3-small-functions>3. Small Functions</a></li></ul></li><li><a href=#practical-examples>Practical Examples</a><ul><li><a href=#building-manager-pattern>Building Manager Pattern</a><ul><li><a href=#clean-building-manager>Clean Building Manager</a></li></ul></li><li><a href=#ui-controller-pattern>UI Controller Pattern</a><ul><li><a href=#clean-ui-controller>Clean UI Controller</a></li></ul></li><li><a href=#input-handler-pattern>Input Handler Pattern</a><ul><li><a href=#clean-input-handler>Clean Input Handler</a></li></ul></li></ul></li><li><a href=#error-handling-best-practices>Error Handling Best Practices</a><ul><li><a href=#clear-error-messages>Clear Error Messages</a></li><li><a href=#graceful-error-recovery>Graceful Error Recovery</a></li></ul></li><li><a href=#performance-tips>Performance Tips</a><ul><li><a href=#efficient-ui-updates>Efficient UI Updates</a></li><li><a href=#batch-operations>Batch Operations</a></li></ul></li><li><a href=#testing-your-code>Testing Your Code</a><ul><li><a href=#unit-testing-patterns>Unit Testing Patterns</a></li><li><a href=#integration-testing>Integration Testing</a></li></ul></li><li><a href=#code-review-checklist>Code Review Checklist</a><ul><li><a href=#function-quality>Function Quality</a></li><li><a href=#error-handling>Error Handling</a></li><li><a href=#performance>Performance</a></li><li><a href=#maintainability>Maintainability</a></li></ul></li><li><a href=#common-anti-patterns-to-avoid>Common Anti-Patterns to Avoid</a><ul><li><a href=#1-god-complex-functions>1. God Complex Functions</a></li><li><a href=#2-magic-numbers-and-strings>2. Magic Numbers and Strings</a></li><li><a href=#3-deep-nesting>3. Deep Nesting</a></li></ul></li><li><a href=#benefits-of-clean-code>Benefits of Clean Code</a><ul><li><a href=#for-you>For You</a></li><li><a href=#for-your-team>For Your Team</a></li><li><a href=#for-your-project>For Your Project</a></li></ul></li></ul></nav></aside><footer class=gb-footer><p>&copy; 2025 Chris Tutorials. All rights reserved.</p><p>Built with <a href=https://gohugo.io/ target=_blank>Hugo</a> and
+<a href=https://godotengine.org/ target=_blank>Godot</a>.</p></footer></div></body></html>

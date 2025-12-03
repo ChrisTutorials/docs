@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> | Item Drops</title>
+
+    <meta name="description"
+        content="">
+
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    
+    <link rel="stylesheet" href="/css/custom.css">
+
+    <meta name="generator" content="Hugo 0.146.5">
+</head>
+
+<body>
+    <div class="gb-layout">
+        <header class="gb-header">
+    <a href="/" class="gb-brand">
+        <i class="fas fa-cubes" style="color: var(--gb-primary);"></i>
+        <span>Item Drops</span>
+    </a>
+
+    <div class="gb-search">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search documentation..." aria-label="Search">
+    </div>
+
+    <nav class="gb-nav">
+        
+        
+        <a href="/item_drops/getting-started/" class="gb-nav-link ">
+            Getting Started
+        </a>
+        
+        <a href="/item_drops/api-reference/" class="gb-nav-link ">
+            API Reference
+        </a>
+        
+        <a href="/item_drops/examples/" class="gb-nav-link ">
+            Examples
+        </a>
+        
+        <a href="/item_drops/integration-guide/" class="gb-nav-link ">
+            Integration Guide
+        </a>
+        
+        <a href="/item_drops/architecture/" class="gb-nav-link ">
+            Architecture
+        </a>
+        
+    </nav>
+</header>
+
+        
+        <aside class="gb-sidebar">
+    <nav class="gb-sidebar-nav">
+        
+
+        
+        
+
+        
+
+        
+        <div class="gb-sidebar-section">
+            <div class="gb-sidebar-title">Item Drops Plugin</div>
+            
+            <a href="/item_drops/getting-started/"
+                class="gb-sidebar-link ">
+                Getting Started
+            </a>
+            
+            <a href="/item_drops/architecture/system-overview/"
+                class="gb-sidebar-link ">
+                System Architecture Overview
+            </a>
+            
+            <a href="/item_drops/reference/"
+                class="gb-sidebar-link ">
+                API Reference
+            </a>
+            
+            <a href="/item_drops/architecture/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/configuration/data-driven/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/configuration/migration/"
+                class="gb-sidebar-link active">
+                
+            </a>
+            
+            <a href="/item_drops/examples/basic-usage/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/feature_suggestions/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/godot-integration/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/implementation/data-driven-implementation/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/improvements/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/integration_guide/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/readme/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/unity-integration/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+        </div>
+        
+    </nav>
+</aside>
+        
+
+        <main class="gb-main">
+            
+            <div class="gb-content">
+                <h1></h1>
+                <h1 id="migration-guide-from-resources-to-data-driven">Migration Guide: From Resources to Data-Driven</h1>
+<h2 id="overview">Overview</h2>
+<p>This guide helps you migrate from Resource-based drop tables to the superior data-driven approach. The migration is designed to be gradual, allowing you to convert tables at your own pace.</p>
+<h2 id="why-migrate">Why Migrate?</h2>
+<table>
+  <thead>
+      <tr>
+          <th>Resource Arrays</th>
+          <th>Data-Driven</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>❌ Multiple scattered <code>.tres</code> files</td>
+          <td>✅ Single JSON/YAML file</td>
+      </tr>
+      <tr>
+          <td>❌ Click-heavy editor experience</td>
+          <td>✅ Searchable, readable configuration</td>
+      </tr>
+      <tr>
+          <td>❌ Runtime-only validation</td>
+          <td>✅ Compile-time + runtime validation</td>
+      </tr>
+      <tr>
+          <td>❌ Version control noise</td>
+          <td>✅ Clean, meaningful diffs</td>
+      </tr>
+      <tr>
+          <td>❌ Complex backup/export</td>
+          <td>✅ Single file export</td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="migration-strategies">Migration Strategies</h2>
+<h3 id="1-gradual-migration-recommended">1. Gradual Migration (Recommended)</h3>
+<p>Use <code>HybridDropTable</code> to support both approaches during transition:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#75715e">// Existing code continues to work</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> dropTable = GD.Load&lt;DropTable&gt;(<span style="color:#e6db74">&#34;res://data/drops/goblin_loot.tres&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// New data-driven tables can be added</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> hybridTable = <span style="color:#66d9ef">new</span> HybridDropTable
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    ConfigurationPath = <span style="color:#e6db74">&#34;res://data/drops/goblin_loot.json&#34;</span> <span style="color:#75715e">// Switch when ready</span>
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><h3 id="2-complete-migration">2. Complete Migration</h3>
+<p>Convert all tables at once for immediate benefits.</p>
+<h2 id="step-by-step-migration">Step-by-Step Migration</h2>
+<h3 id="step-1-install-the-migration-tools">Step 1: Install the Migration Tools</h3>
+<p>The <code>HybridDropTable</code> class includes conversion utilities:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">using</span> ItemDrops.Godot.Resources;
+</span></span></code></pre></div><h3 id="step-2-identify-resource-tables">Step 2: Identify Resource Tables</h3>
+<p>Find all existing drop table resources:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Find all DropTable resources</span>
+</span></span><span style="display:flex;"><span>find . -name <span style="color:#e6db74">&#34;*.tres&#34;</span> -exec grep -l <span style="color:#e6db74">&#34;DropTable&#34;</span> <span style="color:#f92672">{}</span> <span style="color:#ae81ff">\;</span>
+</span></span></code></pre></div><p>Common locations:</p>
+<ul>
+<li><code>res://data/drops/</code></li>
+<li><code>res://resources/loot/</code></li>
+<li><code>res://enemies/</code></li>
+</ul>
+<h3 id="step-3-convert-a-single-table">Step 3: Convert a Single Table</h3>
+<h4 id="method-a-using-the-editor-plugin">Method A: Using the Editor Plugin</h4>
+<ol>
+<li>Open Godot with the ItemDrops plugin enabled</li>
+<li>Find the &ldquo;Drop Tables&rdquo; dock</li>
+<li>Click &ldquo;Convert Resource&rdquo;</li>
+<li>Select your <code>.tres</code> file</li>
+<li>Choose output location for <code>.json</code> file</li>
+</ol>
+<h4 id="method-b-using-code">Method B: Using Code</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#75715e">// Create conversion script</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> ConvertDropTable(<span style="color:#66d9ef">string</span> resourcePath, <span style="color:#66d9ef">string</span> outputPath)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> resource = GD.Load&lt;DropTable&gt;(resourcePath);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> hybrid = <span style="color:#66d9ef">new</span> HybridDropTable
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        MinDrops = resource.MinDrops,
+</span></span><span style="display:flex;"><span>        MaxDrops = resource.MaxDrops,
+</span></span><span style="display:flex;"><span>        DropChance = resource.DropChance,
+</span></span><span style="display:flex;"><span>        Drops = resource.Drops
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    hybrid.ConvertToDataDriven(outputPath);
+</span></span><span style="display:flex;"><span>    GD.Print(<span style="color:#e6db74">$&#34;Converted {resourcePath} to {outputPath}&#34;</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Usage</span>
+</span></span><span style="display:flex;"><span>ConvertDropTable(<span style="color:#e6db74">&#34;res://data/drops/goblin_loot.tres&#34;</span>, <span style="color:#e6db74">&#34;res://data/drops/goblin_loot.json&#34;</span>);
+</span></span></code></pre></div><h3 id="step-4-verify-the-conversion">Step 4: Verify the Conversion</h3>
+<p>Check the generated JSON file:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;minDrops&#34;</span>: <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;maxDrops&#34;</span>: <span style="color:#ae81ff">3</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;dropChance&#34;</span>: <span style="color:#ae81ff">0.8</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;drops&#34;</span>: [
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;itemId&#34;</span>: <span style="color:#e6db74">&#34;health_potion&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;weight&#34;</span>: <span style="color:#ae81ff">1.0</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;rarity&#34;</span>: <span style="color:#e6db74">&#34;Common&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;minQuantity&#34;</span>: <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;maxQuantity&#34;</span>: <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;conditions&#34;</span>: []
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  ]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="step-5-update-code-references">Step 5: Update Code References</h3>
+<h4 id="before-resource-based">Before (Resource-based)</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">var</span> dropTable = GD.Load&lt;DropTable&gt;(<span style="color:#e6db74">&#34;res://data/drops/goblin_loot.tres&#34;</span>);
+</span></span></code></pre></div><h4 id="after-data-driven">After (Data-driven)</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">using</span> ItemDrops.Core.DataDriven;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> dropTable = DataDrivenDropTable.LoadFromJson(<span style="color:#e6db74">&#34;res://data/drops/goblin_loot.json&#34;</span>);
+</span></span></code></pre></div><h4 id="or-hybrid-approach">Or (Hybrid approach)</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">var</span> dropTable = <span style="color:#66d9ef">new</span> HybridDropTable
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    ConfigurationPath = <span style="color:#e6db74">&#34;res://data/drops/goblin_loot.json&#34;</span>
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><h3 id="step-6-test-the-migration">Step 6: Test the Migration</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#75715e">// Test that drops generate correctly</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> context = <span style="color:#66d9ef">new</span> LootContext { Level = <span style="color:#ae81ff">10</span>, Luck = <span style="color:#ae81ff">0.5f</span> };
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> calculator = <span style="color:#66d9ef">new</span> DropCalculator();
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> results = calculator.GenerateDrops(dropTable, context);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>GD.Print(<span style="color:#e6db74">$&#34;Generated {results.Count} drops:&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">foreach</span> (<span style="color:#66d9ef">var</span> result <span style="color:#66d9ef">in</span> results)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    GD.Print(<span style="color:#e6db74">$&#34;  - {result.ItemId} x{result.Quantity}&#34;</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="conversion-examples">Conversion Examples</h2>
+<h3 id="simple-drop-table">Simple Drop Table</h3>
+<h4 id="resource-goblin_loottres">Resource (<code>goblin_loot.tres</code>)</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-gdscript" data-lang="gdscript"><span style="display:flex;"><span>[resource]
+</span></span><span style="display:flex;"><span>script_class <span style="color:#f92672">=</span> DropTable
+</span></span><span style="display:flex;"><span>min_drops <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>max_drops <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>drop_chance <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.8</span>
+</span></span><span style="display:flex;"><span>possible_drops <span style="color:#f92672">=</span> [<span style="color:#a6e22e">SubResource</span>(<span style="color:#e6db74">&#34;DropData_abc123&#34;</span>)]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[sub_resource type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;DropData&#34;</span> id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;DropData_abc123&#34;</span>]
+</span></span><span style="display:flex;"><span>item_id <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;gold_coin&#34;</span>
+</span></span><span style="display:flex;"><span>weight <span style="color:#f92672">=</span> <span style="color:#ae81ff">100.0</span>
+</span></span><span style="display:flex;"><span>rarity <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>min_quantity <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>max_quantity <span style="color:#f92672">=</span> <span style="color:#ae81ff">50</span>
+</span></span></code></pre></div><h4 id="data-driven-goblin_lootjson">Data-Driven (<code>goblin_loot.json</code>)</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;minDrops&#34;</span>: <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;maxDrops&#34;</span>: <span style="color:#ae81ff">3</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;dropChance&#34;</span>: <span style="color:#ae81ff">0.8</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;drops&#34;</span>: [
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;itemId&#34;</span>: <span style="color:#e6db74">&#34;gold_coin&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;weight&#34;</span>: <span style="color:#ae81ff">100.0</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;rarity&#34;</span>: <span style="color:#e6db74">&#34;Common&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;minQuantity&#34;</span>: <span style="color:#ae81ff">10</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;maxQuantity&#34;</span>: <span style="color:#ae81ff">50</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  ]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="complex-drop-table-with-conditions">Complex Drop Table with Conditions</h3>
+<h4 id="resource">Resource</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-gdscript" data-lang="gdscript"><span style="display:flex;"><span>[sub_resource type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;DropData&#34;</span> id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;DropData_def456&#34;</span>]
+</span></span><span style="display:flex;"><span>item_id <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;magic_sword&#34;</span>
+</span></span><span style="display:flex;"><span>weight <span style="color:#f92672">=</span> <span style="color:#ae81ff">5.0</span>
+</span></span><span style="display:flex;"><span>rarity <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>min_quantity <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>max_quantity <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>conditions <span style="color:#f92672">=</span> [<span style="color:#a6e22e">SubResource</span>(<span style="color:#e6db74">&#34;DropCondition_ghi789&#34;</span>)]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[sub_resource type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;DropCondition&#34;</span> id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;DropCondition_ghi789&#34;</span>]
+</span></span><span style="display:flex;"><span>condition_type <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;MinimumLevel&#34;</span>
+</span></span><span style="display:flex;"><span>int_value <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>
+</span></span></code></pre></div><h4 id="data-driven">Data-Driven</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;drops&#34;</span>: [
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;itemId&#34;</span>: <span style="color:#e6db74">&#34;magic_sword&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;weight&#34;</span>: <span style="color:#ae81ff">5.0</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;rarity&#34;</span>: <span style="color:#e6db74">&#34;Rare&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;minQuantity&#34;</span>: <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;maxQuantity&#34;</span>: <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;conditions&#34;</span>: [
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;minimumLevel&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;value&#34;</span>: <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>      ]
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  ]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="bulk-migration-script">Bulk Migration Script</h2>
+<p>For large projects, use this automated conversion script:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#75715e">// MigrationTool.cs</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> Godot;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> ItemDrops.Godot.Resources;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> System;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> System.IO;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">partial</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MigrationTool</span> : Node
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [Export]</span> <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> SourceDirectory { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; } = <span style="color:#e6db74">&#34;res://data/drops/&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [Export]</span> <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> TargetDirectory { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; } = <span style="color:#e6db74">&#34;res://data/drops_converted/&#34;</span>;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> MigrateAllTables()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Ensure target directory exists</span>
+</span></span><span style="display:flex;"><span>        DirAccess.Open(TargetDirectory)?.MakeDirRecursiveAbsolute(TargetDirectory);
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Find all .tres files</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> dir = DirAccess.Open(SourceDirectory);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (dir == <span style="color:#66d9ef">null</span>)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            GD.PrintErr(<span style="color:#e6db74">$&#34;Cannot open source directory: {SourceDirectory}&#34;</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        dir.ListDirBegin();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> fileName = dir.GetNext();
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> (!<span style="color:#66d9ef">string</span>.IsNullOrEmpty(fileName))
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (fileName.EndsWith(<span style="color:#e6db74">&#34;.tres&#34;</span>))
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">var</span> sourcePath = Path.Combine(SourceDirectory, fileName);
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">var</span> targetPath = Path.Combine(TargetDirectory, fileName.Replace(<span style="color:#e6db74">&#34;.tres&#34;</span>, <span style="color:#e6db74">&#34;.json&#34;</span>));
+</span></span><span style="display:flex;"><span>                
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">try</span>
+</span></span><span style="display:flex;"><span>                {
+</span></span><span style="display:flex;"><span>                    ConvertTable(sourcePath, targetPath);
+</span></span><span style="display:flex;"><span>                    GD.Print(<span style="color:#e6db74">$&#34;Converted: {fileName}&#34;</span>);
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">catch</span> (Exception ex)
+</span></span><span style="display:flex;"><span>                {
+</span></span><span style="display:flex;"><span>                    GD.PrintErr(<span style="color:#e6db74">$&#34;Failed to convert {fileName}: {ex.Message}&#34;</span>);
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>            fileName = dir.GetNext();
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        dir.ListDirEnd();
+</span></span><span style="display:flex;"><span>        GD.Print(<span style="color:#e6db74">&#34;Migration complete!&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> ConvertTable(<span style="color:#66d9ef">string</span> sourcePath, <span style="color:#66d9ef">string</span> targetPath)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> resource = GD.Load&lt;DropTable&gt;(sourcePath);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> hybrid = <span style="color:#66d9ef">new</span> HybridDropTable
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            MinDrops = resource.MinDrops,
+</span></span><span style="display:flex;"><span>            MaxDrops = resource.MaxDrops,
+</span></span><span style="display:flex;"><span>            DropChance = resource.DropChance,
+</span></span><span style="display:flex;"><span>            Drops = resource.Drops
+</span></span><span style="display:flex;"><span>        };
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        hybrid.ConvertToDataDriven(targetPath);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="using-the-migration-tool">Using the Migration Tool</h3>
+<ol>
+<li>Create a scene with the <code>MigrationTool</code> script</li>
+<li>Set <code>SourceDirectory</code> to your current drop tables location</li>
+<li>Set <code>TargetDirectory</code> to where you want converted files</li>
+<li>Run the scene and call <code>MigrateAllTables()</code></li>
+</ol>
+<h2 id="validation-and-testing">Validation and Testing</h2>
+<h3 id="post-migration-validation">Post-Migration Validation</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> ValidateMigration(<span style="color:#66d9ef">string</span> originalPath, <span style="color:#66d9ef">string</span> convertedPath)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Load original</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> original = GD.Load&lt;DropTable&gt;(originalPath);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Load converted</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> converted = DataDrivenDropTable.LoadFromJson(convertedPath);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Compare basic properties</span>
+</span></span><span style="display:flex;"><span>    Debug.Assert(original.MinDrops == converted.MinDrops, <span style="color:#e6db74">&#34;MinDrops mismatch&#34;</span>);
+</span></span><span style="display:flex;"><span>    Debug.Assert(original.MaxDrops == converted.MaxDrops, <span style="color:#e6db74">&#34;MaxDrops mismatch&#34;</span>);
+</span></span><span style="display:flex;"><span>    Debug.Assert(Mathf.Abs(original.DropChance - converted.DropChance) &lt; <span style="color:#ae81ff">0.001f</span>, <span style="color:#e6db74">&#34;DropChance mismatch&#34;</span>);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Compare drop counts</span>
+</span></span><span style="display:flex;"><span>    Debug.Assert(original.Drops.Count == converted.Drops.Count, <span style="color:#e6db74">&#34;Drop count mismatch&#34;</span>);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    GD.Print(<span style="color:#e6db74">$&#34;✅ {Path.GetFileName(originalPath)} migrated successfully&#34;</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="performance-testing">Performance Testing</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> BenchmarkPerformance(<span style="color:#66d9ef">string</span> dataDrivenPath, <span style="color:#66d9ef">string</span> resourcePath)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> stopwatch = <span style="color:#66d9ef">new</span> System.Diagnostics.Stopwatch();
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Test data-driven loading</span>
+</span></span><span style="display:flex;"><span>    stopwatch.Restart();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i = <span style="color:#ae81ff">0</span>; i &lt; <span style="color:#ae81ff">1000</span>; i++)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> dataTable = DataDrivenDropTable.LoadFromJson(dataDrivenPath);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    stopwatch.Stop();
+</span></span><span style="display:flex;"><span>    GD.Print(<span style="color:#e6db74">$&#34;Data-Driven: {stopwatch.ElapsedMilliseconds}ms for 1000 loads&#34;</span>);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Test resource loading</span>
+</span></span><span style="display:flex;"><span>    stopwatch.Restart();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i = <span style="color:#ae81ff">0</span>; i &lt; <span style="color:#ae81ff">1000</span>; i++)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> resourceTable = GD.Load&lt;DropTable&gt;(resourcePath);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    stopwatch.Stop();
+</span></span><span style="display:flex;"><span>    GD.Print(<span style="color:#e6db74">$&#34;Resource-Based: {stopwatch.ElapsedMilliseconds}ms for 1000 loads&#34;</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="common-migration-issues">Common Migration Issues</h2>
+<h3 id="issue-1-missing-conditions">Issue 1: Missing Conditions</h3>
+<p><strong>Problem:</strong> Conditions don&rsquo;t convert properly</p>
+<p><strong>Solution:</strong> Check condition type mapping:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#75715e">// In HybridDropTable.CreateCondition()</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> IDropCondition? CreateCondition(DropCondition conditionData)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> conditionData.ConditionType <span style="color:#66d9ef">switch</span>
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;MinimumLevel&#34;</span> =&gt; <span style="color:#66d9ef">new</span> MinimumLevelCondition(conditionData.IntValue),
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;LevelRange&#34;</span> =&gt; <span style="color:#66d9ef">new</span> LevelRangeCondition(conditionData.IntValue, conditionData.IntValue2),
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Add more mappings as needed</span>
+</span></span><span style="display:flex;"><span>        _ =&gt; <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> ArgumentException(<span style="color:#e6db74">$&#34;Unknown condition type: {conditionData.ConditionType}&#34;</span>)
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="issue-2-file-path-issues">Issue 2: File Path Issues</h3>
+<p><strong>Problem:</strong> Converted files can&rsquo;t be found</p>
+<p><strong>Solution:</strong> Ensure paths are correct and files are imported:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#75715e">// Force reimport after conversion</span>
+</span></span><span style="display:flex;"><span>EditorInterface.Singleton.GetFileSystemDock().ReimportFiles(<span style="color:#66d9ef">new</span>[] { outputPath });
+</span></span></code></pre></div><h3 id="issue-3-runtime-errors">Issue 3: Runtime Errors</h3>
+<p><strong>Problem:</strong> Drops don&rsquo;t generate after migration</p>
+<p><strong>Solution:</strong> Validate the converted table:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">var</span> dropTable = DataDrivenDropTable.LoadFromJson(path);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> validation = dropTable.Validate();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (!validation.IsValid)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">foreach</span> (<span style="color:#66d9ef">var</span> error <span style="color:#66d9ef">in</span> validation.Errors)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        GD.PrintErr(<span style="color:#e6db74">$&#34;Validation error: {error}&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="rollback-plan">Rollback Plan</h2>
+<p>If you need to rollback:</p>
+<ol>
+<li><strong>Keep original <code>.tres</code> files</strong> until you&rsquo;re confident in the migration</li>
+<li><strong>Use version control</strong> to track changes</li>
+<li><strong>Test thoroughly</strong> before deleting old files</li>
+</ol>
+<h3 id="rollback-script">Rollback Script</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> RollbackMigration(<span style="color:#66d9ef">string</span> convertedDirectory, <span style="color:#66d9ef">string</span> backupDirectory)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Restore from backup if needed</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> sourceDir = DirAccess.Open(backupDirectory);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> targetDir = DirAccess.Open(convertedDirectory);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Copy original files back</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Implementation depends on your backup strategy</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="best-practices">Best Practices</h2>
+<h3 id="1-backup-first">1. Backup First</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Create backup of original resources</span>
+</span></span><span style="display:flex;"><span>cp -r res://data/drops/ res://data/drops_backup/
+</span></span></code></pre></div><h3 id="2-convert-incrementally">2. Convert Incrementally</h3>
+<ul>
+<li>Start with simple tables</li>
+<li>Test each conversion</li>
+<li>Move to more complex tables</li>
+</ul>
+<h3 id="3-use-version-control">3. Use Version Control</h3>
+<ul>
+<li>Commit changes in logical chunks</li>
+<li>Use descriptive commit messages</li>
+<li>Tag migration milestones</li>
+</ul>
+<h3 id="4-document-changes">4. Document Changes</h3>
+<ul>
+<li>Note any custom modifications</li>
+<li>Document conversion decisions</li>
+<li>Keep migration scripts for future reference</li>
+</ul>
+<h2 id="migration-checklist">Migration Checklist</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Backup original Resource files</li>
+<li><input disabled="" type="checkbox"> Install ItemDrops plugin with migration tools</li>
+<li><input disabled="" type="checkbox"> Identify all drop table resources</li>
+<li><input disabled="" type="checkbox"> Convert simple tables first</li>
+<li><input disabled="" type="checkbox"> Test converted tables</li>
+<li><input disabled="" type="checkbox"> Update code references</li>
+<li><input disabled="" type="checkbox"> Convert complex tables</li>
+<li><input disabled="" type="checkbox"> Run performance benchmarks</li>
+<li><input disabled="" type="checkbox"> Update documentation</li>
+<li><input disabled="" type="checkbox"> Remove old Resource files (when confident)</li>
+</ul>
+<hr>
+<p><strong>Next:</strong> <a href="../reference/schema.md">Configuration Schema</a> | <a href="../reference/troubleshooting.md">Troubleshooting</a> | <a href="../advanced/conditions.md">Advanced Topics</a></p>
+
+            </div>
+            
+        </main>
+
+        
+        <aside class="gb-toc">
+            <div class="gb-toc-title">On this page</div>
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#why-migrate">Why Migrate?</a></li>
+    <li><a href="#migration-strategies">Migration Strategies</a>
+      <ul>
+        <li><a href="#1-gradual-migration-recommended">1. Gradual Migration (Recommended)</a></li>
+        <li><a href="#2-complete-migration">2. Complete Migration</a></li>
+      </ul>
+    </li>
+    <li><a href="#step-by-step-migration">Step-by-Step Migration</a>
+      <ul>
+        <li><a href="#step-1-install-the-migration-tools">Step 1: Install the Migration Tools</a></li>
+        <li><a href="#step-2-identify-resource-tables">Step 2: Identify Resource Tables</a></li>
+        <li><a href="#step-3-convert-a-single-table">Step 3: Convert a Single Table</a></li>
+        <li><a href="#step-4-verify-the-conversion">Step 4: Verify the Conversion</a></li>
+        <li><a href="#step-5-update-code-references">Step 5: Update Code References</a></li>
+        <li><a href="#step-6-test-the-migration">Step 6: Test the Migration</a></li>
+      </ul>
+    </li>
+    <li><a href="#conversion-examples">Conversion Examples</a>
+      <ul>
+        <li><a href="#simple-drop-table">Simple Drop Table</a></li>
+        <li><a href="#complex-drop-table-with-conditions">Complex Drop Table with Conditions</a></li>
+      </ul>
+    </li>
+    <li><a href="#bulk-migration-script">Bulk Migration Script</a>
+      <ul>
+        <li><a href="#using-the-migration-tool">Using the Migration Tool</a></li>
+      </ul>
+    </li>
+    <li><a href="#validation-and-testing">Validation and Testing</a>
+      <ul>
+        <li><a href="#post-migration-validation">Post-Migration Validation</a></li>
+        <li><a href="#performance-testing">Performance Testing</a></li>
+      </ul>
+    </li>
+    <li><a href="#common-migration-issues">Common Migration Issues</a>
+      <ul>
+        <li><a href="#issue-1-missing-conditions">Issue 1: Missing Conditions</a></li>
+        <li><a href="#issue-2-file-path-issues">Issue 2: File Path Issues</a></li>
+        <li><a href="#issue-3-runtime-errors">Issue 3: Runtime Errors</a></li>
+      </ul>
+    </li>
+    <li><a href="#rollback-plan">Rollback Plan</a>
+      <ul>
+        <li><a href="#rollback-script">Rollback Script</a></li>
+      </ul>
+    </li>
+    <li><a href="#best-practices">Best Practices</a>
+      <ul>
+        <li><a href="#1-backup-first">1. Backup First</a></li>
+        <li><a href="#2-convert-incrementally">2. Convert Incrementally</a></li>
+        <li><a href="#3-use-version-control">3. Use Version Control</a></li>
+        <li><a href="#4-document-changes">4. Document Changes</a></li>
+      </ul>
+    </li>
+    <li><a href="#migration-checklist">Migration Checklist</a></li>
+  </ul>
+</nav>
+        </aside>
+        
+
+        <footer class="gb-footer">
+    <p>&copy; 2025 Chris Tutorials. All rights reserved.</p>
+    <p>
+        Built with <a href="https://gohugo.io/" target="_blank">Hugo</a> and
+        <a href="https://godotengine.org/" target="_blank">Godot</a>.
+    </p>
+</footer>
+    </div>
+</body>
+
+</html>

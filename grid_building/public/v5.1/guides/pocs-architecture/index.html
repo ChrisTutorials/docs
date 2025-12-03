@@ -1,0 +1,426 @@
+<!doctype html><html lang=en-us><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1316&amp;path=livereload" data-no-instant defer></script><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>POCS Architecture Guide | GridBuilding Plugin</title>
+<meta name=description content="How to use GridBuilding's clean architecture in your Godot projects"><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel=stylesheet><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css><link rel=stylesheet href=/css/custom.css><meta name=generator content="Hugo 0.146.5"></head><body><div class=gb-layout><header class=gb-header><a href=/ class=gb-brand><i class="fas fa-cubes" style=color:var(--gb-primary)></i>
+<span>GridBuilding Plugin</span></a><div class=gb-search><i class="fas fa-search"></i>
+<input type=text placeholder="Search documentation..." aria-label=Search></div><nav class=gb-nav><a href=/ class=gb-nav-link>Home
+</a><a href=/v5.1/overview/ class=gb-nav-link>Documentation
+</a><a href=/v5.1/overview/ class=gb-nav-link>Grid Building Plugin Overview
+</a><a href=/v5.1/api/ class=gb-nav-link>API Reference
+</a><a href=/v5.1/guides/ class=gb-nav-link>Getting Started Guides
+</a><a href=/v5.1/examples/ class=gb-nav-link>Examples
+</a><a href=/v5.1/examples/ class=gb-nav-link>Code Examples
+</a><a href=/community/ class=gb-nav-link>Community
+</a><a href=/v5.1/architecture-diagrams/ class=gb-nav-link>Architecture Diagrams</a></nav></header><aside class=gb-sidebar><nav class=gb-sidebar-nav><div class=gb-sidebar-section><div class=gb-sidebar-title>GridBuilding Plugin</div><a href=/gridbuilding/getting_started/ class=gb-sidebar-link>Getting Started with GridBuilding
+</a><a href=/gridbuilding/csharp_state_integration/ class=gb-sidebar-link>C# State Integration with Godot Frontend
+</a><a href=/gridbuilding/api_reference/ class=gb-sidebar-link>API Reference
+</a><a href=/gridbuilding/troubleshooting/ class=gb-sidebar-link>Troubleshooting Guide
+</a><a href=/gridbuilding/godot_integration_example/ class=gb-sidebar-link>Godot Integration Example
+</a><a href=/gridbuilding/service_based_architecture/ class=gb-sidebar-link>Service-Based Architecture</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.1.0</div><a href=/v5.1/overview/ class=gb-sidebar-link>Grid Building Plugin Overview
+</a><a href=/v5.1/guides/ class=gb-sidebar-link>Getting Started Guides
+</a><a href=/v5.1/api/ class=gb-sidebar-link>C# API Reference
+</a><a href=/v5.1/examples/ class=gb-sidebar-link>Code Examples
+</a><a href=/v5.1/architecture-diagrams/ class=gb-sidebar-link>Architecture Diagrams
+</a><a href=/v5.1/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.1/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.1/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.1/validation/ class=gb-sidebar-link>Validation Tools</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.0.0</div><a href=/v5.0/api/ class=gb-sidebar-link>GDScript API Reference
+</a><a href=/v5.0/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.0/overview/ class=gb-sidebar-link>Grid Building Plugin v5.0.0
+</a><a href=/v5.0/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.0/guides/ class=gb-sidebar-link>Plugin Overview
+</a><a href=/v5.0/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.0/validation/ class=gb-sidebar-link>Validation Tools</a></div></nav></aside><main class=gb-main><div class=gb-content><h1>POCS Architecture Guide</h1><h1 id=pocs-architecture-guide>POCS Architecture Guide</h1><h2 id=overview>Overview</h2><p>GridBuilding uses POCS (Pure C# Core Services) architecture to provide you with a clean, powerful building system that separates complex logic from your Godot game code. This means you get:</p><ul><li><strong>Faster Development</strong> - Complex building logic handled for you</li><li><strong>Clean Code</strong> - Your Godot scripts stay simple and focused</li><li><strong>Better Performance</strong> - Optimized core services handle the heavy lifting</li><li><strong>Easy Testing</strong> - Core logic can be tested without running Godot</li></ul><h2 id=what-this-means-for-you>What This Means for You</h2><h3 id=in-your-godot-project>In Your Godot Project</h3><p>You work with simple Godot Nodes and familiar patterns:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Simple Godot script - just call the service</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>extends</span> <span style=color:#f0883e;font-weight:700>Node</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#d2a8ff;font-weight:700>@onready</span> <span style=color:#ff7b72>var</span> placement_system <span style=color:#ff7b72;font-weight:700>=</span> $PlacementSystem
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_building</span>(building_type, position):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> result <span style=color:#ff7b72;font-weight:700>=</span> placement_system<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>place_building</span>(building_type, position)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> result<span style=color:#ff7b72;font-weight:700>.</span>success:
+</span></span><span style=display:flex><span>        print(<span style=color:#a5d6ff>&#34;Building placed!&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>else</span>:
+</span></span><span style=display:flex><span>        print(<span style=color:#a5d6ff>&#34;Placement failed: &#34;</span>, result<span style=color:#ff7b72;font-weight:700>.</span>error)
+</span></span></code></pre></td></tr></table></div></div><h3 id=behind-the-scenes>Behind the Scenes</h3><p>The complex logic happens in pure C# services that:</p><ul><li>Validate building placement</li><li>Handle collision detection</li><li>Manage building state</li><li>Process removal operations</li></ul><h2 id=key-components-youll-use>Key Components You&rsquo;ll Use</h2><h3 id=1-godot-nodes-your-interface>1. Godot Nodes (Your Interface)</h3><p>These are the Godot Nodes you add to your scene tree:</p><ul><li><strong>PlacementSystem</strong> - Handle building placement</li><li><strong>ManipulationSystem</strong> - Handle building movement/removal</li><li><strong>GridTargetingSystem</strong> - Handle grid targeting and selection</li></ul><h3 id=2-services-the-brains>2. Services (The Brains)</h3><p>These run in the background - you don&rsquo;t interact with them directly:</p><ul><li><strong>PlacementService</strong> - Validates and executes placement</li><li><strong>ManipulationService</strong> - Handles building operations</li><li><strong>GridTargetingEventService</strong> - Manages targeting events</li></ul><h3 id=3-state-objects-data-storage>3. State Objects (Data Storage)</h3><p>These hold building data - you might read from them but don&rsquo;t modify directly:</p><ul><li><strong>BuildingState</strong> - Contains building information</li><li><strong>GridTargetingState</strong> - Contains targeting information</li></ul><h2 id=benefits-for-your-game-development>Benefits for Your Game Development</h2><h3 id=1-simpler-godot-code>1. Simpler Godot Code</h3><p>Your Godot scripts focus on game logic, not building system complexity:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Before: Complex building logic in GDScript</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>extends</span> <span style=color:#f0883e;font-weight:700>Node</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_building</span>(building_type, position):
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># 50+ lines of validation, collision checking, state management...</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>pass</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># After: Clean, simple calls</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>extends</span> <span style=color:#f0883e;font-weight:700>Node</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_building</span>(building_type, position):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> result <span style=color:#ff7b72;font-weight:700>=</span> $PlacementSystem<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>place_building</span>(building_type, position)
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>handle_placement_result</span>(result)
+</span></span></code></pre></td></tr></table></div></div><h3 id=2-better-performance>2. Better Performance</h3><p>Core services are optimized C# code that runs much faster than GDScript:</p><ul><li>Collision detection is handled in efficient C#</li><li>Grid calculations use optimized algorithms</li><li>State management is memory-efficient</li></ul><h3 id=3-reliable-building-logic>3. Reliable Building Logic</h3><p>The core services handle edge cases you might not think of:</p><ul><li>Building overlaps and collisions</li><li>Grid boundary validation</li><li>State consistency</li><li>Error handling and recovery</li></ul><h3 id=4-easy-debugging>4. Easy Debugging</h3><p>When something goes wrong, you get clear error messages:</p><ul><li>&ldquo;Building placement failed: Position occupied&rdquo;</li><li>&ldquo;Invalid building type: &rsquo;tower&rsquo; not found&rdquo;</li><li>&ldquo;Grid boundary exceeded: position (20, 30) outside grid&rdquo;</li></ul><h2 id=how-to-use-the-system>How to Use the System</h2><h3 id=step-1-add-systems-to-your-scene>Step 1: Add Systems to Your Scene</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># In your main scene or building manager</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> placement_system <span style=color:#ff7b72;font-weight:700>=</span> preload(<span style=color:#a5d6ff>&#34;res://addons/grid_building/godot/systems/placement/placement_system.gd&#34;</span>)<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>new</span>()
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> manipulation_system <span style=color:#ff7b72;font-weight:700>=</span> preload(<span style=color:#a5d6ff>&#34;res://addons/grid_building/godot/systems/manipulation/manipulation_system.gd&#34;</span>)<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>new</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#d2a8ff;font-weight:700>add_child</span>(placement_system)
+</span></span><span style=display:flex><span><span style=color:#d2a8ff;font-weight:700>add_child</span>(manipulation_system)
+</span></span></code></pre></td></tr></table></div></div><h3 id=step-2-configure-your-buildings>Step 2: Configure Your Buildings</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Define what buildings can be placed</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> building_config <span style=color:#ff7b72;font-weight:700>=</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a5d6ff>&#34;house&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:#a5d6ff>&#34;size&#34;</span>: <span style=color:#f0883e;font-weight:700>Vector2i</span>(<span style=color:#a5d6ff>2</span>, <span style=color:#a5d6ff>2</span>),
+</span></span><span style=display:flex><span>        <span style=color:#a5d6ff>&#34;scene&#34;</span>: <span style=color:#a5d6ff>&#34;res://buildings/house.tscn&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a5d6ff>&#34;cost&#34;</span>: <span style=color:#a5d6ff>100</span>
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>    <span style=color:#a5d6ff>&#34;tower&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:#a5d6ff>&#34;size&#34;</span>: <span style=color:#f0883e;font-weight:700>Vector2i</span>(<span style=color:#a5d6ff>1</span>, <span style=color:#a5d6ff>1</span>), 
+</span></span><span style=display:flex><span>        <span style=color:#a5d6ff>&#34;scene&#34;</span>: <span style=color:#a5d6ff>&#34;res://buildings/tower.tscn&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a5d6ff>&#34;cost&#34;</span>: <span style=color:#a5d6ff>50</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h3 id=step-3-use-the-building-systems>Step 3: Use the Building Systems</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Place a building</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>on_place_building_requested</span>(building_type, grid_position):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> result <span style=color:#ff7b72;font-weight:700>=</span> placement_system<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>place_building</span>(building_type, grid_position, <span style=color:#a5d6ff>&#34;player&#34;</span>)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> result<span style=color:#ff7b72;font-weight:700>.</span>success:
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic># Building automatically added to scene tree</span>
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>spawn_building_effects</span>(result<span style=color:#ff7b72;font-weight:700>.</span>building_node)
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>update_player_resources</span>(<span style=color:#ff7b72;font-weight:700>-</span>building_config[building_type]<span style=color:#ff7b72;font-weight:700>.</span>cost)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>else</span>:
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>show_error_message</span>(result<span style=color:#ff7b72;font-weight:700>.</span>error)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Remove a building</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>on_remove_building_requested</span>(building_node):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> result <span style=color:#ff7b72;font-weight:700>=</span> manipulation_system<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>remove_building</span>(building_node)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> result<span style=color:#ff7b72;font-weight:700>.</span>success:
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>despawn_building_effects</span>(building_node)
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>refund_building_cost</span>(building_node<span style=color:#ff7b72;font-weight:700>.</span>building_type)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>else</span>:
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>show_error_message</span>(result<span style=color:#ff7b72;font-weight:700>.</span>error)
+</span></span></code></pre></td></tr></table></div></div><h2 id=common-usage-patterns>Common Usage Patterns</h2><h3 id=building-placement-with-validation>Building Placement with Validation</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>try_place_building_at_cursor</span>(building_type):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> grid_pos <span style=color:#ff7b72;font-weight:700>=</span> grid_targeting_system<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get_grid_position</span>(<span style=color:#d2a8ff;font-weight:700>get_global_mouse_position</span>())
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Check if placement is valid before attempting</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> placement_system<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>can_place_building</span>(building_type, grid_pos):
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>show_invalid_placement_preview</span>()
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Show valid placement preview</span>
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>show_valid_placement_preview</span>(building_type, grid_pos)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Actually place when player confirms</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#f0883e;font-weight:700>Input</span><span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>is_action_just_pressed</span>(<span style=color:#a5d6ff>&#34;confirm_placement&#34;</span>):
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>place_building</span>(building_type, grid_pos)
+</span></span></code></pre></td></tr></table></div></div><h3 id=building-selection-and-manipulation>Building Selection and Manipulation</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>on_building_clicked</span>(building_node):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> selected_building <span style=color:#ff7b72;font-weight:700>==</span> building_node:
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic># If already selected, start moving</span>
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>start_building_movement</span>(building_node)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>else</span>:
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic># Select the building</span>
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>select_building</span>(building_node)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>start_building_movement</span>(building_node):
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Enter manipulation mode</span>
+</span></span><span style=display:flex><span>    manipulation_system<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>start_move_operation</span>(building_node)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Show movement preview</span>
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>show_movement_preview</span>(building_node)
+</span></span></code></pre></td></tr></table></div></div><h3 id=grid-based-targeting>Grid-Based Targeting</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">8
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>_process</span>(_delta):
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Update grid targeting based on mouse position</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> mouse_pos <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#d2a8ff;font-weight:700>get_global_mouse_position</span>()
+</span></span><span style=display:flex><span>    grid_targeting_system<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>update_target_position</span>(mouse_pos)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Get current grid position for UI</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> current_grid_pos <span style=color:#ff7b72;font-weight:700>=</span> grid_targeting_system<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get_current_grid_position</span>()
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>update_grid_coordinates_display</span>(current_grid_pos)
+</span></span></code></pre></td></tr></table></div></div><h2 id=error-handling-best-practices>Error Handling Best Practices</h2><h3 id=always-check-results>Always Check Results</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ✅ GOOD: Always check operation results</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_building</span>(building_type, position):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> result <span style=color:#ff7b72;font-weight:700>=</span> placement_system<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>place_building</span>(building_type, position, <span style=color:#a5d6ff>&#34;player&#34;</span>)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#ff7b72;font-weight:700>not</span> result<span style=color:#ff7b72;font-weight:700>.</span>success:
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic># Handle specific error types</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>match</span> result<span style=color:#ff7b72;font-weight:700>.</span>error_type:
+</span></span><span style=display:flex><span>            <span style=color:#a5d6ff>&#34;POSITION_OCCUPIED&#34;</span>:
+</span></span><span style=display:flex><span>                <span style=color:#d2a8ff;font-weight:700>show_message</span>(<span style=color:#a5d6ff>&#34;This position is already occupied!&#34;</span>)
+</span></span><span style=display:flex><span>            <span style=color:#a5d6ff>&#34;INVALID_POSITION&#34;</span>:
+</span></span><span style=display:flex><span>                <span style=color:#d2a8ff;font-weight:700>show_message</span>(<span style=color:#a5d6ff>&#34;Can&#39;t build here!&#34;</span>)
+</span></span><span style=display:flex><span>            <span style=color:#a5d6ff>&#34;INSUFFICIENT_RESOURCES&#34;</span>:
+</span></span><span style=display:flex><span>                <span style=color:#d2a8ff;font-weight:700>show_message</span>(<span style=color:#a5d6ff>&#34;Not enough resources!&#34;</span>)
+</span></span><span style=display:flex><span>            _:
+</span></span><span style=display:flex><span>                <span style=color:#d2a8ff;font-weight:700>show_message</span>(<span style=color:#a5d6ff>&#34;Placement failed: &#34;</span> <span style=color:#ff7b72;font-weight:700>+</span> result<span style=color:#ff7b72;font-weight:700>.</span>error)
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> <span style=color:#79c0ff>false</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Success case</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> <span style=color:#79c0ff>true</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ❌ AVOID: Ignoring results</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_building</span>(building_type, position):
+</span></span><span style=display:flex><span>    placement_system<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>place_building</span>(building_type, position, <span style=color:#a5d6ff>&#34;player&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># No error checking - building might fail silently!</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=provide-user-feedback>Provide User Feedback</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>handle_placement_result</span>(result):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> result<span style=color:#ff7b72;font-weight:700>.</span>success:
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic># Positive feedback</span>
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>play_sound</span>(<span style=color:#a5d6ff>&#34;building_placed&#34;</span>)
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>show_particles</span>(<span style=color:#a5d6ff>&#34;placement_success&#34;</span>, result<span style=color:#ff7b72;font-weight:700>.</span>position)
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>update_ui_resources</span>()
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>else</span>:
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic># Clear error feedback</span>
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>play_sound</span>(<span style=color:#a5d6ff>&#34;error&#34;</span>)
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>shake_camera</span>()
+</span></span><span style=display:flex><span>        <span style=color:#d2a8ff;font-weight:700>show_error_tooltip</span>(result<span style=color:#ff7b72;font-weight:700>.</span>error)
+</span></span></code></pre></td></tr></table></div></div><h2 id=performance-tips>Performance Tips</h2><h3 id=1-use-efficient-grid-updates>1. Use Efficient Grid Updates</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ✅ GOOD: Batch updates when possible</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>update_multiple_buildings</span>(buildings):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>for</span> building <span style=color:#ff7b72;font-weight:700>in</span> buildings:
+</span></span><span style=display:flex><span>        building_system<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>queue_building_update</span>(building)
+</span></span><span style=display:flex><span>    building_system<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>process_queued_updates</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ❌ AVOID: Individual updates in loops</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>update_multiple_buildings</span>(buildings):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>for</span> building <span style=color:#ff7b72;font-weight:700>in</span> buildings:
+</span></span><span style=display:flex><span>        building_system<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>update_building_now</span>(building)  <span style=color:#8b949e;font-style:italic># Expensive!</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=2-optimize-targeting-updates>2. Optimize Targeting Updates</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">9
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ✅ GOOD: Throttle targeting updates</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> _last_target_update <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>0</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>const</span> TARGET_UPDATE_RATE <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>0.1</span>  <span style=color:#8b949e;font-style:italic># 10 times per second</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>_process</span>(delta):
+</span></span><span style=display:flex><span>    _last_target_update <span style=color:#ff7b72;font-weight:700>+=</span> delta
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> _last_target_update <span style=color:#ff7b72;font-weight:700>&gt;=</span> TARGET_UPDATE_RATE:
+</span></span><span style=display:flex><span>        grid_targeting_system<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>update_target_position</span>(<span style=color:#d2a8ff;font-weight:700>get_global_mouse_position</span>())
+</span></span><span style=display:flex><span>        _last_target_update <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>0</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=integration-with-your-game-systems>Integration with Your Game Systems</h2><h3 id=resource-management>Resource Management</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Connect building placement to your resource system</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>_ready</span>():
+</span></span><span style=display:flex><span>    placement_system<span style=color:#ff7b72;font-weight:700>.</span>building_placed<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>connect</span>(_on_building_placed)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>_on_building_placed</span>(building_data):
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Deduct resources based on building type</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> cost <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#d2a8ff;font-weight:700>get_building_cost</span>(building_data<span style=color:#ff7b72;font-weight:700>.</span>type)
+</span></span><span style=display:flex><span>    resource_system<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>deduct_resources</span>(cost)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Update statistics</span>
+</span></span><span style=display:flex><span>    stats_system<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>building_placed</span>(building_data<span style=color:#ff7b72;font-weight:700>.</span>type)
+</span></span></code></pre></td></tr></table></div></div><h3 id=saveload-integration>Save/Load Integration</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Save building state</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>save_game_state</span>():
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> building_states <span style=color:#ff7b72;font-weight:700>=</span> placement_system<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>get_all_building_states</span>()
+</span></span><span style=display:flex><span>    save_data[<span style=color:#a5d6ff>&#34;buildings&#34;</span>] <span style=color:#ff7b72;font-weight:700>=</span> building_states
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Load building state</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>load_game_state</span>(save_data):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> save_data<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>has</span>(<span style=color:#a5d6ff>&#34;buildings&#34;</span>):
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>for</span> building_state <span style=color:#ff7b72;font-weight:700>in</span> save_data[<span style=color:#a5d6ff>&#34;buildings&#34;</span>]:
+</span></span><span style=display:flex><span>            placement_system<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>restore_building</span>(building_state)
+</span></span></code></pre></td></tr></table></div></div><h2 id=migration-from-old-systems>Migration from Old Systems</h2><p>If you&rsquo;re coming from older GridBuilding versions:</p><h3 id=from-direct-node-management>From Direct Node Management</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># OLD WAY: Manual node management</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_building</span>(building_type, position):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> building_scene <span style=color:#ff7b72;font-weight:700>=</span> preload(<span style=color:#a5d6ff>&#34;res://buildings/&#34;</span> <span style=color:#ff7b72;font-weight:700>+</span> building_type <span style=color:#ff7b72;font-weight:700>+</span> <span style=color:#a5d6ff>&#34;.tscn&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> building <span style=color:#ff7b72;font-weight:700>=</span> building_scene<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>instantiate</span>()
+</span></span><span style=display:flex><span>    building<span style=color:#ff7b72;font-weight:700>.</span>position <span style=color:#ff7b72;font-weight:700>=</span> position
+</span></span><span style=display:flex><span>    <span style=color:#d2a8ff;font-weight:700>add_child</span>(building)
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Manual validation, collision checking, state tracking...</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># NEW WAY: Use the service</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>place_building</span>(building_type, position):
+</span></span><span style=display:flex><span>    placement_system<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>place_building</span>(building_type, position, <span style=color:#a5d6ff>&#34;player&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># Everything handled for you!</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=from-gdscript-building-logic>From GDScript Building Logic</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-gdscript data-lang=gdscript><span style=display:flex><span><span style=color:#8b949e;font-style:italic># OLD WAY: Complex GDScript logic</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>extends</span> <span style=color:#f0883e;font-weight:700>Node</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>validate_placement</span>(position, building_type):
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># 20+ lines of validation logic...</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> position<span style=color:#ff7b72;font-weight:700>.</span>x <span style=color:#ff7b72;font-weight:700>&lt;</span> <span style=color:#a5d6ff>0</span> <span style=color:#ff7b72;font-weight:700>or</span> position<span style=color:#ff7b72;font-weight:700>.</span>y <span style=color:#ff7b72;font-weight:700>&lt;</span> <span style=color:#a5d6ff>0</span>: <span style=color:#ff7b72>return</span> <span style=color:#79c0ff>false</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>if</span> <span style=color:#d2a8ff;font-weight:700>check_collisions</span>(position, building_type): <span style=color:#ff7b72>return</span> <span style=color:#79c0ff>false</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic># More validation...</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># NEW WAY: Let the service handle it</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>extends</span> <span style=color:#f0883e;font-weight:700>Node</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>func</span> <span style=color:#d2a8ff;font-weight:700>validate_placement</span>(position, building_type):
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> placement_system<span style=color:#ff7b72;font-weight:700>.</span><span style=color:#d2a8ff;font-weight:700>can_place_building</span>(building_type, position)
+</span></span></code></pre></td></tr></table></div></div><h2 id=next-steps>Next Steps</h2><ol><li><strong>Read the Service Pattern Migration Guide</strong> - For detailed migration steps</li><li><strong>Check the Examples</strong> - See real implementations in action</li><li><strong>Review API Reference</strong> - Complete method documentation</li><li><strong>Try the Tutorial</strong> - Step-by-step building system setup</li></ol><p>The POCS architecture gives you the power of complex building systems while keeping your Godot code clean and simple. Focus on making your game great - let GridBuilding handle the building complexity!</p></div></main><aside class=gb-toc><div class=gb-toc-title>On this page</div><nav id=TableOfContents><ul><li><a href=#overview>Overview</a></li><li><a href=#what-this-means-for-you>What This Means for You</a><ul><li><a href=#in-your-godot-project>In Your Godot Project</a></li><li><a href=#behind-the-scenes>Behind the Scenes</a></li></ul></li><li><a href=#key-components-youll-use>Key Components You&rsquo;ll Use</a><ul><li><a href=#1-godot-nodes-your-interface>1. Godot Nodes (Your Interface)</a></li><li><a href=#2-services-the-brains>2. Services (The Brains)</a></li><li><a href=#3-state-objects-data-storage>3. State Objects (Data Storage)</a></li></ul></li><li><a href=#benefits-for-your-game-development>Benefits for Your Game Development</a><ul><li><a href=#1-simpler-godot-code>1. Simpler Godot Code</a></li><li><a href=#2-better-performance>2. Better Performance</a></li><li><a href=#3-reliable-building-logic>3. Reliable Building Logic</a></li><li><a href=#4-easy-debugging>4. Easy Debugging</a></li></ul></li><li><a href=#how-to-use-the-system>How to Use the System</a><ul><li><a href=#step-1-add-systems-to-your-scene>Step 1: Add Systems to Your Scene</a></li><li><a href=#step-2-configure-your-buildings>Step 2: Configure Your Buildings</a></li><li><a href=#step-3-use-the-building-systems>Step 3: Use the Building Systems</a></li></ul></li><li><a href=#common-usage-patterns>Common Usage Patterns</a><ul><li><a href=#building-placement-with-validation>Building Placement with Validation</a></li><li><a href=#building-selection-and-manipulation>Building Selection and Manipulation</a></li><li><a href=#grid-based-targeting>Grid-Based Targeting</a></li></ul></li><li><a href=#error-handling-best-practices>Error Handling Best Practices</a><ul><li><a href=#always-check-results>Always Check Results</a></li><li><a href=#provide-user-feedback>Provide User Feedback</a></li></ul></li><li><a href=#performance-tips>Performance Tips</a><ul><li><a href=#1-use-efficient-grid-updates>1. Use Efficient Grid Updates</a></li><li><a href=#2-optimize-targeting-updates>2. Optimize Targeting Updates</a></li></ul></li><li><a href=#integration-with-your-game-systems>Integration with Your Game Systems</a><ul><li><a href=#resource-management>Resource Management</a></li><li><a href=#saveload-integration>Save/Load Integration</a></li></ul></li><li><a href=#migration-from-old-systems>Migration from Old Systems</a><ul><li><a href=#from-direct-node-management>From Direct Node Management</a></li><li><a href=#from-gdscript-building-logic>From GDScript Building Logic</a></li></ul></li><li><a href=#next-steps>Next Steps</a></li></ul></nav></aside><footer class=gb-footer><p>&copy; 2025 Chris Tutorials. All rights reserved.</p><p>Built with <a href=https://gohugo.io/ target=_blank>Hugo</a> and
+<a href=https://godotengine.org/ target=_blank>Godot</a>.</p></footer></div></body></html>

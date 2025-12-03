@@ -1,0 +1,347 @@
+<!-- Enhanced Mobile Navigation -->
+<nav class="mobile-nav" role="navigation" aria-label="Mobile navigation">
+  <div class="mobile-nav-header">
+    <a href="{{ .Site.BaseURL }}" class="mobile-nav-brand">
+      <div class="mobile-nav-logo">
+        <div class="logo-grid">
+          <span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+      <span class="mobile-nav-text">{{ .Site.Title }}</span>
+    </a>
+    <button class="mobile-nav-toggle" aria-expanded="false" aria-controls="mobile-menu"
+      aria-label="Toggle navigation menu">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+  </div>
+
+  <div id="mobile-menu" class="mobile-menu" hidden>
+    <div class="mobile-menu-section">
+      <h3 class="mobile-menu-title">Navigation</h3>
+      <ul class="mobile-menu-list">
+        {{- $current := . -}}
+        {{- range .Site.Menus.main -}}
+        <li class="mobile-menu-item">
+          <a href="{{ .URL }}" class="mobile-menu-link{{ if $current.IsMenuCurrent .Menu . }} active{{ end }}" {{ if
+            .Params.external }}target="_blank" rel="noopener" {{ end }}>
+            {{ if .Params.icon }}
+            <i class="{{ .Params.icon }} mobile-menu-icon"></i>
+            {{ end }}
+            <span class="mobile-menu-text">{{ .Name }}</span>
+            {{ if .Params.description }}
+            <span class="mobile-menu-description">{{ .Params.description }}</span>
+            {{ end }}
+          </a>
+        </li>
+        {{- end -}}
+      </ul>
+    </div>
+
+    {{- if .Site.Menus.versions -}}
+    <div class="mobile-menu-section">
+      <h3 class="mobile-menu-title">Versions</h3>
+      <ul class="mobile-menu-list">
+        {{- $current := . -}}
+        {{- range .Site.Menus.versions -}}
+        <li class="mobile-menu-item">
+          <a href="{{ .URL }}" class="mobile-menu-link{{ if $current.IsMenuCurrent .Menu . }} active{{ end }}">
+            {{ if .Params.latest }}<span class="mobile-menu-badge">Latest</span>{{ end }}
+            {{ if eq .Params.status "stable" }}<span class="mobile-menu-badge stable">Stable</span>{{ end }}
+            {{ if eq .Params.status "development" }}<span class="mobile-menu-badge dev">Dev</span>{{ end }}
+            <span class="mobile-menu-text">{{ .Name }}</span>
+          </a>
+        </li>
+        {{- end -}}
+      </ul>
+    </div>
+    {{- end -}}
+
+    <div class="mobile-menu-section">
+      <h3 class="mobile-menu-title">Resources</h3>
+      <ul class="mobile-menu-list">
+        <li class="mobile-menu-item">
+          <a href="https://chris-tutorials.itch.io/grid-building-godot" class="mobile-menu-link" target="_blank"
+            rel="noopener">
+            <i class="fab fa-itch-io mobile-menu-icon"></i>
+            <span class="mobile-menu-text">itch.io</span>
+          </a>
+        </li>
+        <li class="mobile-menu-item">
+          <a href="{{ .Site.BaseURL }}community/" class="mobile-menu-link">
+            <i class="fas fa-users mobile-menu-icon"></i>
+            <span class="mobile-menu-text">Community</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<style>
+  /* Mobile Navigation Styles */
+  .mobile-nav {
+    display: none;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: var(--gb-surface, #ffffff);
+    border-bottom: 1px solid var(--gb-border, #e2e8f0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    height: 64px;
+  }
+
+  .mobile-nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: var(--gb-primary, #1e40af);
+    font-weight: 600;
+  }
+
+  .mobile-nav-logo {
+    width: 32px;
+    height: 32px;
+  }
+
+  .logo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    width: 100%;
+    height: 100%;
+  }
+
+  .logo-grid span {
+    background: var(--gb-primary, #1e40af);
+    border-radius: 1px;
+  }
+
+  .logo-grid span:nth-child(2),
+  .logo-grid span:nth-child(5),
+  .logo-grid span:nth-child(8) {
+    background: var(--gb-accent, #0891b2);
+  }
+
+  .mobile-nav-text {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .mobile-nav-toggle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: transparent;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .mobile-nav-toggle:hover {
+    background: var(--gb-surface-hover, #f1f5f9);
+  }
+
+  .mobile-nav-toggle[aria-expanded="true"] .hamburger-line:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+  }
+
+  .mobile-nav-toggle[aria-expanded="true"] .hamburger-line:nth-child(2) {
+    opacity: 0;
+  }
+
+  .mobile-nav-toggle[aria-expanded="true"] .hamburger-line:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+  }
+
+  .hamburger-line {
+    width: 1.25rem;
+    height: 2px;
+    background: var(--gb-text-primary, #1e293b);
+    border-radius: 1px;
+    transition: all 0.2s ease;
+  }
+
+  .mobile-menu {
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+
+  .mobile-menu-section {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--gb-border, #e2e8f0);
+  }
+
+  .mobile-menu-section:last-child {
+    border-bottom: none;
+  }
+
+  .mobile-menu-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--gb-text-muted, #64748b);
+    padding: 0 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .mobile-menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .mobile-menu-item {
+    border-bottom: 1px solid var(--gb-border-light, #f1f5f9);
+  }
+
+  .mobile-menu-item:last-child {
+    border-bottom: none;
+  }
+
+  .mobile-menu-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    color: var(--gb-text-primary, #1e293b);
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+    min-height: 44px;
+    /* iOS touch target minimum */
+  }
+
+  .mobile-menu-link:hover {
+    background: var(--gb-surface-hover, #f1f5f9);
+  }
+
+  .mobile-menu-link.active {
+    background: var(--gb-primary-light, #dbeafe);
+    color: var(--gb-primary, #1e40af);
+    font-weight: 500;
+  }
+
+  .mobile-menu-icon {
+    width: 1.25rem;
+    text-align: center;
+    color: var(--gb-text-muted, #64748b);
+  }
+
+  .mobile-menu-link.active .mobile-menu-icon {
+    color: var(--gb-primary, #1e40af);
+  }
+
+  .mobile-menu-text {
+    flex: 1;
+    font-size: 0.875rem;
+    line-height: 1.25;
+  }
+
+  .mobile-menu-description {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--gb-text-muted, #64748b);
+    line-height: 1.25;
+    margin-top: 0.125rem;
+  }
+
+  .mobile-menu-badge {
+    font-size: 0.625rem;
+    font-weight: 600;
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    text-transform: uppercase;
+    margin-left: 0.5rem;
+  }
+
+  .mobile-menu-badge.stable {
+    background: var(--gb-success, #059669);
+    color: white;
+  }
+
+  .mobile-menu-badge.dev {
+    background: var(--gb-accent, #0891b2);
+    color: white;
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .mobile-nav {
+      display: block;
+    }
+  }
+
+  /* Touch-friendly interactions */
+  .mobile-menu-link:active {
+    transform: scale(0.98);
+  }
+
+  /* Smooth scrolling */
+  .mobile-menu {
+    scroll-behavior: smooth;
+  }
+
+  /* Focus states for accessibility */
+  .mobile-nav-toggle:focus,
+  .mobile-menu-link:focus {
+    outline: 2px solid var(--gb-primary, #1e40af);
+    outline-offset: 2px;
+  }
+</style>
+
+<script>
+  // Mobile navigation toggle functionality
+  document.addEventListener('DOMContentLoaded', function () {
+    const toggle = document.querySelector('.mobile-nav-toggle');
+    const menu = document.getElementById('mobile-menu');
+
+    if (toggle && menu) {
+      toggle.addEventListener('click', function () {
+        const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+
+        toggle.setAttribute('aria-expanded', !isExpanded);
+
+        if (isExpanded) {
+          menu.setAttribute('hidden', '');
+          document.body.style.overflow = '';
+        } else {
+          menu.removeAttribute('hidden');
+          document.body.style.overflow = 'hidden'; // Prevent background scroll
+        }
+      });
+
+      // Close menu when clicking outside
+      document.addEventListener('click', function (event) {
+        if (!toggle.contains(event.target) && !menu.contains(event.target)) {
+          toggle.setAttribute('aria-expanded', 'false');
+          menu.setAttribute('hidden', '');
+          document.body.style.overflow = '';
+        }
+      });
+
+      // Close menu on escape key
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+          toggle.setAttribute('aria-expanded', 'false');
+          menu.setAttribute('hidden', '');
+          document.body.style.overflow = '';
+          toggle.focus();
+        }
+      });
+    }
+  });
+</script>

@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> | Item Drops</title>
+
+    <meta name="description"
+        content="">
+
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    
+    <link rel="stylesheet" href="/css/custom.css">
+
+    <meta name="generator" content="Hugo 0.146.5">
+</head>
+
+<body>
+    <div class="gb-layout">
+        <header class="gb-header">
+    <a href="/" class="gb-brand">
+        <i class="fas fa-cubes" style="color: var(--gb-primary);"></i>
+        <span>Item Drops</span>
+    </a>
+
+    <div class="gb-search">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search documentation..." aria-label="Search">
+    </div>
+
+    <nav class="gb-nav">
+        
+        
+        <a href="/item_drops/getting-started/" class="gb-nav-link ">
+            Getting Started
+        </a>
+        
+        <a href="/item_drops/api-reference/" class="gb-nav-link ">
+            API Reference
+        </a>
+        
+        <a href="/item_drops/examples/" class="gb-nav-link ">
+            Examples
+        </a>
+        
+        <a href="/item_drops/integration-guide/" class="gb-nav-link ">
+            Integration Guide
+        </a>
+        
+        <a href="/item_drops/architecture/" class="gb-nav-link ">
+            Architecture
+        </a>
+        
+    </nav>
+</header>
+
+        
+        <aside class="gb-sidebar">
+    <nav class="gb-sidebar-nav">
+        
+
+        
+        
+
+        
+
+        
+        <div class="gb-sidebar-section">
+            <div class="gb-sidebar-title">Item Drops Plugin</div>
+            
+            <a href="/item_drops/getting-started/"
+                class="gb-sidebar-link ">
+                Getting Started
+            </a>
+            
+            <a href="/item_drops/architecture/system-overview/"
+                class="gb-sidebar-link ">
+                System Architecture Overview
+            </a>
+            
+            <a href="/item_drops/reference/"
+                class="gb-sidebar-link ">
+                API Reference
+            </a>
+            
+            <a href="/item_drops/architecture/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/configuration/data-driven/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/configuration/migration/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/examples/basic-usage/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/feature_suggestions/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/godot-integration/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/implementation/data-driven-implementation/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/improvements/"
+                class="gb-sidebar-link active">
+                
+            </a>
+            
+            <a href="/item_drops/integration_guide/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/readme/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+            <a href="/item_drops/unity-integration/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+        </div>
+        
+    </nav>
+</aside>
+        
+
+        <main class="gb-main">
+            
+            <div class="gb-content">
+                <h1></h1>
+                <h1 id="itemdrops-plugin---recommended-improvements">ItemDrops Plugin - Recommended Improvements</h1>
+<p><em>Living document for ongoing enhancements and optimizations</em></p>
+<h2 id="-overview">📋 Overview</h2>
+<p>This document tracks recommended improvements for the ItemDrops plugin, organized by priority and implementation complexity. Items are marked with their current status and implementation notes.</p>
+<h2 id="-architecture--code-quality">🏗️ Architecture &amp; Code Quality</h2>
+<h3 id="--interface-segregation">[ ] Interface Segregation</h3>
+<p><strong>Priority</strong>: High | <strong>Status</strong>: Pending | <strong>Complexity</strong>: Medium</p>
+<p><strong>Current Issue</strong>: <code>IDropTable</code> has too many responsibilities (data access, validation, generation)</p>
+<p><strong>Recommended Solution</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#75715e">// Split into focused interfaces</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">IDropTable</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    IReadOnlyList&lt;IDrop&gt; Drops { <span style="color:#66d9ef">get</span>; }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> MinDrops { <span style="color:#66d9ef">get</span>; }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> MaxDrops { <span style="color:#66d9ef">get</span>; }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">float</span> DropChance { <span style="color:#66d9ef">get</span>; }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">IDropTableValidator</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    DropTableValidationResult Validate();
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">IDropGenerator</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    IEnumerable&lt;DropResult&gt; GenerateDrops(LootContext context);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Benefits</strong>:</p>
+<ul>
+<li>Better separation of concerns</li>
+<li>Easier unit testing</li>
+<li>More focused interfaces</li>
+<li>Future extensibility</li>
+</ul>
+<hr>
+<h3 id="--factory-pattern-for-drop-creation">[ ] Factory Pattern for Drop Creation</h3>
+<p><strong>Priority</strong>: High | <strong>Status</strong>: Pending | <strong>Complexity</strong>: Low</p>
+<p><strong>Current Issue</strong>: Drop creation logic scattered across multiple classes</p>
+<p><strong>Recommended Solution</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DropFactory</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> IDrop CreateItemDrop(<span style="color:#66d9ef">string</span> itemId, <span style="color:#66d9ef">float</span> weight, ItemRarity rarity = ItemRarity.Common)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> IDropCondition CreateCondition(<span style="color:#66d9ef">string</span> type, <span style="color:#66d9ef">params</span> <span style="color:#66d9ef">object</span>[] parameters)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> ILootModifier CreateModifier(<span style="color:#66d9ef">string</span> type, <span style="color:#66d9ef">params</span> <span style="color:#66d9ef">object</span>[] parameters)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Benefits</strong>:</p>
+<ul>
+<li>Centralized creation logic</li>
+<li>Easier configuration management</li>
+<li>Consistent object initialization</li>
+<li>Better error handling</li>
+</ul>
+<hr>
+<h3 id="--enhanced-builder-pattern">[ ] Enhanced Builder Pattern</h3>
+<p><strong>Priority</strong>: Medium | <strong>Status</strong>: Pending | <strong>Complexity</strong>: Medium</p>
+<p><strong>Current Issue</strong>: DropTableBuilder could be more expressive for common scenarios</p>
+<p><strong>Recommended Solution</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DropTableBuilder</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> DropTableBuilder WithCommonDrops(<span style="color:#66d9ef">params</span> <span style="color:#66d9ef">string</span>[] itemIds)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> DropTableBuilder WithRareDrops(<span style="color:#66d9ef">float</span> chance, <span style="color:#66d9ef">params</span> <span style="color:#66d9ef">string</span>[] itemIds)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> DropTableBuilder WithLevelScaling(<span style="color:#66d9ef">int</span> minLevel, <span style="color:#66d9ef">int</span> maxLevel)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> DropTableBuilder WithLuckScaling(<span style="color:#66d9ef">float</span> baseLuck)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Benefits</strong>:</p>
+<ul>
+<li>More expressive API</li>
+<li>Reduced boilerplate</li>
+<li>Common patterns built-in</li>
+<li>Better readability</li>
+</ul>
+<hr>
+<h2 id="-performance-optimizations">⚡ Performance Optimizations</h2>
+<h3 id="--object-pooling-for-dropresults">[ ] Object Pooling for DropResults</h3>
+<p><strong>Priority</strong>: High | <strong>Status</strong>: Pending | <strong>Complexity</strong>: Medium</p>
+<p><strong>Current Issue</strong>: Frequent allocation of DropResult objects in high-drop scenarios</p>
+<p><strong>Recommended Solution</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DropResultPool</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">readonly</span> ConcurrentQueue&lt;DropResult&gt; _pool = <span style="color:#66d9ef">new</span>();
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> DropResult Get() =&gt; _pool.TryDequeue(<span style="color:#66d9ef">out</span> <span style="color:#66d9ef">var</span> result) ? result : <span style="color:#66d9ef">new</span> DropResult();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> Return(DropResult result) =&gt; _pool.Enqueue(result);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Benefits</strong>:</p>
+<ul>
+<li>Reduced GC pressure</li>
+<li>Better performance in high-frequency scenarios</li>
+<li>Memory efficiency</li>
+</ul>
+<p><strong>Implementation Notes</strong>:</p>
+<ul>
+<li>Thread-safe for concurrent access</li>
+<li>Automatic pool growth</li>
+<li>Configurable maximum pool size</li>
+</ul>
+<hr>
+<h3 id="--lazy-loading-for-drop-tables">[ ] Lazy Loading for Drop Tables</h3>
+<p><strong>Priority</strong>: Medium | <strong>Status</strong>: Pending | <strong>Complexity</strong>: Low</p>
+<p><strong>Current Issue</strong>: All drop tables loaded immediately, even unused ones</p>
+<p><strong>Recommended Solution</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LazyDropTable</span> : IDropTable
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">readonly</span> Func&lt;DropTable&gt; _factory;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> DropTable? _innerTable;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> IReadOnlyList&lt;IDrop&gt; Drops =&gt; GetTable().Drops;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> DropTable GetTable() =&gt; _innerTable ??= _factory();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Benefits</strong>:</p>
+<ul>
+<li>Faster startup times</li>
+<li>Reduced memory usage</li>
+<li>On-demand initialization</li>
+</ul>
+<hr>
+<h3 id="--caching-strategy">[ ] Caching Strategy</h3>
+<p><strong>Priority</strong>: Medium | <strong>Status</strong>: Pending | <strong>Complexity</strong>: High</p>
+<p><strong>Current Issue</strong>: Repeated calculations for identical drop scenarios</p>
+<p><strong>Recommended Solution</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CachedDropCalculator</span> : DropCalculator
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">readonly</span> LRUCache&lt;(<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">float</span>), List&lt;DropResult&gt;&gt; _cache;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> List&lt;DropResult&gt; GenerateDrops(IDropTable table, LootContext context)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> key = (GetTableHash(table), context.Level, context.LuckModifier);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> _cache.GetOrAdd(key, () =&gt; <span style="color:#66d9ef">base</span>.GenerateDrops(table, context));
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Benefits</strong>:</p>
+<ul>
+<li>Significant performance gains for repeated scenarios</li>
+<li>Configurable cache size</li>
+<li>Thread-safe implementation</li>
+</ul>
+<p><strong>Implementation Notes</strong>:</p>
+<ul>
+<li>Need robust hash function for drop tables</li>
+<li>Cache invalidation strategy</li>
+<li>Memory usage monitoring</li>
+</ul>
+<hr>
+<h2 id="-error-handling--validation">🛡️ Error Handling &amp; Validation</h2>
+<h3 id="--result-pattern-for-operations">[ ] Result Pattern for Operations</h3>
+<p><strong>Priority</strong>: High | <strong>Status</strong>: Pending | <strong>Complexity</strong>: Medium</p>
+<p><strong>Current Issue</strong>: Error handling inconsistent across the codebase</p>
+<p><strong>Recommended Solution</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DropGenerationResult</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">bool</span> Success { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">init</span>; }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> IReadOnlyList&lt;DropResult&gt; Drops { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">init</span>; } = Array.Empty&lt;DropResult&gt;();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> IReadOnlyList&lt;<span style="color:#66d9ef">string</span>&gt; Errors { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">init</span>; } = Array.Empty&lt;<span style="color:#66d9ef">string</span>&gt;();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> IReadOnlyList&lt;<span style="color:#66d9ef">string</span>&gt; Warnings { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">init</span>; } = Array.Empty&lt;<span style="color:#66d9ef">string</span>&gt;();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Benefits</strong>:</p>
+<ul>
+<li>Consistent error handling</li>
+<li>Better debugging information</li>
+<li>Chainable operations</li>
+<li>Type-safe error reporting</li>
+</ul>
+<hr>
+<h3 id="--comprehensive-validation">[ ] Comprehensive Validation</h3>
+<p><strong>Priority</strong>: High | <strong>Status</strong>: Pending | <strong>Complexity</strong>: Low</p>
+<p><strong>Current Issue</strong>: Validation logic scattered and incomplete</p>
+<p><strong>Recommended Solution</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DropTableValidator</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> ValidationResult Validate(IDropTable table)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> result = <span style="color:#66d9ef">new</span> ValidationResult();
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Validate weights</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (table.Drops.Any(d =&gt; d.Weight &lt;= <span style="color:#ae81ff">0</span>))
+</span></span><span style="display:flex;"><span>            result.AddError(<span style="color:#e6db74">&#34;All drops must have positive weight&#34;</span>);
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Validate drop ranges</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (table.MinDrops &gt; table.MaxDrops)
+</span></span><span style="display:flex;"><span>            result.AddError(<span style="color:#e6db74">&#34;Min drops cannot exceed max drops&#34;</span>);
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> result;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Benefits</strong>:</p>
+<ul>
+<li>Centralized validation logic</li>
+<li>Consistent error messages</li>
+<li>Extensible validation rules</li>
+<li>Better debugging experience</li>
+</ul>
+<hr>
+<h2 id="-testing--diagnostics">🧪 Testing &amp; Diagnostics</h2>
+<h3 id="--test-data-factory">[ ] Test Data Factory</h3>
+<p><strong>Priority</strong>: Medium | <strong>Status</strong>: Pending | <strong>Complexity</strong>: Low</p>
+<p><strong>Current Issue</strong>: Test setup code duplicated across test classes</p>
+<p><strong>Recommended Solution</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DropTestDataFactory</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> IDropTable CreateBasicTable()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> IDropTable CreateComplexTable()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> LootContext CreateHighLevelContext()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> LootContext CreateLowLuckContext()
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Benefits</strong>:</p>
+<ul>
+<li>Reduced test code duplication</li>
+<li>Consistent test data</li>
+<li>Easier test maintenance</li>
+<li>Standardized test scenarios</li>
+</ul>
+<hr>
+<h3 id="--diagnostic-tools">[ ] Diagnostic Tools</h3>
+<p><strong>Priority</strong>: Medium | <strong>Status</strong>: Pending | <strong>Complexity</strong>: Medium</p>
+<p><strong>Current Issue</strong>: Limited visibility into drop generation behavior</p>
+<p><strong>Recommended Solution</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DropTableDiagnostics</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> DropStatistics GetDetailedStatistics(IDropTable table, <span style="color:#66d9ef">int</span> simulations = <span style="color:#ae81ff">10000</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> DropProbabilityMatrix GetProbabilityMatrix(IDropTable table)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> GenerateReport(IDropTable table)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Benefits</strong>:</p>
+<ul>
+<li>Better debugging capabilities</li>
+<li>Performance analysis tools</li>
+<li>Statistical insights</li>
+<li>Exportable reports</li>
+</ul>
+<hr>
+<h2 id="-configuration--extensibility">⚙️ Configuration &amp; Extensibility</h2>
+<h3 id="--configuration-system">[ ] Configuration System</h3>
+<p><strong>Priority</strong>: Medium | <strong>Status</strong>: Pending | <strong>Complexity</strong>: Low</p>
+<p><strong>Current Issue</strong>: Hard-coded configuration values</p>
+<p><strong>Recommended Solution</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ItemDropsConfiguration</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> DefaultSimulations { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; } = <span style="color:#ae81ff">1000</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">bool</span> EnableCaching { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; } = <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> CacheSize { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; } = <span style="color:#ae81ff">1000</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> LogLevel LogLevel { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; } = LogLevel.Warning;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Benefits</strong>:</p>
+<ul>
+<li>Runtime configuration</li>
+<li>Environment-specific settings</li>
+<li>Easier debugging</li>
+<li>Performance tuning</li>
+</ul>
+<hr>
+<h3 id="--plugin-architecture">[ ] Plugin Architecture</h3>
+<p><strong>Priority</strong>: Low | <strong>Status</strong>: Pending | <strong>Complexity</strong>: High</p>
+<p><strong>Current Issue</strong>: Limited extensibility points</p>
+<p><strong>Recommended Solution</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">IDropPlugin</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">string</span> Name { <span style="color:#66d9ef">get</span>; }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> Initialize(IItemDropsContext context);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> RegisterDropTypes(IDropTypeRegistry registry);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Benefits</strong>:</p>
+<ul>
+<li>Third-party extensions</li>
+<li>Modular architecture</li>
+<li>Plugin ecosystem</li>
+<li>Custom drop types</li>
+</ul>
+<hr>
+<h2 id="-engine-integration-improvements">🎮 Engine Integration Improvements</h2>
+<h3 id="--godot-signal-system">[ ] Godot Signal System</h3>
+<p><strong>Priority</strong>: Medium | <strong>Status</strong>: Pending | <strong>Complexity</strong>: Low</p>
+<p><strong>Current Issue</strong>: Limited event handling in Godot integration</p>
+<p><strong>Recommended Solution</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#75715e">// Add to ItemDropsBus</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">[Signal]</span> <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">delegate</span> <span style="color:#66d9ef">void</span> DropGeneratedEventHandler(<span style="color:#66d9ef">string</span> itemId, Vector2 position);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">[Signal]</span> <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">delegate</span> <span style="color:#66d9ef">void</span> DropCollectedEventHandler(<span style="color:#66d9ef">string</span> itemId, Node collector);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">[Signal]</span> <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">delegate</span> <span style="color:#66d9ef">void</span> DropTableValidatedEventHandler(<span style="color:#66d9ef">string</span> tableId, <span style="color:#66d9ef">bool</span> isValid);
+</span></span></code></pre></div><p><strong>Benefits</strong>:</p>
+<ul>
+<li>Godot-idiomatic event handling</li>
+<li>Better integration with Godot scene tree</li>
+<li>Visual scripting support</li>
+</ul>
+<hr>
+<h3 id="--unity-event-system">[ ] Unity Event System</h3>
+<p><strong>Priority</strong>: Medium | <strong>Status</strong>: Pending | <strong>Complexity</strong>: Low</p>
+<p><strong>Current Issue</strong>: Limited event handling in Unity integration</p>
+<p><strong>Recommended Solution</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ItemDropsEvents</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> UnityEvent&lt;<span style="color:#66d9ef">string</span>, Vector3&gt; OnDropGenerated = <span style="color:#66d9ef">new</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> UnityEvent&lt;<span style="color:#66d9ef">string</span>, GameObject&gt; OnDropCollected = <span style="color:#66d9ef">new</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> UnityEvent&lt;<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">bool</span>&gt; OnDropTableValidated = <span style="color:#66d9ef">new</span>();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Benefits</strong>:</p>
+<ul>
+<li>Unity-idiomatic event handling</li>
+<li>Inspector integration</li>
+<li>Visual scripting support</li>
+</ul>
+<hr>
+<h2 id="-documentation--examples">📚 Documentation &amp; Examples</h2>
+<h3 id="--sample-implementations">[ ] Sample Implementations</h3>
+<p><strong>Priority</strong>: Low | <strong>Status</strong>: Pending | <strong>Complexity</strong>: Low</p>
+<p><strong>Current Issue</strong>: Limited examples for common use cases</p>
+<p><strong>Recommended Solution</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#75715e">// Create example drop tables for common use cases</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CommonDropTables</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> IDropTable BasicEnemyDrops { <span style="color:#66d9ef">get</span>; }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> IDropTable BossDrops { <span style="color:#66d9ef">get</span>; }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> IDropTable TreasureChestDrops { <span style="color:#66d9ef">get</span>; }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Benefits</strong>:</p>
+<ul>
+<li>Quick start for developers</li>
+<li>Common patterns documented</li>
+<li>Reference implementations</li>
+<li>Best practices showcase</li>
+</ul>
+<hr>
+<h3 id="--integration-guides">[ ] Integration Guides</h3>
+<p><strong>Priority</strong>: Low | <strong>Status</strong>: Pending | <strong>Complexity</strong>: Low</p>
+<p><strong>Current Issue</strong>: Documentation could be more comprehensive</p>
+<p><strong>Recommended Tasks</strong>:</p>
+<ul>
+<li><input disabled="" type="checkbox"> Add comprehensive README with examples</li>
+<li><input disabled="" type="checkbox"> Create demo scenes for both Godot and Unity</li>
+<li><input disabled="" type="checkbox"> Add performance benchmarking tools</li>
+<li><input disabled="" type="checkbox"> Create video tutorials</li>
+</ul>
+<p><strong>Benefits</strong>:</p>
+<ul>
+<li>Better developer experience</li>
+<li>Faster onboarding</li>
+<li>Reduced support burden</li>
+<li>Community growth</li>
+</ul>
+<hr>
+<h2 id="-implementation-priority">🚀 Implementation Priority</h2>
+<h3 id="phase-1-high-priority---next-sprint">Phase 1 (High Priority - Next Sprint)</h3>
+<ol>
+<li><strong>Interface Segregation</strong> - Foundation for better architecture</li>
+<li><strong>Result Pattern</strong> - Consistent error handling</li>
+<li><strong>Object Pooling</strong> - Performance optimization</li>
+<li><strong>Factory Pattern</strong> - Centralized creation logic</li>
+</ol>
+<h3 id="phase-2-medium-priority---following-sprints">Phase 2 (Medium Priority - Following Sprints)</h3>
+<ol>
+<li><strong>Enhanced Validation</strong> - Better error prevention</li>
+<li><strong>Diagnostic Tools</strong> - Debugging capabilities</li>
+<li><strong>Configuration System</strong> - Runtime flexibility</li>
+<li><strong>Signal/Event Systems</strong> - Engine integration</li>
+</ol>
+<h3 id="phase-3-low-priority---future-enhancements">Phase 3 (Low Priority - Future Enhancements)</h3>
+<ol>
+<li><strong>Plugin Architecture</strong> - Extensibility</li>
+<li><strong>Caching Strategy</strong> - Advanced performance</li>
+<li><strong>Sample Implementations</strong> - Documentation</li>
+<li><strong>Integration Guides</strong> - Developer experience</li>
+</ol>
+<hr>
+<h2 id="-metrics--kpis">📊 Metrics &amp; KPIs</h2>
+<h3 id="performance-targets">Performance Targets</h3>
+<ul>
+<li><strong>Drop Generation</strong>: &lt; 1ms for typical tables (10 drops)</li>
+<li><strong>Memory Usage</strong>: &lt; 10MB for 1000 drop tables</li>
+<li><strong>Startup Time</strong>: &lt; 100ms for plugin initialization</li>
+<li><strong>Test Coverage</strong>: &gt; 90% for Core library</li>
+</ul>
+<h3 id="code-quality-targets">Code Quality Targets</h3>
+<ul>
+<li><strong>Cyclomatic Complexity</strong>: &lt; 10 per method</li>
+<li><strong>Maintainability Index</strong>: &gt; 80</li>
+<li><strong>Technical Debt</strong>: &lt; 1 day</li>
+<li><strong>Documentation Coverage</strong>: &gt; 80%</li>
+</ul>
+<hr>
+<h2 id="-review-process">🔄 Review Process</h2>
+<h3 id="monthly-review">Monthly Review</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Assess implemented improvements</li>
+<li><input disabled="" type="checkbox"> Update priority based on feedback</li>
+<li><input disabled="" type="checkbox"> Add new improvement suggestions</li>
+<li><input disabled="" type="checkbox"> Review performance metrics</li>
+</ul>
+<h3 id="quarterly-review">Quarterly Review</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Evaluate overall plugin health</li>
+<li><input disabled="" type="checkbox"> Plan major architectural changes</li>
+<li><input disabled="" type="checkbox"> Update roadmap based on user feedback</li>
+<li><input disabled="" type="checkbox"> Review community contributions</li>
+</ul>
+<hr>
+<h2 id="-implementation-notes">📝 Implementation Notes</h2>
+<h3 id="general-guidelines">General Guidelines</h3>
+<ul>
+<li>Maintain POCS architecture principles</li>
+<li>Ensure backward compatibility where possible</li>
+<li>Add comprehensive tests for new features</li>
+<li>Update documentation for all changes</li>
+<li>Follow existing code style and patterns</li>
+</ul>
+<h3 id="testing-requirements">Testing Requirements</h3>
+<ul>
+<li>Unit tests for all new Core features</li>
+<li>Integration tests for engine-specific code</li>
+<li>Performance benchmarks for optimizations</li>
+<li>Compatibility tests for breaking changes</li>
+</ul>
+<h3 id="documentation-requirements">Documentation Requirements</h3>
+<ul>
+<li>Update README for user-facing changes</li>
+<li>Add inline documentation for new APIs</li>
+<li>Create examples for complex features</li>
+<li>Update this improvements document</li>
+</ul>
+<hr>
+<p><em>Last Updated: November 2025</em><br>
+<em>Next Review: December 2025</em><br>
+<em>Document Version: 1.0</em></p>
+
+            </div>
+            
+        </main>
+
+        
+        <aside class="gb-toc">
+            <div class="gb-toc-title">On this page</div>
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#-overview">📋 Overview</a></li>
+    <li><a href="#-architecture--code-quality">🏗️ Architecture &amp; Code Quality</a>
+      <ul>
+        <li><a href="#--interface-segregation">[ ] Interface Segregation</a></li>
+        <li><a href="#--factory-pattern-for-drop-creation">[ ] Factory Pattern for Drop Creation</a></li>
+        <li><a href="#--enhanced-builder-pattern">[ ] Enhanced Builder Pattern</a></li>
+      </ul>
+    </li>
+    <li><a href="#-performance-optimizations">⚡ Performance Optimizations</a>
+      <ul>
+        <li><a href="#--object-pooling-for-dropresults">[ ] Object Pooling for DropResults</a></li>
+        <li><a href="#--lazy-loading-for-drop-tables">[ ] Lazy Loading for Drop Tables</a></li>
+        <li><a href="#--caching-strategy">[ ] Caching Strategy</a></li>
+      </ul>
+    </li>
+    <li><a href="#-error-handling--validation">🛡️ Error Handling &amp; Validation</a>
+      <ul>
+        <li><a href="#--result-pattern-for-operations">[ ] Result Pattern for Operations</a></li>
+        <li><a href="#--comprehensive-validation">[ ] Comprehensive Validation</a></li>
+      </ul>
+    </li>
+    <li><a href="#-testing--diagnostics">🧪 Testing &amp; Diagnostics</a>
+      <ul>
+        <li><a href="#--test-data-factory">[ ] Test Data Factory</a></li>
+        <li><a href="#--diagnostic-tools">[ ] Diagnostic Tools</a></li>
+      </ul>
+    </li>
+    <li><a href="#-configuration--extensibility">⚙️ Configuration &amp; Extensibility</a>
+      <ul>
+        <li><a href="#--configuration-system">[ ] Configuration System</a></li>
+        <li><a href="#--plugin-architecture">[ ] Plugin Architecture</a></li>
+      </ul>
+    </li>
+    <li><a href="#-engine-integration-improvements">🎮 Engine Integration Improvements</a>
+      <ul>
+        <li><a href="#--godot-signal-system">[ ] Godot Signal System</a></li>
+        <li><a href="#--unity-event-system">[ ] Unity Event System</a></li>
+      </ul>
+    </li>
+    <li><a href="#-documentation--examples">📚 Documentation &amp; Examples</a>
+      <ul>
+        <li><a href="#--sample-implementations">[ ] Sample Implementations</a></li>
+        <li><a href="#--integration-guides">[ ] Integration Guides</a></li>
+      </ul>
+    </li>
+    <li><a href="#-implementation-priority">🚀 Implementation Priority</a>
+      <ul>
+        <li><a href="#phase-1-high-priority---next-sprint">Phase 1 (High Priority - Next Sprint)</a></li>
+        <li><a href="#phase-2-medium-priority---following-sprints">Phase 2 (Medium Priority - Following Sprints)</a></li>
+        <li><a href="#phase-3-low-priority---future-enhancements">Phase 3 (Low Priority - Future Enhancements)</a></li>
+      </ul>
+    </li>
+    <li><a href="#-metrics--kpis">📊 Metrics &amp; KPIs</a>
+      <ul>
+        <li><a href="#performance-targets">Performance Targets</a></li>
+        <li><a href="#code-quality-targets">Code Quality Targets</a></li>
+      </ul>
+    </li>
+    <li><a href="#-review-process">🔄 Review Process</a>
+      <ul>
+        <li><a href="#monthly-review">Monthly Review</a></li>
+        <li><a href="#quarterly-review">Quarterly Review</a></li>
+      </ul>
+    </li>
+    <li><a href="#-implementation-notes">📝 Implementation Notes</a>
+      <ul>
+        <li><a href="#general-guidelines">General Guidelines</a></li>
+        <li><a href="#testing-requirements">Testing Requirements</a></li>
+        <li><a href="#documentation-requirements">Documentation Requirements</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+        </aside>
+        
+
+        <footer class="gb-footer">
+    <p>&copy; 2025 Chris Tutorials. All rights reserved.</p>
+    <p>
+        Built with <a href="https://gohugo.io/" target="_blank">Hugo</a> and
+        <a href="https://godotengine.org/" target="_blank">Godot</a>.
+    </p>
+</footer>
+    </div>
+</body>
+
+</html>

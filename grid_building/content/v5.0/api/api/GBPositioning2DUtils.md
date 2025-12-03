@@ -1,0 +1,10 @@
+---
+slug: v5-0/api/GBPositioning2DUtils
+title: GBPositioning2DUtils
+description: GBPositioning2DUtils
+---
+
+
+*This API reference is automatically generated from the plugin source code. For implementation examples and usage guides, see the [guides section](../../guides/).*
+
+</div>

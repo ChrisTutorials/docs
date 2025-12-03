@@ -1,0 +1,77 @@
+{{/* PlantUML Diagram Shortcode for Hugo */}}
+{{/* Usage: {{< plantuml-diagram "Core.Services.PlacementService" >}} */}}
+
+{{ $diagramName := .Get 0 }}
+{{ $diagramPath := printf "/diagrams/%s.svg" $diagramName }}
+{{ $fullPath := printf "static/diagrams/%s.svg" $diagramName }}
+
+{{ if fileExists $fullPath }}
+<figure class="plantuml-diagram">
+  <img src="{{ $diagramPath }}"
+       alt="Architecture Diagram: {{ $diagramName }}"
+       loading="lazy"
+       class="diagram-svg">
+  <figcaption class="diagram-caption">
+    <strong>{{ $diagramName }}</strong> - Generated architecture diagram
+  </figcaption>
+</figure>
+
+<style>
+.plantuml-diagram {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.diagram-svg {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  padding: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.diagram-caption {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #64748b;
+  font-style: italic;
+}
+
+@media (prefers-color-scheme: dark) {
+  .diagram-svg {
+    border-color: #374151;
+    background: #1f2937;
+  }
+
+  .diagram-caption {
+    color: #9ca3af;
+  }
+}
+</style>
+{{ else }}
+<div class="diagram-error">
+  <p><strong>Diagram not found:</strong> {{ $diagramName }}</p>
+  <p><em>Run <code>./scripts/render-plantuml-diagrams.sh</code> to generate diagrams.</em></p>
+</div>
+
+<style>
+.diagram-error {
+  border: 2px dashed #ef4444;
+  border-radius: 8px;
+  padding: 1rem;
+  background: #fef2f2;
+  color: #dc2626;
+  text-align: center;
+}
+
+@media (prefers-color-scheme: dark) {
+  .diagram-error {
+    background: #451a1a;
+    border-color: #dc2626;
+    color: #fca5a5;
+  }
+}
+</style>
+{{ end }}

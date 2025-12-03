@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1316&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> | WorldTime Plugin</title>
+
+    <meta name="description"
+        content="">
+
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    
+    <link rel="stylesheet" href="/css/custom.css">
+
+    <meta name="generator" content="Hugo 0.146.5">
+</head>
+
+<body>
+    <div class="gb-layout">
+        <header class="gb-header">
+    <a href="/" class="gb-brand">
+        <i class="fas fa-cubes" style="color: var(--gb-primary);"></i>
+        <span>Grid Building</span>
+    </a>
+
+    <div class="gb-search">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search documentation..." aria-label="Search">
+    </div>
+
+    <nav class="gb-nav">
+        
+        
+        <a href="/worldtime/getting-started/" class="gb-nav-link ">
+            Getting Started
+        </a>
+        
+        <a href="/worldtime/api-reference/" class="gb-nav-link ">
+            API Reference
+        </a>
+        
+        <a href="/worldtime/examples/" class="gb-nav-link ">
+            Examples
+        </a>
+        
+        <a href="/worldtime/migration/" class="gb-nav-link ">
+            Migration
+        </a>
+        
+    </nav>
+</header>
+
+        
+        <aside class="gb-sidebar">
+    <nav class="gb-sidebar-nav">
+        
+
+        
+        
+
+        
+
+        
+        <div class="gb-sidebar-section">
+            <div class="gb-sidebar-title">WorldTime Plugin</div>
+            
+            <a href="/worldtime/extendingtheageingsystem/"
+                class="gb-sidebar-link active">
+                
+            </a>
+            
+            <a href="/worldtime/todo/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+        </div>
+        
+    </nav>
+</aside>
+        
+
+        <main class="gb-main">
+            
+            <div class="gb-content">
+                <h1></h1>
+                <h1 id="making-things-age-a-simple-guide">Making Things Age: A Simple Guide</h1>
+<p>Want to make crops grow, characters get older, or buildings fall apart? The AgeingSystem handles the &ldquo;passing time&rdquo; part - you just need to tell it what should happen at different ages.</p>
+<h2 id="-the-basic-idea">🎯 The Basic Idea</h2>
+<p>The AgeingSystem is like a <strong>timer that counts up forever</strong>. You decide what happens when the timer reaches certain numbers.</p>
+<p><strong>Think of it like this:</strong></p>
+<ul>
+<li>Age 0-1: Seed</li>
+<li>Age 1-3: Sprout</li>
+<li>Age 3-5: Growing plant</li>
+<li>Age 5-8: Ready to harvest</li>
+<li>Age 8+: Dead plant</li>
+</ul>
+<p>The system handles the counting. You handle the &ldquo;what happens at each age&rdquo; part.</p>
+<h2 id="-making-crops-grow-the-easy-way">🌱 Making Crops Grow (The Easy Way)</h2>
+<p>Here&rsquo;s how to make a simple crop that grows through different stages:</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// Create a crop component</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">partial</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">WheatCrop</span> <span style="color:#1f2328">:</span> Node2D
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> AgeingComponent _ageing<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> Sprite2D _sprite<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">override</span> <span style="color:#cf222e">void</span> _Ready<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        _sprite <span style="color:#1f2328">=</span> GetNode<span style="color:#1f2328">&lt;</span>Sprite2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;Sprite&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a">// Create the aging component</span>
+</span></span><span style="display:flex;"><span>        _ageing <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> AgeingComponent<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>        _ageing<span style="color:#1f2328">.</span>AgeStateChanged <span style="color:#1f2328">+=</span> OnCropAged<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        AddChild<span style="color:#1f2328">(</span>_ageing<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// This is called whenever the crop gets older</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> <span style="color:#cf222e">void</span> OnCropAged<span style="color:#1f2328">(</span><span style="color:#cf222e">object</span> sender<span style="color:#1f2328">,</span> AgeStateChangedEventArgs e<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>e<span style="color:#1f2328">.</span>NewState <span style="color:#1f2328">==</span> <span style="color:#cf222e">null</span><span style="color:#1f2328">)</span> <span style="color:#cf222e">return</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">float</span> age <span style="color:#1f2328">=</span> e<span style="color:#1f2328">.</span>NewState<span style="color:#1f2328">.</span>Current<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a">// Change what the crop looks like based on age</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>age <span style="color:#1f2328">&lt;</span> <span style="color:#0550ae">1</span><span style="color:#1f2328">)</span> 
+</span></span><span style="display:flex;"><span>            _sprite<span style="color:#1f2328">.</span>Texture <span style="color:#1f2328">=</span> GD<span style="color:#1f2328">.</span>Load<span style="color:#1f2328">&lt;</span>Texture2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;res://crops/wheat/seed.png&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">else</span> <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>age <span style="color:#1f2328">&lt;</span> <span style="color:#0550ae">3</span><span style="color:#1f2328">)</span> 
+</span></span><span style="display:flex;"><span>            _sprite<span style="color:#1f2328">.</span>Texture <span style="color:#1f2328">=</span> GD<span style="color:#1f2328">.</span>Load<span style="color:#1f2328">&lt;</span>Texture2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;res://crops/wheat/sprout.png&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">else</span> <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>age <span style="color:#1f2328">&lt;</span> <span style="color:#0550ae">5</span><span style="color:#1f2328">)</span> 
+</span></span><span style="display:flex;"><span>            _sprite<span style="color:#1f2328">.</span>Texture <span style="color:#1f2328">=</span> GD<span style="color:#1f2328">.</span>Load<span style="color:#1f2328">&lt;</span>Texture2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;res://crops/wheat/growing.png&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">else</span> <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>age <span style="color:#1f2328">&lt;</span> <span style="color:#0550ae">8</span><span style="color:#1f2328">)</span> 
+</span></span><span style="display:flex;"><span>            _sprite<span style="color:#1f2328">.</span>Texture <span style="color:#1f2328">=</span> GD<span style="color:#1f2328">.</span>Load<span style="color:#1f2328">&lt;</span>Texture2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;res://crops/wheat/mature.png&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">else</span> 
+</span></span><span style="display:flex;"><span>            _sprite<span style="color:#1f2328">.</span>Texture <span style="color:#1f2328">=</span> GD<span style="color:#1f2328">.</span>Load<span style="color:#1f2328">&lt;</span>Texture2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;res://crops/wheat/dead.png&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>That&rsquo;s it! Your wheat crop will now automatically change appearance as it ages.</p>
+<h2 id="-adding-growth-factors">🌾 Adding Growth Factors</h2>
+<p>Want water and seasons to affect growth? Just add some modifiers:</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">partial</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">WheatCrop</span> <span style="color:#1f2328">:</span> Node2D
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> AgeingComponent _ageing<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> Sprite2D _sprite<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> <span style="color:#cf222e">float</span> _waterLevel <span style="color:#1f2328">=</span> <span style="color:#0550ae">1.0f</span><span style="color:#1f2328">;</span>  <span style="color:#57606a">// How much water the crop has</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> <span style="color:#cf222e">float</span> _growthSpeed <span style="color:#1f2328">=</span> <span style="color:#0550ae">1.0f</span><span style="color:#1f2328">;</span> <span style="color:#57606a">// How fast it grows</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">override</span> <span style="color:#cf222e">void</span> _Ready<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        _sprite <span style="color:#1f2328">=</span> GetNode<span style="color:#1f2328">&lt;</span>Sprite2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;Sprite&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        _ageing <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> AgeingComponent<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>        _ageing<span style="color:#1f2328">.</span>AgeStateChanged <span style="color:#1f2328">+=</span> OnCropAged<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        AddChild<span style="color:#1f2328">(</span>_ageing<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Call this when the player waters the crop</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">void</span> WaterCrop<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        _waterLevel <span style="color:#1f2328">=</span> Mathf<span style="color:#1f2328">.</span>Min<span style="color:#1f2328">(</span><span style="color:#0550ae">1.0f</span><span style="color:#1f2328">,</span> _waterLevel <span style="color:#1f2328">+</span> <span style="color:#0550ae">0.3f</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        _growthSpeed <span style="color:#1f2328">=</span> <span style="color:#0550ae">0.5f</span> <span style="color:#1f2328">+</span> _waterLevel<span style="color:#1f2328">;</span> <span style="color:#57606a">// More water = faster growth</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Call this every day to simulate water evaporation</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">void</span> DailyUpdate<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        _waterLevel <span style="color:#1f2328">=</span> Mathf<span style="color:#1f2328">.</span>Max<span style="color:#1f2328">(</span><span style="color:#0550ae">0.0f</span><span style="color:#1f2328">,</span> _waterLevel <span style="color:#1f2328">-</span> <span style="color:#0550ae">0.1f</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        _growthSpeed <span style="color:#1f2328">=</span> <span style="color:#0550ae">0.5f</span> <span style="color:#1f2328">+</span> _waterLevel<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a">// Apply growth speed to age</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">float</span> effectiveAge <span style="color:#1f2328">=</span> _ageing<span style="color:#1f2328">.</span>AgeState<span style="color:#1f2328">.</span>Current <span style="color:#1f2328">*</span> _growthSpeed<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        UpdateCropAppearance<span style="color:#1f2328">(</span>effectiveAge<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> <span style="color:#cf222e">void</span> UpdateCropAppearance<span style="color:#1f2328">(</span><span style="color:#cf222e">float</span> age<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>age <span style="color:#1f2328">&lt;</span> <span style="color:#0550ae">1</span><span style="color:#1f2328">)</span> 
+</span></span><span style="display:flex;"><span>            _sprite<span style="color:#1f2328">.</span>Texture <span style="color:#1f2328">=</span> GD<span style="color:#1f2328">.</span>Load<span style="color:#1f2328">&lt;</span>Texture2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;res://crops/wheat/seed.png&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">else</span> <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>age <span style="color:#1f2328">&lt;</span> <span style="color:#0550ae">3</span><span style="color:#1f2328">)</span> 
+</span></span><span style="display:flex;"><span>            _sprite<span style="color:#1f2328">.</span>Texture <span style="color:#1f2328">=</span> GD<span style="color:#1f2328">.</span>Load<span style="color:#1f2328">&lt;</span>Texture2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;res://crops/wheat/sprout.png&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">else</span> <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>age <span style="color:#1f2328">&lt;</span> <span style="color:#0550ae">5</span><span style="color:#1f2328">)</span> 
+</span></span><span style="display:flex;"><span>            _sprite<span style="color:#1f2328">.</span>Texture <span style="color:#1f2328">=</span> GD<span style="color:#1f2328">.</span>Load<span style="color:#1f2328">&lt;</span>Texture2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;res://crops/wheat/growing.png&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">else</span> <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>age <span style="color:#1f2328">&lt;</span> <span style="color:#0550ae">8</span><span style="color:#1f2328">)</span> 
+</span></span><span style="display:flex;"><span>            _sprite<span style="color:#1f2328">.</span>Texture <span style="color:#1f2328">=</span> GD<span style="color:#1f2328">.</span>Load<span style="color:#1f2328">&lt;</span>Texture2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;res://crops/wheat/mature.png&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">else</span> 
+</span></span><span style="display:flex;"><span>            _sprite<span style="color:#1f2328">.</span>Texture <span style="color:#1f2328">=</span> GD<span style="color:#1f2328">.</span>Load<span style="color:#1f2328">&lt;</span>Texture2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;res://crops/wheat/dead.png&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> <span style="color:#cf222e">void</span> OnCropAged<span style="color:#1f2328">(</span><span style="color:#cf222e">object</span> sender<span style="color:#1f2328">,</span> AgeStateChangedEventArgs e<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        DailyUpdate<span style="color:#1f2328">();</span> <span style="color:#57606a">// Update growth factors when age changes</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="-making-characters-age">👶 Making Characters Age</h2>
+<p>Want NPCs to get older and change appearance over time?</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">partial</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">NPC</span> <span style="color:#1f2328">:</span> Node2D
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> AgeingComponent _ageing<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> Sprite2D _sprite<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> <span style="color:#cf222e">float</span> _moveSpeed <span style="color:#1f2328">=</span> <span style="color:#0550ae">100.0f</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">override</span> <span style="color:#cf222e">void</span> _Ready<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        _sprite <span style="color:#1f2328">=</span> GetNode<span style="color:#1f2328">&lt;</span>Sprite2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;Sprite&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        _ageing <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> AgeingComponent<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>        _ageing<span style="color:#1f2328">.</span>AgeStateChanged <span style="color:#1f2328">+=</span> OnCharacterAged<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        AddChild<span style="color:#1f2328">(</span>_ageing<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> <span style="color:#cf222e">void</span> OnCharacterAged<span style="color:#1f2328">(</span><span style="color:#cf222e">object</span> sender<span style="color:#1f2328">,</span> AgeStateChangedEventArgs e<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>e<span style="color:#1f2328">.</span>NewState <span style="color:#1f2328">==</span> <span style="color:#cf222e">null</span><span style="color:#1f2328">)</span> <span style="color:#cf222e">return</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">float</span> age <span style="color:#1f2328">=</span> e<span style="color:#1f2328">.</span>NewState<span style="color:#1f2328">.</span>Current<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a">// Change appearance based on age</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>age <span style="color:#1f2328">&lt;</span> <span style="color:#0550ae">18</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            _sprite<span style="color:#1f2328">.</span>Texture <span style="color:#1f2328">=</span> GD<span style="color:#1f2328">.</span>Load<span style="color:#1f2328">&lt;</span>Texture2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;res://characters/child.png&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>            _moveSpeed <span style="color:#1f2328">=</span> <span style="color:#0550ae">120.0f</span><span style="color:#1f2328">;</span> <span style="color:#57606a">// Kids run faster</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">else</span> <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>age <span style="color:#1f2328">&lt;</span> <span style="color:#0550ae">30</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            _sprite<span style="color:#1f2328">.</span>Texture <span style="color:#1f2328">=</span> GD<span style="color:#1f2328">.</span>Load<span style="color:#1f2328">&lt;</span>Texture2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;res://characters/young_adult.png&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>            _moveSpeed <span style="color:#1f2328">=</span> <span style="color:#0550ae">100.0f</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">else</span> <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>age <span style="color:#1f2328">&lt;</span> <span style="color:#0550ae">50</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            _sprite<span style="color:#1f2328">.</span>Texture <span style="color:#1f2328">=</span> GD<span style="color:#1f2328">.</span>Load<span style="color:#1f2328">&lt;</span>Texture2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;res://characters/adult.png&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>            _moveSpeed <span style="color:#1f2328">=</span> <span style="color:#0550ae">90.0f</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">else</span> <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>age <span style="color:#1f2328">&lt;</span> <span style="color:#0550ae">70</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            _sprite<span style="color:#1f2328">.</span>Texture <span style="color:#1f2328">=</span> GD<span style="color:#1f2328">.</span>Load<span style="color:#1f2328">&lt;</span>Texture2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;res://characters/elder.png&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>            _moveSpeed <span style="color:#1f2328">=</span> <span style="color:#0550ae">70.0f</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">else</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            _sprite<span style="color:#1f2328">.</span>Texture <span style="color:#1f2328">=</span> GD<span style="color:#1f2328">.</span>Load<span style="color:#1f2328">&lt;</span>Texture2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;res://characters/senior.png&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>            _moveSpeed <span style="color:#1f2328">=</span> <span style="color:#0550ae">50.0f</span><span style="color:#1f2328">;</span> <span style="color:#57606a">// Seniors move slower</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">float</span> GetMoveSpeed<span style="color:#1f2328">()</span> <span style="color:#1f2328">=&gt;</span> _moveSpeed<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="-making-buildings-deteriorate">🏠 Making Buildings Deteriorate</h2>
+<p>Want buildings to fall apart over time if not maintained?</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">56
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">57
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">58
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">60
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">61
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">partial</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">Building</span> <span style="color:#1f2328">:</span> Node2D
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> AgeingComponent _ageing<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> Sprite2D _sprite<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> <span style="color:#cf222e">float</span> _condition <span style="color:#1f2328">=</span> <span style="color:#0550ae">100.0f</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">override</span> <span style="color:#cf222e">void</span> _Ready<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        _sprite <span style="color:#1f2328">=</span> GetNode<span style="color:#1f2328">&lt;</span>Sprite2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;Sprite&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        _ageing <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> AgeingComponent<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>        _ageing<span style="color:#1f2328">.</span>AgeStateChanged <span style="color:#1f2328">+=</span> OnBuildingAged<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        AddChild<span style="color:#1f2328">(</span>_ageing<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> <span style="color:#cf222e">void</span> OnBuildingAged<span style="color:#1f2328">(</span><span style="color:#cf222e">object</span> sender<span style="color:#1f2328">,</span> AgeStateChangedEventArgs e<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>e<span style="color:#1f2328">.</span>NewState <span style="color:#1f2328">==</span> <span style="color:#cf222e">null</span><span style="color:#1f2328">)</span> <span style="color:#cf222e">return</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">float</span> age <span style="color:#1f2328">=</span> e<span style="color:#1f2328">.</span>NewState<span style="color:#1f2328">.</span>Current<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a">// Buildings lose condition over time</span>
+</span></span><span style="display:flex;"><span>        _condition <span style="color:#1f2328">=</span> Mathf<span style="color:#1f2328">.</span>Max<span style="color:#1f2328">(</span><span style="color:#0550ae">0</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">100.0f</span> <span style="color:#1f2328">-</span> <span style="color:#1f2328">(</span>age <span style="color:#1f2328">*</span> <span style="color:#0550ae">5.0f</span><span style="color:#1f2328">));</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a">// Change appearance based on condition</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>_condition <span style="color:#1f2328">&gt;</span> <span style="color:#0550ae">80</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            _sprite<span style="color:#1f2328">.</span>Texture <span style="color:#1f2328">=</span> GD<span style="color:#1f2328">.</span>Load<span style="color:#1f2328">&lt;</span>Texture2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;res://buildings/house_new.png&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">else</span> <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>_condition <span style="color:#1f2328">&gt;</span> <span style="color:#0550ae">60</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            _sprite<span style="color:#1f2328">.</span>Texture <span style="color:#1f2328">=</span> GD<span style="color:#1f2328">.</span>Load<span style="color:#1f2328">&lt;</span>Texture2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;res://buildings/house_good.png&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">else</span> <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>_condition <span style="color:#1f2328">&gt;</span> <span style="color:#0550ae">40</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            _sprite<span style="color:#1f2328">.</span>Texture <span style="color:#1f2328">=</span> GD<span style="color:#1f2328">.</span>Load<span style="color:#1f2328">&lt;</span>Texture2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;res://buildings/house_fair.png&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">else</span> <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>_condition <span style="color:#1f2328">&gt;</span> <span style="color:#0550ae">20</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            _sprite<span style="color:#1f2328">.</span>Texture <span style="color:#1f2328">=</span> GD<span style="color:#1f2328">.</span>Load<span style="color:#1f2328">&lt;</span>Texture2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;res://buildings/house_poor.png&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">else</span>
+</span></span><span style="display:flex;"><span>            _sprite<span style="color:#1f2328">.</span>Texture <span style="color:#1f2328">=</span> GD<span style="color:#1f2328">.</span>Load<span style="color:#1f2328">&lt;</span>Texture2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;res://buildings/house_ruined.png&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Player can repair buildings</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">void</span> Repair<span style="color:#1f2328">(</span><span style="color:#cf222e">float</span> amount<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        _condition <span style="color:#1f2328">=</span> Mathf<span style="color:#1f2328">.</span>Min<span style="color:#1f2328">(</span><span style="color:#0550ae">100.0f</span><span style="color:#1f2328">,</span> _condition <span style="color:#1f2328">+</span> amount<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        UpdateAppearance<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> <span style="color:#cf222e">void</span> UpdateAppearance<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>_condition <span style="color:#1f2328">&gt;</span> <span style="color:#0550ae">80</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            _sprite<span style="color:#1f2328">.</span>Texture <span style="color:#1f2328">=</span> GD<span style="color:#1f2328">.</span>Load<span style="color:#1f2328">&lt;</span>Texture2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;res://buildings/house_new.png&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">else</span> <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>_condition <span style="color:#1f2328">&gt;</span> <span style="color:#0550ae">60</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            _sprite<span style="color:#1f2328">.</span>Texture <span style="color:#1f2328">=</span> GD<span style="color:#1f2328">.</span>Load<span style="color:#1f2328">&lt;</span>Texture2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;res://buildings/house_good.png&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">else</span> <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>_condition <span style="color:#1f2328">&gt;</span> <span style="color:#0550ae">40</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            _sprite<span style="color:#1f2328">.</span>Texture <span style="color:#1f2328">=</span> GD<span style="color:#1f2328">.</span>Load<span style="color:#1f2328">&lt;</span>Texture2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;res://buildings/house_fair.png&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">else</span> <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>_condition <span style="color:#1f2328">&gt;</span> <span style="color:#0550ae">20</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            _sprite<span style="color:#1f2328">.</span>Texture <span style="color:#1f2328">=</span> GD<span style="color:#1f2328">.</span>Load<span style="color:#1f2328">&lt;</span>Texture2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;res://buildings/house_poor.png&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">else</span>
+</span></span><span style="display:flex;"><span>            _sprite<span style="color:#1f2328">.</span>Texture <span style="color:#1f2328">=</span> GD<span style="color:#1f2328">.</span>Load<span style="color:#1f2328">&lt;</span>Texture2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;res://buildings/house_ruined.png&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">bool</span> IsRuined<span style="color:#1f2328">()</span> <span style="color:#1f2328">=&gt;</span> _condition <span style="color:#1f2328">&lt;=</span> <span style="color:#0550ae">20</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="-quick-tips-for-game-development">🎮 Quick Tips for Game Development</h2>
+<h3 id="making-it-work-in-your-game">Making It Work in Your Game</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// In your main game scene</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">partial</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">GameManager</span> <span style="color:#1f2328">:</span> Node
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">override</span> <span style="color:#cf222e">void</span> _Ready<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a">// Connect to world time system</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">var</span> worldTime <span style="color:#1f2328">=</span> GetNode<span style="color:#1f2328">&lt;</span>TimeManagerNode<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;TimeManager&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        worldTime<span style="color:#1f2328">.</span>DayChanged <span style="color:#1f2328">+=</span> OnNewDay<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> <span style="color:#cf222e">void</span> OnNewDay<span style="color:#1f2328">(</span><span style="color:#cf222e">int</span> newDay<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a">// Make all crops age by 1 day</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">var</span> crops <span style="color:#1f2328">=</span> GetTree<span style="color:#1f2328">().</span>GetNodesInGroup<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;crops&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">foreach</span> <span style="color:#1f2328">(</span>Node crop <span style="color:#cf222e">in</span> crops<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>crop <span style="color:#cf222e">is</span> WheatCrop wheatCrop<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                wheatCrop<span style="color:#1f2328">.</span>DailyUpdate<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="using-resources-for-easy-configuration">Using Resources for Easy Configuration</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// Create a resource file for different crop types</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">[Resource]</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">CropData</span> <span style="color:#1f2328">:</span> Resource
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">string</span> CropName <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">float</span><span style="color:#1f2328">[]</span> GrowthStages <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span> <span style="color:#1f2328">=</span> <span style="color:#1f2328">{</span> <span style="color:#0550ae">1</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">3</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">5</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">8</span> <span style="color:#1f2328">};</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">string</span><span style="color:#1f2328">[]</span> StageSprites <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span> <span style="color:#1f2328">=</span> <span style="color:#1f2328">{</span> <span style="color:#0a3069">&#34;seed&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;sprout&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;growing&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;mature&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;dead&#34;</span> <span style="color:#1f2328">};</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> <span style="color:#cf222e">float</span> BaseGrowthSpeed <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span> <span style="color:#1f2328">=</span> <span style="color:#0550ae">1.0f</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Use it in your crop</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">partial</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">GenericCrop</span> <span style="color:#1f2328">:</span> Node2D
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">    [Export]</span> <span style="color:#cf222e">public</span> CropData<span style="color:#1f2328">?</span> CropData <span style="color:#1f2328">{</span> <span style="color:#cf222e">get</span><span style="color:#1f2328">;</span> <span style="color:#cf222e">set</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">private</span> <span style="color:#cf222e">void</span> UpdateAppearance<span style="color:#1f2328">(</span><span style="color:#cf222e">float</span> age<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>CropData <span style="color:#1f2328">==</span> <span style="color:#cf222e">null</span><span style="color:#1f2328">)</span> <span style="color:#cf222e">return</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">for</span> <span style="color:#1f2328">(</span><span style="color:#cf222e">int</span> i <span style="color:#1f2328">=</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">;</span> i <span style="color:#1f2328">&lt;</span> CropData<span style="color:#1f2328">.</span>GrowthStages<span style="color:#1f2328">.</span>Length<span style="color:#1f2328">;</span> i<span style="color:#1f2328">++)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>age <span style="color:#1f2328">&lt;</span> CropData<span style="color:#1f2328">.</span>GrowthStages<span style="color:#1f2328">[</span>i<span style="color:#1f2328">])</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                _sprite<span style="color:#1f2328">.</span>Texture <span style="color:#1f2328">=</span> GD<span style="color:#1f2328">.</span>Load<span style="color:#1f2328">&lt;</span>Texture2D<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">$&#34;res://crops/{CropData.StageSprites[i]}.png&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">break</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="saving-and-loading">Saving and Loading</h3>
+<p>The AgeingSystem automatically handles saving and loading:</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// Save the game</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">void</span> SaveGame<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">var</span> saveData <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> Dictionary<span style="color:#1f2328">&lt;</span><span style="color:#cf222e">string</span><span style="color:#1f2328">,</span> <span style="color:#cf222e">string</span><span style="color:#1f2328">&gt;();</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Save all aging objects</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">var</span> crops <span style="color:#1f2328">=</span> GetTree<span style="color:#1f2328">().</span>GetNodesInGroup<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;crops&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">foreach</span> <span style="color:#1f2328">(</span>Node crop <span style="color:#cf222e">in</span> crops<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>crop <span style="color:#cf222e">is</span> WheatCrop wheatCrop<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">var</span> cropData <span style="color:#1f2328">=</span> wheatCrop<span style="color:#1f2328">.</span>_ageing<span style="color:#1f2328">.</span>ToDict<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>            saveData<span style="color:#1f2328">[</span><span style="color:#0a3069">$&#34;crop_{wheatCrop.Name}&#34;</span><span style="color:#1f2328">]</span> <span style="color:#1f2328">=</span> Json<span style="color:#1f2328">.</span>Stringify<span style="color:#1f2328">(</span>cropData<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Write to file</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">var</span> file <span style="color:#1f2328">=</span> FileAccess<span style="color:#1f2328">.</span>Open<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;user://savegame.json&#34;</span><span style="color:#1f2328">,</span> FileAccess<span style="color:#1f2328">.</span>ModeFlags<span style="color:#1f2328">.</span>Write<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    file<span style="color:#1f2328">.</span>StoreString<span style="color:#1f2328">(</span>Json<span style="color:#1f2328">.</span>Stringify<span style="color:#1f2328">(</span>saveData<span style="color:#1f2328">));</span>
+</span></span><span style="display:flex;"><span>    file<span style="color:#1f2328">.</span>Close<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Load the game</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">void</span> LoadGame<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">var</span> file <span style="color:#1f2328">=</span> FileAccess<span style="color:#1f2328">.</span>Open<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;user://savegame.json&#34;</span><span style="color:#1f2328">,</span> FileAccess<span style="color:#1f2328">.</span>ModeFlags<span style="color:#1f2328">.</span>Read<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">var</span> saveData <span style="color:#1f2328">=</span> Json<span style="color:#1f2328">.</span>ParseString<span style="color:#1f2328">(</span>file<span style="color:#1f2328">.</span>GetAsText<span style="color:#1f2328">()).</span>AsGodotDictionary<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>    file<span style="color:#1f2328">.</span>Close<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Restore all aging objects</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">foreach</span> <span style="color:#1f2328">(</span><span style="color:#cf222e">var</span> key <span style="color:#cf222e">in</span> saveData<span style="color:#1f2328">.</span>Keys<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>key<span style="color:#1f2328">.</span>ToString<span style="color:#1f2328">().</span>StartsWith<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;crop_&#34;</span><span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">var</span> cropName <span style="color:#1f2328">=</span> key<span style="color:#1f2328">.</span>ToString<span style="color:#1f2328">().</span>Replace<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;crop_&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">var</span> cropData <span style="color:#1f2328">=</span> Json<span style="color:#1f2328">.</span>ParseString<span style="color:#1f2328">(</span>saveData<span style="color:#1f2328">[</span>key<span style="color:#1f2328">].</span>ToString<span style="color:#1f2328">()).</span>AsGodotDictionary<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">var</span> crop <span style="color:#1f2328">=</span> GetNode<span style="color:#1f2328">&lt;</span>WheatCrop<span style="color:#1f2328">&gt;(</span>cropName<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>crop <span style="color:#1f2328">!=</span> <span style="color:#cf222e">null</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                crop<span style="color:#1f2328">.</span>_ageing<span style="color:#1f2328">.</span>FromDict<span style="color:#1f2328">(</span>cropData<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="-common-patterns">📚 Common Patterns</h2>
+<h3 id="1-different-growth-speeds-for-different-crops">1. Different Growth Speeds for Different Crops</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">partial</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">CornCrop</span> <span style="color:#1f2328">:</span> WheatCrop  <span style="color:#57606a">// Reuse wheat crop code</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">override</span> <span style="color:#cf222e">void</span> _Ready<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">base</span><span style="color:#1f2328">.</span>_Ready<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a">// Corn grows slower than wheat</span>
+</span></span><span style="display:flex;"><span>        _growthSpeed <span style="color:#1f2328">=</span> <span style="color:#0550ae">0.7f</span><span style="color:#1f2328">;</span>  <span style="color:#57606a">// 70% of normal speed</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="2-seasonal-effects">2. Seasonal Effects</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">partial</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">SeasonalCrop</span> <span style="color:#1f2328">:</span> WheatCrop
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">protected</span> <span style="color:#cf222e">override</span> <span style="color:#cf222e">void</span> DailyUpdate<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">base</span><span style="color:#1f2328">.</span>DailyUpdate<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a">// Get current season from your world time system</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">var</span> season <span style="color:#1f2328">=</span> GetCurrentSeason<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a">// Adjust growth based on season</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">switch</span> <span style="color:#1f2328">(</span>season<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">case</span> Season<span style="color:#1f2328">.</span>Spring<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                _growthSpeed <span style="color:#1f2328">=</span> <span style="color:#0550ae">1.2f</span><span style="color:#1f2328">;</span>  <span style="color:#57606a">// Spring bonus</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">break</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">case</span> Season<span style="color:#1f2328">.</span>Summer<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                _growthSpeed <span style="color:#1f2328">=</span> <span style="color:#0550ae">1.5f</span><span style="color:#1f2328">;</span>  <span style="color:#57606a">// Summer bonus</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">break</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">case</span> Season<span style="color:#1f2328">.</span>Fall<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                _growthSpeed <span style="color:#1f2328">=</span> <span style="color:#0550ae">0.8f</span><span style="color:#1f2328">;</span>  <span style="color:#57606a">// Fall penalty</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">break</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">case</span> Season<span style="color:#1f2328">.</span>Winter<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                _growthSpeed <span style="color:#1f2328">=</span> <span style="color:#0550ae">0.3f</span><span style="color:#1f2328">;</span>  <span style="color:#57606a">// Winter penalty</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">break</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="3-random-variations">3. Random Variations</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">partial</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">RandomCrop</span> <span style="color:#1f2328">:</span> WheatCrop
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">override</span> <span style="color:#cf222e">void</span> _Ready<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">base</span><span style="color:#1f2328">.</span>_Ready<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a">// Add some randomness to make each crop unique</span>
+</span></span><span style="display:flex;"><span>        _growthSpeed <span style="color:#1f2328">*=</span> GD<span style="color:#1f2328">.</span>RandfRange<span style="color:#1f2328">(</span><span style="color:#0550ae">0.8f</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">1.2f</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="-common-problems-and-solutions">🐛 Common Problems and Solutions</h2>
+<h3 id="problem-my-crops-arent-aging">Problem: My crops aren&rsquo;t aging!</h3>
+<p><strong>Solution:</strong> Make sure your TimeManager is running and connected to the aging system.</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// In your TimeManager</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">public</span> <span style="color:#cf222e">override</span> <span style="color:#cf222e">void</span> _Process<span style="color:#1f2328">(</span><span style="color:#cf222e">double</span> delta<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">base</span><span style="color:#1f2328">.</span>_Process<span style="color:#1f2328">(</span>delta<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">// Update aging system</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">var</span> worldAgeSystem <span style="color:#1f2328">=</span> GetNode<span style="color:#1f2328">&lt;</span>WorldAgeSystemNode<span style="color:#1f2328">&gt;(</span><span style="color:#0a3069">&#34;WorldAgeSystem&#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>    worldAgeSystem<span style="color:#1f2328">.</span>Update<span style="color:#1f2328">((</span><span style="color:#cf222e">float</span><span style="color:#1f2328">)</span>delta<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="problem-crops-age-too-fastslow">Problem: Crops age too fast/slow</h3>
+<p><strong>Solution:</strong> Adjust the time scale in your TimeManager settings.</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// Make time pass slower</span>
+</span></span><span style="display:flex;"><span>timeScale<span style="color:#1f2328">.</span>DeltaMultiplier <span style="color:#1f2328">=</span> <span style="color:#0550ae">500.0f</span><span style="color:#1f2328">;</span>  <span style="color:#57606a">// Default is 1000.0f</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Make time pass faster  </span>
+</span></span><span style="display:flex;"><span>timeScale<span style="color:#1f2328">.</span>DeltaMultiplier <span style="color:#1f2328">=</span> <span style="color:#0550ae">2000.0f</span><span style="color:#1f2328">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="problem-crops-dont-save-their-age">Problem: Crops don&rsquo;t save their age</h3>
+<p><strong>Solution:</strong> Make sure you&rsquo;re calling the save/load methods correctly.</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// Save</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> cropData <span style="color:#1f2328">=</span> crop<span style="color:#1f2328">.</span>_ageing<span style="color:#1f2328">.</span>ToDict<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Load</span>
+</span></span><span style="display:flex;"><span>crop<span style="color:#1f2328">.</span>_ageing<span style="color:#1f2328">.</span>FromDict<span style="color:#1f2328">(</span>cropData<span style="color:#1f2328">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="-what-to-build-next">🎯 What to Build Next?</h2>
+<p>Now that you know the basics, try these ideas:</p>
+<ol>
+<li><strong>Fruit Trees</strong> - Trees that produce fruit every season</li>
+<li><strong>Animal Aging</strong> - Animals that grow up and eventually die</li>
+<li><strong>Tool Wear</strong> - Tools that break after use and need repair</li>
+<li><strong>World Events</strong> - Special things that happen at certain world ages</li>
+<li><strong>Character Relationships</strong> - NPCs that form relationships over time</li>
+</ol>
+<h2 id="-summary">📖 Summary</h2>
+<p>The AgeingSystem is simple:</p>
+<ol>
+<li><strong>Add AgeingComponent</strong> to anything that should age</li>
+<li><strong>Listen for AgeStateChanged</strong> events</li>
+<li><strong>Change appearance/behavior</strong> based on the age</li>
+<li><strong>Save/load</strong> automatically works</li>
+</ol>
+<p>That&rsquo;s it! You now have everything you need to make crops grow, characters age, buildings deteriorate, and anything else you can imagine.</p>
+<p><strong>Remember:</strong> The system handles the counting, you handle what happens at each age. Keep it simple and have fun building your game!</p>
+
+            </div>
+            
+        </main>
+
+        
+        <aside class="gb-toc">
+            <div class="gb-toc-title">On this page</div>
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#-the-basic-idea">🎯 The Basic Idea</a></li>
+    <li><a href="#-making-crops-grow-the-easy-way">🌱 Making Crops Grow (The Easy Way)</a></li>
+    <li><a href="#-adding-growth-factors">🌾 Adding Growth Factors</a></li>
+    <li><a href="#-making-characters-age">👶 Making Characters Age</a></li>
+    <li><a href="#-making-buildings-deteriorate">🏠 Making Buildings Deteriorate</a></li>
+    <li><a href="#-quick-tips-for-game-development">🎮 Quick Tips for Game Development</a>
+      <ul>
+        <li><a href="#making-it-work-in-your-game">Making It Work in Your Game</a></li>
+        <li><a href="#using-resources-for-easy-configuration">Using Resources for Easy Configuration</a></li>
+        <li><a href="#saving-and-loading">Saving and Loading</a></li>
+      </ul>
+    </li>
+    <li><a href="#-common-patterns">📚 Common Patterns</a>
+      <ul>
+        <li><a href="#1-different-growth-speeds-for-different-crops">1. Different Growth Speeds for Different Crops</a></li>
+        <li><a href="#2-seasonal-effects">2. Seasonal Effects</a></li>
+        <li><a href="#3-random-variations">3. Random Variations</a></li>
+      </ul>
+    </li>
+    <li><a href="#-common-problems-and-solutions">🐛 Common Problems and Solutions</a>
+      <ul>
+        <li><a href="#problem-my-crops-arent-aging">Problem: My crops aren&rsquo;t aging!</a></li>
+        <li><a href="#problem-crops-age-too-fastslow">Problem: Crops age too fast/slow</a></li>
+        <li><a href="#problem-crops-dont-save-their-age">Problem: Crops don&rsquo;t save their age</a></li>
+      </ul>
+    </li>
+    <li><a href="#-what-to-build-next">🎯 What to Build Next?</a></li>
+    <li><a href="#-summary">📖 Summary</a></li>
+  </ul>
+</nav>
+        </aside>
+        
+
+        <footer class="gb-footer">
+    <p>&copy; 2025 Chris Tutorials. All rights reserved.</p>
+    <p>
+        Built with <a href="https://gohugo.io/" target="_blank">Hugo</a> and
+        <a href="https://godotengine.org/" target="_blank">Godot</a>.
+    </p>
+</footer>
+    </div>
+</body>
+
+</html>
