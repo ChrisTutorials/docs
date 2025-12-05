@@ -14,6 +14,7 @@ tags:
   - "example"
   - "tutorial"
   - "complete"
+aliases: ["/latest/examples/godot-integration-example/", "/gridbuilding/latest/examples/godot-integration-example/"]
 ---
 
 

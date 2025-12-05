@@ -13,6 +13,7 @@ tags:
   - "architecture"
   - "services"
   - "pattern"
+aliases: ["/latest/guides/service-based-architecture/", "/gridbuilding/latest/guides/service-based-architecture/"]
 ---
 
 

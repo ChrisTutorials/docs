@@ -1,0 +1,639 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Service-Based Architecture | GridBuilding Plugin</title>
+<meta name=description content="Understanding the service-based architecture pattern used in GridBuilding plugin"><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel=stylesheet><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css><link rel=stylesheet href=/css/custom.css><meta name=generator content="Hugo 0.146.5"></head><body><div class=gb-layout><header class=gb-header><a href=/ class=gb-brand><i class="fas fa-cubes" style=color:var(--gb-primary)></i>
+<span>GridBuilding Plugin</span></a><div class=gb-search><i class="fas fa-search"></i>
+<input type=text placeholder="Search documentation..." aria-label=Search></div><nav class=gb-nav><a href=/ class=gb-nav-link>Home
+</a><a href=/v6.0/overview/ class=gb-nav-link>Documentation
+</a><a href=/v5.1/overview/ class=gb-nav-link>Grid Building Plugin Overview
+</a><a href=/v6.0/api/ class=gb-nav-link>API Reference
+</a><a href=/v5.1/guides/ class=gb-nav-link>Getting Started Guides
+</a><a href=/v6.0/examples/ class=gb-nav-link>Examples
+</a><a href=/v5.1/examples/ class=gb-nav-link>Code Examples
+</a><a href=/community/ class=gb-nav-link>Community
+</a><a href=/v5.1/architecture-diagrams/ class=gb-nav-link>Architecture Diagrams</a></nav></header><aside class=gb-sidebar><nav class=gb-sidebar-nav><div class=gb-sidebar-section><div class=gb-sidebar-title>V6-0s</div><a href=/v6-0/guides/getting_started/ class=gb-sidebar-link>Getting Started with GridBuilding
+</a><a href=/v6.0/guides/gdscript-to-csharp-mapping/ class=gb-sidebar-link>GDScript to C# Migration Guide
+</a><a href=/v6-0/guides/csharp_state_integration/ class=gb-sidebar-link>C# State Integration with Godot Frontend
+</a><a href=/v6-0/guides/troubleshooting/ class=gb-sidebar-link>Troubleshooting Guide
+</a><a href=/v6-0/examples/godot_integration_example/ class=gb-sidebar-link>Godot Integration Example
+</a><a href=/v6-0/guides/service_based_architecture/ class="gb-sidebar-link active">Service-Based Architecture
+</a><a href=/gridbuilding/v6-0/api/ class=gb-sidebar-link>GridBuilding API Reference</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.1.0</div><a href=/v5.1/overview/ class=gb-sidebar-link>Grid Building Plugin Overview
+</a><a href=/v5.1/guides/ class=gb-sidebar-link>Getting Started Guides
+</a><a href=/v5.1/api/ class=gb-sidebar-link>C# API Reference
+</a><a href=/v5.1/examples/ class=gb-sidebar-link>Code Examples
+</a><a href=/v5.1/architecture-diagrams/ class=gb-sidebar-link>Architecture Diagrams
+</a><a href=/v5.1/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.1/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.1/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.1/validation/ class=gb-sidebar-link>Validation Tools</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.0.0</div><a href=/v5.0/api/ class=gb-sidebar-link>GDScript API Reference
+</a><a href=/v5.0/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.0/overview/ class=gb-sidebar-link>Grid Building Plugin v5.0.0
+</a><a href=/v5.0/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.0/guides/ class=gb-sidebar-link>Plugin Overview
+</a><a href=/v5.0/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.0/validation/ class=gb-sidebar-link>Validation Tools</a></div></nav></aside><main class=gb-main><div class=gb-content><h1>Service-Based Architecture</h1><h2 id=-overview>🎯 Overview</h2><p>This document describes the refined service-based architecture that separates <strong>state data</strong> from <strong>business logic</strong> and <strong>event handling</strong>. This creates a cleaner separation of concerns and improves testability.</p><h2 id=-architecture-principles>🏗️ Architecture Principles</h2><h3 id=1-state--pure-data-only>1. <strong>State = Pure Data Only</strong></h3><ul><li>State classes contain ONLY data (no logic, no events)</li><li>Serializable and testable in isolation</li><li>No engine dependencies</li><li>No business logic or validation</li></ul><h3 id=2-services--business-logic--events>2. <strong>Services = Business Logic + Events</strong></h3><ul><li>Services contain all business logic</li><li>Services handle state validation and transitions</li><li>Services dispatch events and signals</li><li>Services coordinate between multiple state objects</li></ul><h3 id=3-clear-data-flow>3. <strong>Clear Data Flow</strong></h3><ul><li><strong>Godot</strong> ↔ <strong>Services</strong> ↔ <strong>State</strong></li><li>Godot never directly accesses State</li><li>All communication goes through Services</li><li>Events flow from Services to Godot</li></ul><h2 id=-new-folder-structure>📊 New Folder Structure</h2><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">51
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">52
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">53
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">54
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">55
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>Core/
+</span></span><span style=display:flex><span>├── State/                    # PURE DATA ONLY
+</span></span><span style=display:flex><span>│   ├── Building/
+</span></span><span style=display:flex><span>│   │   └── BuildingState.cs
+</span></span><span style=display:flex><span>│   ├── Manipulation/
+</span></span><span style=display:flex><span>│   │   └── ManipulationState.cs
+</span></span><span style=display:flex><span>│   ├── Targeting/
+</span></span><span style=display:flex><span>│   │   └── TargetingState.cs
+</span></span><span style=display:flex><span>│   ├── User/
+</span></span><span style=display:flex><span>│   │   └── UserState.cs
+</span></span><span style=display:flex><span>│   ├── Mode/
+</span></span><span style=display:flex><span>│   │   └── ModeState.cs
+</span></span><span style=display:flex><span>│   └── IState.cs            # Base state interface
+</span></span><span style=display:flex><span>│
+</span></span><span style=display:flex><span>├── Services/                   # SERVICES: Business logic + events
+</span></span><span style=display:flex><span>│   ├── Building/              # Building operations and events
+</span></span><span style=display:flex><span>│   │   ├── IBuildingService.cs
+</span></span><span style=display:flex><span>│   │   ├── BuildingService.cs
+</span></span><span style=display:flex><span>│   │   └── BuildingEvents.cs
+</span></span><span style=display:flex><span>│   ├── Manipulation/          # Manipulation operations and events
+</span></span><span style=display:flex><span>│   │   ├── IManipulationService.cs
+</span></span><span style=display:flex><span>│   │   ├── ManipulationService.cs
+</span></span><span style=display:flex><span>│   │   └── ManipulationEvents.cs
+</span></span><span style=display:flex><span>│   ├── Targeting/             # Targeting operations and events
+</span></span><span style=display:flex><span>│   │   ├── ITargetingService.cs
+</span></span><span style=display:flex><span>│   │   ├── TargetingService.cs
+</span></span><span style=display:flex><span>│   │   └── TargetingEvents.cs
+</span></span><span style=display:flex><span>│   ├── Input/                 # Input processing and events
+</span></span><span style=display:flex><span>│   │   ├── IInputService.cs
+</span></span><span style=display:flex><span>│   │   ├── InputService.cs
+</span></span><span style=display:flex><span>│   │   └── InputEvents.cs
+</span></span><span style=display:flex><span>│   ├── EventDispatcher.cs     # Central event coordination
+</span></span><span style=display:flex><span>│   ├── ICalculator.cs         # Calculator interfaces
+</span></span><span style=display:flex><span>│   └── IGeometryCalculator.cs # Geometry calculation interfaces
+</span></span><span style=display:flex><span>│
+</span></span><span style=display:flex><span>├── Systems/                  # CORE SYSTEMS (unchanged)
+</span></span><span style=display:flex><span>│   ├── Building/
+</span></span><span style=display:flex><span>│   ├── Collision/
+</span></span><span style=display:flex><span>│   ├── Components/
+</span></span><span style=display:flex><span>│   ├── Configuration/
+</span></span><span style=display:flex><span>│   ├── Data/
+</span></span><span style=display:flex><span>│   ├── Geometry/
+</span></span><span style=display:flex><span>│   ├── Grid/
+</span></span><span style=display:flex><span>│   ├── Input/
+</span></span><span style=display:flex><span>│   ├── InputManager.cs        # Input management system
+</span></span><span style=display:flex><span>│   ├── Logging/
+</span></span><span style=display:flex><span>│   ├── Manipulation/
+</span></span><span style=display:flex><span>│   ├── Placement/
+</span></span><span style=display:flex><span>│   ├── State/
+</span></span><span style=display:flex><span>│   ├── Targeting/
+</span></span><span style=display:flex><span>│   └── Validation/
+</span></span><span style=display:flex><span>│
+</span></span><span style=display:flex><span>├── Grid/                     # GRID INTEGRATION (unchanged)
+</span></span><span style=display:flex><span>├── Interfaces/               # INTERFACES (unchanged)
+</span></span><span style=display:flex><span>└── Common/                   # UTILITIES (unchanged)
+</span></span></code></pre></td></tr></table></div></div><h2 id=-data-flow-architecture>🔄 Data Flow Architecture</h2><h3 id=godot--core--godot-flow><strong>Godot → Core → Godot Flow</strong></h3><pre tabindex=0><code>┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Godot Layer   │    │  Service Layer  │    │   State Layer   │
+│                 │    │                 │    │                 │
+│ User Input      │───▶│ InputService   │───▶│ UserState       │
+│ Mouse Click     │    │                 │    │                 │
+│ Key Press       │    │                 │    │                 │
+│                 │    │                 │    │                 │
+│ UI Updates      │◀───│ BuildingEvents │◀───│ BuildingState   │
+│ Visual Changes  │    │ Manipulation   │    │                 │
+│ Audio Feedback  │    │ Events         │    │                 │
+│                 │    │                 │    │                 │
+│ Godot Nodes     │───▶│ BuildingService│───▶│ BuildingState   │
+│ Scene Objects   │    │ Manipulation   │    │                 │
+│ Components      │    │ Service        │    │                 │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+</code></pre><h3 id=detailed-flow-examples><strong>Detailed Flow Examples</strong></h3><h4 id=1-building-placement-flow><strong>1. Building Placement Flow</strong></h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">51
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">52
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">53
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">54
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">55
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">56
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">57
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">58
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">59
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">60
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">61
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Godot Layer</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>GridBuildingNode</span> : Node
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>private</span> IBuildingService _buildingService;
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>override</span> <span style=color:#ff7b72>void</span> _Ready()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Connect to SERVICE events, not state</span>
+</span></span><span style=display:flex><span>        _buildingService.BuildingPlaced += OnBuildingPlaced;
+</span></span><span style=display:flex><span>        _buildingService.BuildingFailed += OnBuildingFailed;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> OnUserClick(Vector2I gridPos)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Call SERVICE method</span>
+</span></span><span style=display:flex><span>        _buildingService.PlaceBuilding(gridPos, <span style=color:#a5d6ff>&#34;house&#34;</span>);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>private</span> <span style=color:#ff7b72>void</span> OnBuildingPlaced(BuildingPlacedEvent args)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Update visuals based on event data</span>
+</span></span><span style=display:flex><span>        SpawnBuildingVisual(args.BuildingState);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Service Layer</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>BuildingService</span> : IBuildingService
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>private</span> <span style=color:#ff7b72>readonly</span> BuildingState _state;
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>private</span> <span style=color:#ff7b72>readonly</span> IEventDispatcher _events;
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>event</span> EventHandler&lt;BuildingPlacedEvent&gt; BuildingPlaced;
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>event</span> EventHandler&lt;BuildingFailedEvent&gt; BuildingFailed;
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> PlaceBuilding(Vector2I position, <span style=color:#ff7b72>string</span> buildingType)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Business logic here</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> (!CanPlaceBuilding(position, buildingType))
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            BuildingFailed?.Invoke(<span style=color:#ff7b72>this</span>, <span style=color:#ff7b72>new</span> BuildingFailedEvent(...));
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Update STATE (pure data)</span>
+</span></span><span style=display:flex><span>        _state.Position = position;
+</span></span><span style=display:flex><span>        _state.BuildingType = buildingType;
+</span></span><span style=display:flex><span>        _state.Status = BuildingStatus.Placed;
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Dispatch EVENT</span>
+</span></span><span style=display:flex><span>        BuildingPlaced?.Invoke(<span style=color:#ff7b72>this</span>, <span style=color:#ff7b72>new</span> BuildingPlacedEvent(_state));
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// State Layer (PURE DATA)</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>BuildingState</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> Vector2I Position { <span style=color:#ff7b72>get</span>; <span style=color:#ff7b72>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>string</span> BuildingType { <span style=color:#ff7b72>get</span>; <span style=color:#ff7b72>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> BuildingStatus Status { <span style=color:#ff7b72>get</span>; <span style=color:#ff7b72>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// NO EVENTS, NO LOGIC</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h4 id=2-manipulation-flow><strong>2. Manipulation Flow</strong></h4><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">51
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">52
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">53
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">54
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">55
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">56
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">57
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">58
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">59
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">60
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">61
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">62
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">63
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Godot Layer</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>ManipulationController</span> : Node
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>private</span> IManipulationService _manipulationService;
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>override</span> <span style=color:#ff7b72>void</span> _Ready()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Connect to service events</span>
+</span></span><span style=display:flex><span>        _manipulationService.ManipulationStarted += OnManipulationStarted;
+</span></span><span style=display:flex><span>        _manipulationService.ManipulationUpdated += OnManipulationUpdated;
+</span></span><span style=display:flex><span>        _manipulationService.ManipulationCompleted += OnManipulationCompleted;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> StartManipulation(Vector2I startPos)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        _manipulationService.StartManipulation(ManipulationMode.Move, startPos);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Service Layer</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>ManipulationService</span> : IManipulationService
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>private</span> <span style=color:#ff7b72>readonly</span> ManipulationState _state;
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>private</span> <span style=color:#ff7b72>readonly</span> ITargetingService _targetingService;
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>event</span> EventHandler&lt;ManipulationStartedEvent&gt; ManipulationStarted;
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>event</span> EventHandler&lt;ManipulationUpdatedEvent&gt; ManipulationUpdated;
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>event</span> EventHandler&lt;ManipulationCompletedEvent&gt; ManipulationCompleted;
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> StartManipulation(ManipulationMode mode, Vector2I origin)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Business logic</span>
+</span></span><span style=display:flex><span>        _state.CurrentMode = mode;
+</span></span><span style=display:flex><span>        _state.GridOrigin = origin;
+</span></span><span style=display:flex><span>        _state.Phase = ManipulationPhase.Active;
+</span></span><span style=display:flex><span>        _state.IsActive = <span style=color:#79c0ff>true</span>;
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Event dispatch</span>
+</span></span><span style=display:flex><span>        ManipulationStarted?.Invoke(<span style=color:#ff7b72>this</span>, <span style=color:#ff7b72>new</span> ManipulationStartedEvent(_state));
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> UpdateManipulation(Vector2I targetPosition)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Update state</span>
+</span></span><span style=display:flex><span>        _state.GridTarget = targetPosition;
+</span></span><span style=display:flex><span>        _state.AffectedTiles = CalculateAffectedTiles(origin, targetPosition);
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Event dispatch</span>
+</span></span><span style=display:flex><span>        ManipulationUpdated?.Invoke(<span style=color:#ff7b72>this</span>, <span style=color:#ff7b72>new</span> ManipulationUpdatedEvent(_state));
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// State Layer (PURE DATA)</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>ManipulationState</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> ManipulationMode CurrentMode { <span style=color:#ff7b72>get</span>; <span style=color:#ff7b72>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> Vector2I GridOrigin { <span style=color:#ff7b72>get</span>; <span style=color:#ff7b72>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> Vector2I GridTarget { <span style=color:#ff7b72>get</span>; <span style=color:#ff7b72>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> List&lt;Vector2I&gt; AffectedTiles { <span style=color:#ff7b72>get</span>; <span style=color:#ff7b72>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> ManipulationPhase Phase { <span style=color:#ff7b72>get</span>; <span style=color:#ff7b72>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>bool</span> IsActive { <span style=color:#ff7b72>get</span>; <span style=color:#ff7b72>set</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// NO EVENTS, NO LOGIC</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h2 id=-service-interface-design>🔌 Service Interface Design</h2><h3 id=standard-service-pattern><strong>Standard Service Pattern</strong></h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>interface</span> <span style=color:#f0883e;font-weight:700>IBuildingService</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Events</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>event</span> EventHandler&lt;BuildingPlacedEvent&gt; BuildingPlaced;
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>event</span> EventHandler&lt;BuildingFailedEvent&gt; BuildingFailed;
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>event</span> EventHandler&lt;BuildingRemovedEvent&gt; BuildingRemoved;
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Commands (state-changing operations)</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>void</span> PlaceBuilding(Vector2I position, <span style=color:#ff7b72>string</span> buildingType);
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>void</span> RemoveBuilding(<span style=color:#ff7b72>string</span> buildingId);
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>void</span> MoveBuilding(<span style=color:#ff7b72>string</span> buildingId, Vector2I newPosition);
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Queries (read-only operations)</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>bool</span> CanPlaceBuilding(Vector2I position, <span style=color:#ff7b72>string</span> buildingType);
+</span></span><span style=display:flex><span>    BuildingState GetBuilding(<span style=color:#ff7b72>string</span> buildingId);
+</span></span><span style=display:flex><span>    IEnumerable&lt;BuildingState&gt; GetAllBuildings();
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h3 id=event-design-pattern><strong>Event Design Pattern</strong></h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">37
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Base event class</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>abstract</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>GameEvent</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> DateTime Timestamp { <span style=color:#ff7b72>get</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>string</span> Source { <span style=color:#ff7b72>get</span>; }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>protected</span> GameEvent(<span style=color:#ff7b72>string</span> source)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        Timestamp = DateTime.Now;
+</span></span><span style=display:flex><span>        Source = source;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Specific event classes</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>BuildingPlacedEvent</span> : GameEvent
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> BuildingState BuildingState { <span style=color:#ff7b72>get</span>; }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> BuildingPlacedEvent(BuildingState buildingState) 
+</span></span><span style=display:flex><span>        : <span style=color:#ff7b72>base</span>(<span style=color:#a5d6ff>&#34;BuildingService&#34;</span>)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        BuildingState = buildingState;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>ManipulationUpdatedEvent</span> : GameEvent
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> ManipulationState ManipulationState { <span style=color:#ff7b72>get</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> Vector2I CurrentPosition { <span style=color:#ff7b72>get</span>; }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> ManipulationUpdatedEvent(ManipulationState state) 
+</span></span><span style=display:flex><span>        : <span style=color:#ff7b72>base</span>(<span style=color:#a5d6ff>&#34;ManipulationService&#34;</span>)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        ManipulationState = state;
+</span></span><span style=display:flex><span>        CurrentPosition = state.GridTarget;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h2 id=-godot-implementation-changes>🎯 Godot Implementation Changes</h2><h3 id=before-state-based><strong>Before (State-Based)</strong></h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// ❌ Direct state access</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>GridBuildingNode</span> : Node
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>private</span> BuildingState _buildingState;
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>override</span> <span style=color:#ff7b72>void</span> _Ready()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Connect directly to state events</span>
+</span></span><span style=display:flex><span>        _buildingState.PropertyChanged += OnBuildingStateChanged;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h3 id=after-service-based><strong>After (Service-Based)</strong></h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// ✅ Service-based access</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>GridBuildingNode</span> : Node
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>private</span> IBuildingService _buildingService;
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>private</span> IManipulationService _manipulationService;
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>private</span> IInputService _inputService;
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>override</span> <span style=color:#ff7b72>void</span> _Ready()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Connect to service events</span>
+</span></span><span style=display:flex><span>        _buildingService.BuildingPlaced += OnBuildingPlaced;
+</span></span><span style=display:flex><span>        _manipulationService.ManipulationUpdated += OnManipulationUpdated;
+</span></span><span style=display:flex><span>        _inputService.InputReceived += OnInputReceived;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> OnUserInput(InputEvent inputEvent)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Send to service, not state</span>
+</span></span><span style=display:flex><span>        _inputService.ProcessInput(inputEvent);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h2 id=-testing-benefits>🧪 Testing Benefits</h2><h3 id=state-testing-pure-data><strong>State Testing (Pure Data)</strong></h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Test]
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> BuildingState_ShouldStorePosition()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> state = <span style=color:#ff7b72>new</span> BuildingState();
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>    state.Position = <span style=color:#ff7b72>new</span> Vector2I(<span style=color:#a5d6ff>5</span>, <span style=color:#a5d6ff>3</span>);
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>    Assert.AreEqual(<span style=color:#ff7b72>new</span> Vector2I(<span style=color:#a5d6ff>5</span>, <span style=color:#a5d6ff>3</span>), state.Position);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h3 id=service-testing-business-logic><strong>Service Testing (Business Logic)</strong></h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Test]
+</span></span><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> BuildingService_ShouldFailPlacement_WhenInvalidPosition()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> mockValidator = <span style=color:#ff7b72>new</span> Mock&lt;IPlacementValidator&gt;();
+</span></span><span style=display:flex><span>    mockValidator.Setup(x =&gt; x.CanPlace(It.IsAny&lt;Vector2I&gt;())).Returns(<span style=color:#79c0ff>false</span>);
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>var</span> service = <span style=color:#ff7b72>new</span> BuildingService(mockValidator.Object);
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Act &amp; Assert</span>
+</span></span><span style=display:flex><span>    Assert.Throws&lt;PlacementException&gt;(() =&gt; 
+</span></span><span style=display:flex><span>        service.PlaceBuilding(<span style=color:#ff7b72>new</span> Vector2I(<span style=color:#a5d6ff>5</span>, <span style=color:#a5d6ff>3</span>), <span style=color:#a5d6ff>&#34;house&#34;</span>));
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h2 id=-migration-steps>📋 Migration Steps</h2><h3 id=phase-1-create-service-interfaces><strong>Phase 1: Create Service Interfaces</strong></h3><ol><li>Define <code>IBuildingService</code>, <code>IManipulationService</code>, etc.</li><li>Define event classes</li><li>Create service interfaces in <code>Services/</code> folder</li></ol><h3 id=phase-2-implement-services><strong>Phase 2: Implement Services</strong></h3><ol><li>Move business logic from state classes to service classes</li><li>Remove events from state classes</li><li>Add event dispatching to service classes</li></ol><h3 id=phase-3-update-godot-layer><strong>Phase 3: Update Godot Layer</strong></h3><ol><li>Change Godot classes to use services instead of state</li><li>Update event subscriptions to use service events</li><li>Update method calls to use service methods</li></ol><h3 id=phase-4-clean-up><strong>Phase 4: Clean Up</strong></h3><ol><li>Remove old event code from state classes</li><li>Remove context objects that are now services</li><li>Update documentation</li></ol><h2 id=-benefits-summary>🎯 Benefits Summary</h2><h3 id=before-mixed-stateservices><strong>Before (Mixed State/Services)</strong></h3><ul><li>❌ State contains business logic</li><li>❌ State dispatches events</li><li>❌ Hard to test (mixed concerns)</li><li>❌ Godot directly accesses state</li><li>❌ Confusing data flow</li></ul><h3 id=after-separated><strong>After (Separated)</strong></h3><ul><li>✅ State is pure data (easily testable)</li><li>✅ Services handle business logic</li><li>✅ Services dispatch events</li><li>✅ Clear data flow: Godot ↔ Services ↔ State</li><li>✅ Better separation of concerns</li><li>✅ Easier unit testing</li><li>✅ More maintainable code</li></ul><h2 id=-event-flow-diagram>🔄 Event Flow Diagram</h2><pre tabindex=0><code>User Input (Godot)
+       ↓
+InputService.ProcessInput()
+       ↓
+[Business Logic in Services]
+       ↓
+State Objects Updated (Pure Data)
+       ↓
+Events Dispatched (Services)
+       ↓
+Godot Updates Visuals
+</code></pre><p>This architecture provides a <strong>clean separation of concerns</strong> while maintaining <strong>clear data flow</strong> and <strong>excellent testability</strong>.</p></div></main><aside class=gb-toc><div class=gb-toc-title>On this page</div><nav id=TableOfContents><ul><li><a href=#-overview>🎯 Overview</a></li><li><a href=#-architecture-principles>🏗️ Architecture Principles</a><ul><li><a href=#1-state--pure-data-only>1. <strong>State = Pure Data Only</strong></a></li><li><a href=#2-services--business-logic--events>2. <strong>Services = Business Logic + Events</strong></a></li><li><a href=#3-clear-data-flow>3. <strong>Clear Data Flow</strong></a></li></ul></li><li><a href=#-new-folder-structure>📊 New Folder Structure</a></li><li><a href=#-data-flow-architecture>🔄 Data Flow Architecture</a><ul><li><a href=#godot--core--godot-flow><strong>Godot → Core → Godot Flow</strong></a></li><li><a href=#detailed-flow-examples><strong>Detailed Flow Examples</strong></a><ul><li><a href=#1-building-placement-flow><strong>1. Building Placement Flow</strong></a></li><li><a href=#2-manipulation-flow><strong>2. Manipulation Flow</strong></a></li></ul></li></ul></li><li><a href=#-service-interface-design>🔌 Service Interface Design</a><ul><li><a href=#standard-service-pattern><strong>Standard Service Pattern</strong></a></li><li><a href=#event-design-pattern><strong>Event Design Pattern</strong></a></li></ul></li><li><a href=#-godot-implementation-changes>🎯 Godot Implementation Changes</a><ul><li><a href=#before-state-based><strong>Before (State-Based)</strong></a></li><li><a href=#after-service-based><strong>After (Service-Based)</strong></a></li></ul></li><li><a href=#-testing-benefits>🧪 Testing Benefits</a><ul><li><a href=#state-testing-pure-data><strong>State Testing (Pure Data)</strong></a></li><li><a href=#service-testing-business-logic><strong>Service Testing (Business Logic)</strong></a></li></ul></li><li><a href=#-migration-steps>📋 Migration Steps</a><ul><li><a href=#phase-1-create-service-interfaces><strong>Phase 1: Create Service Interfaces</strong></a></li><li><a href=#phase-2-implement-services><strong>Phase 2: Implement Services</strong></a></li><li><a href=#phase-3-update-godot-layer><strong>Phase 3: Update Godot Layer</strong></a></li><li><a href=#phase-4-clean-up><strong>Phase 4: Clean Up</strong></a></li></ul></li><li><a href=#-benefits-summary>🎯 Benefits Summary</a><ul><li><a href=#before-mixed-stateservices><strong>Before (Mixed State/Services)</strong></a></li><li><a href=#after-separated><strong>After (Separated)</strong></a></li></ul></li><li><a href=#-event-flow-diagram>🔄 Event Flow Diagram</a></li></ul></nav></aside><footer class=gb-footer><p>&copy; 2025 Chris Tutorials. All rights reserved.</p><p>Built with <a href=https://gohugo.io/ target=_blank>Hugo</a> and
+<a href=https://godotengine.org/ target=_blank>Godot</a>.</p></footer></div></body></html>

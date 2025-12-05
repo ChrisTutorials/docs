@@ -4,6 +4,14 @@ description: "Development version with latest features and improvements"
 ---
 
 
+
+> **Status:** The v5.1 documentation line has been folded into the v6.0 C#-first release.
+>
+> The planned 5.1 feature set became too complex to ship as a separate minor version, and the C# language migration justified rolling that work directly into the v6.0 docs.
+> For current, maintained documentation, please use the v6.0 section instead.
+
+_This v5.1 section is legacy and may be removed in a future cleanup once v6.0 is fully stabilized._
+
 # Grid Building Plugin v5.1.0 (Development)
 
 {{< version-notice status="development" version="5.1.0" text="This is the development version. Features may change before final release." >}}

@@ -3,6 +3,7 @@ title: "C# State Integration with Godot Frontend"
 date: 2025-12-01T17:11:00-05:00
 draft: false
 weight: 15
+aliases: ["/latest/guides/csharp-state-integration/", "/gridbuilding/latest/guides/csharp-state-integration/"]
 ---
 
 

@@ -13,6 +13,7 @@ tags:
   - "troubleshooting"
   - "help"
   - "issues"
+aliases: ["/latest/guides/troubleshooting/", "/gridbuilding/latest/guides/troubleshooting/"]
 ---
 
 

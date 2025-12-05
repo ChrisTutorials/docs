@@ -12,6 +12,7 @@ tags:
   - "grid"
   - "tutorial"
   - "getting-started"
+aliases: ["/latest/guides/getting-started/", "/gridbuilding/latest/guides/getting-started/"]
 ---
 
 This tutorial will walk you through setting up and using the GridBuilding plugin in your Godot project.
