@@ -3,7 +3,6 @@ title: "GridBuilding API Reference"
 description: "Complete API reference for GridBuilding plugin v6.0"
 weight: 100
 url: "/gridbuilding/v6-0/api/"
-aliases: ["/latest/api/", "/gridbuilding/latest/api/"]
 ---
 
 # GridBuilding API Reference v6.0

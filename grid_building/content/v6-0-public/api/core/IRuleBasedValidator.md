@@ -1,0 +1,27 @@
+---
+title: "IRuleBasedValidator"
+description: "Rule-based validator interface for complex validation scenarios"
+weight: 10
+url: "/gridbuilding/v6-0-public/api/core/irulebasedvalidator/"
+---
+
+# IRuleBasedValidator
+
+```csharp
+GridBuilding.Core.Systems.Validation
+interface IRuleBasedValidator
+{
+    // Members...
+}
+```
+
+Rule-based validator interface for complex validation scenarios
+
+**Project:** GridBuilding v6.0  
+**Layer:** Core  
+**Source:** `Core/_incomplete/Validation/IValidator.cs`  
+**Namespace:** `GridBuilding.Core.Systems.Validation`  
+**Parsing Method:** AST-based (Roslyn) - NOT regex
+
+**⚠️ IMPORTANT**: This documentation was generated using AST parsing, not regex.
+

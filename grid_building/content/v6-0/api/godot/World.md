@@ -1,0 +1,27 @@
+---
+title: "World"
+description: "Mock implementations for testing"
+weight: 20
+url: "/gridbuilding/v6-0/api/godot/world/"
+---
+
+# World
+
+```csharp
+GridBuilding.Godot.Tests.Demo
+class World
+{
+    // Members...
+}
+```
+
+Mock implementations for testing
+
+**Project:** GridBuilding v6.0  
+**Layer:** Godot  
+**Source:** `Godot/Tests/Unit/Helpers/DemoTestEnvironmentTest.cs`  
+**Namespace:** `GridBuilding.Godot.Tests.Demo`  
+**Parsing Method:** AST-based (Roslyn) - NOT regex
+
+**⚠️ IMPORTANT**: This documentation was generated using AST parsing, not regex.
+
