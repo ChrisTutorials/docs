@@ -2,7 +2,7 @@
 title: "Dependency Resolution in GridBuilding v6.0 (Godot)"
 description: "How GridBuilding systems and services resolve their dependencies using ServiceCompositionRoot, ServiceRegistry, and CompositionContainer."
 weight: 40
-url: "/v6.0/guides/dependency-resolution/"
+url: "/gridbuilding/v6.0-public/guides/dependency-resolution/"
 ---
 
 # Dependency Resolution in GridBuilding v6.0 (Godot)
@@ -107,6 +107,43 @@ Key points:
 - The system **does not new up** its own services.
 - It **finds the nearest `ServiceCompositionRoot`**, then asks for services.
 - The **Pure C# logic** stays in Core services (`IPlacementService`, `IGridTargetingService`), while the node orchestrates Godot-specific behavior.
+
+### 2.1.1 Key runtime services (what they do and consume)
+
+At runtime, three services are central to placement flows:
+
+- **`IPlacementService` (Core.Services.Placement)**
+  - **Role:** Pure C# placement engine (validate + execute placement, remove/move objects, query occupancy).
+  - **Consumes:**
+    - `IPlacementValidator` (rule checks: bounds, collisions, tile policies).
+    - `ICollisionCalculator` (geometry/collision math in Core).
+    - `IGridTargetingState` (current grid, tile, and owner context).
+  - **Produces:**
+    - `PlacementReport` (detailed validation results).
+    - `PlacementResult` (success flag, errors, and placed-instance metadata for the Godot layer to consume).
+
+- **`PlacementSystem` (Godot.Systems.Placement)**
+  - **Role:** Lightweight Godot `Node` that orchestrates placement using the Enhanced Service Registry pattern.
+  - **Consumes:**
+    - `IPlacementService` from `ServiceCompositionRoot`.
+    - `ISceneService` (instantiates scenes, sets positions, attaches to tree).
+    - `IndicatorService` (drives rule-check indicators after validation).
+  - **Produces:**
+    - Final `PlacementReport` for callers (UI, behaviors, tests).
+    - Instantiated Godot nodes for successful placements (via `ISceneService`).
+
+- **`IndicatorService` (Godot.Systems.Placement.Managers)**
+  - **Role:** Manages `RuleCheckIndicator` nodes for visual feedback during placement.
+  - **Consumes:**
+    - `GridTargetingState` (to know where indicators should be placed).
+    - Indicator templates from `CompositionContainer` / templates resources.
+    - `CollisionMapper` and placement utilities for geometry and contact points.
+    - `Logger` for diagnostics.
+  - **Produces:**
+    - Indicator nodes under a given parent.
+    - Diagnostic reports via `IndicatorSetupReport` and logs.
+
+> **Note:** Older building-centric services like `BuildingService`, `IBuildingService`, and `BuildingBehavior` are now marked as obsolete. New code should drive placement via `PlacementSystem` + `IPlacementService` and, where needed, a placement-focused behavior that talks to those services.
 
 ### 2.2 Legacy pattern: pass a CompositionContainer in
 
@@ -231,4 +268,113 @@ Over time, more APIs will move to the **ServiceCompositionRoot + ServiceRegistry
 - Tests can use the same mechanisms: Core tests construct services directly; Godot tests use the root or a test `CompositionContainer`.
 
 This is the v6.0-supported way GridBuilding resolves dependencies and keeps Core logic engine-agnostic.
+
+
+---
+
+## 6. Owners and Multi-Tenant Dependency Resolution (Design Direction)
+
+Status: This section documents the intended architecture for multi-owner and multiplayer setups in v6.x. Some elements are still in progress and tracked in internal docs.
+
+### 6.1 What is an Owner
+
+In GridBuilding, an Owner is any participant that can control or own buildings and actions in a session:
+
+- Human local player
+- AI controller
+- Special or system side such as neutral or environment
+
+Owners are not limited to human players. The API and dependency lifetimes are designed around this generic owner concept.
+
+### 6.2 Lifetimes: Process, Session, Owner
+
+To support multiple sessions and multiple owners per session, GridBuilding uses three layers of lifetime:
+
+- Process lifetime
+  - Lives for the lifetime of the game process
+  - Holds shared infrastructure such as logging, configuration, factories, serialization
+  - Knows which modules or plugins are available
+
+- Session lifetime
+  - One session scope per game session, match, or world
+  - Shared across all owners in that session
+  - Holds session state such as world or grid state, rules, shared services
+
+- Owner lifetime
+  - One owner scope per combination of session and owner
+  - Holds per-owner state such as selection and preview state, build queues, and owner UI or controllers
+
+A simple way to visualize this is:
+
+  Process services
+    Session services per session
+      Owner services per owner in a session
+
+ServiceCompositionRoot and ServiceRegistry remain the core mechanisms, but are extended to support session and owner scopes instead of a single global registry.
+
+### 6.3 Plugin modules and registration
+
+Plugins, including the GridBuilding plugin itself, do not create their own composition roots. Instead, each plugin exposes a module that can register services at the appropriate lifetimes.
+
+At startup and during session or owner creation, the framework:
+
+1. Discovers all module implementations
+2. Calls registration methods such as:
+   - Register process services once at process bootstrap
+   - Register session services once per new session
+   - Register owner services once per new owner in that session
+
+This keeps plugin wiring centralized and consistent while still allowing each plugin to define what it needs per lifetime.
+
+### 6.4 Owner registration flow
+
+To participate in GridBuilding, a game or higher-level framework creates owners through a single canonical API. Conceptually the flow is:
+
+1. Create a session for a world or match using a session manager
+2. Create an owner in that session using an owner configuration
+3. Internally, the owner creation
+   - Creates an owner scope under the session scope
+   - Invokes all plugin modules so they can register owner services
+   - Returns an owner handle or identifier for later use
+
+On the Godot side, this is paired with a SessionRoot and OwnerRoot node pattern.
+
+- A SessionRoot node represents the session in the scene tree
+- Under SessionRoot, there is one OwnerRoot node per owner
+- Each OwnerRoot marks a subtree as belonging to a specific owner
+- Nodes under an OwnerRoot do not create services directly, they ask the framework to inject dependencies from their owner scope
+
+### 6.5 Quickstart: GridBuildingCompositionRoot
+
+For simple single-owner setups such as tutorials or standalone prototypes, you can still use an optional GridBuildingCompositionRoot node.
+
+This node:
+
+- Creates a minimal session and owner on its own
+- Registers GridBuilding session and owner services
+- Wires a basic scene for a single controlling side
+
+This should be treated as a convenience bootstrap for GridBuilding only scenes. For multi-plugin or advanced multiplayer scenarios, prefer the central session and owner APIs described above.
+
+### 6.6 Session-Level systems and Owner-Level controllers
+
+GridBuilding distinguishes between:
+
+- Session-level systems with one instance per game session
+  - BuildingSystem which orchestrates building and placement for the session
+  - ManipulationSystemNode which orchestrates moving and removing objects for the session
+
+- Owner-level controllers with one instance per owner
+  - Input and UI controllers for human and AI owners
+  - Targeting nodes such as TargetingShapeCast2D tied to that owner view or camera
+
+In a four owner game you still have one BuildingSystem node and one ManipulationSystemNode node. You have four owners, each with their own owner scope for selection and preview state and their own targeting and controller nodes.
+
+When an owner issues a command:
+
+1. An owner-level controller reads input and consults that owners state from the owner scope
+2. It calls the shared BuildingSystem or ManipulationSystemNode with an owner handle and current targeting data
+3. The system uses session scoped services for world and rules and owner scoped services for who is acting and how
+
+This lets multiple owners use the same systems in parallel without duplicating system nodes or leaking state between owners.
 

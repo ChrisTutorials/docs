@@ -6,6 +6,7 @@ This repo contains the Hugo source for the GridBuilding documentation website. F
 - `content/` holds the Markdown source (staging).
 - `public/` contains the built site (web visible).
 - Versioned directories (`/v6.0/`, `/v5.1/`, `/v5.0/`) live under `content/` and are rendered to matching URLs.
+- Only plain `vX.Y` directories are valid version roots. Do **not** create `vX-Y`, `vX.Y-public`, or other suffixed variants; use subfolders (e.g. `v6.0/api/public/`) under the canonical version root instead.
 - `latest` aliases are implemented via frontmatter `aliases` pointing at the current version.
 
 ## Workflow
