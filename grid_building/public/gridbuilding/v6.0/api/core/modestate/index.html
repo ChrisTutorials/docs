@@ -1,0 +1,460 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>ModeState | GridBuilding Plugin</title>
+<meta name=description content><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel=stylesheet><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css><link rel=stylesheet href=/css/custom.css><meta name=generator content="Hugo 0.146.5"></head><body><div class=gb-layout><header class=gb-header><a href=/ class=gb-brand><i class="fas fa-cubes" style=color:var(--gb-primary)></i>
+<span>GridBuilding Plugin</span></a><div class=gb-search><i class="fas fa-search"></i>
+<input type=text placeholder="Search documentation..." aria-label=Search></div><nav class=gb-nav><a href=/ class=gb-nav-link>Home
+</a><a href=/v6.0/overview/ class=gb-nav-link>Documentation
+</a><a href=/v5.1/overview/ class=gb-nav-link>Grid Building Plugin Overview
+</a><a href=/v6.0/api/ class=gb-nav-link>API Reference
+</a><a href=/v5.1/guides/ class=gb-nav-link>Getting Started Guides
+</a><a href=/v6.0/examples/ class=gb-nav-link>Examples
+</a><a href=/v5.1/examples/ class=gb-nav-link>Code Examples
+</a><a href=/community/ class=gb-nav-link>Community
+</a><a href=/v5.1/architecture-diagrams/ class=gb-nav-link>Architecture Diagrams</a></nav></header><aside class=gb-sidebar><nav class=gb-sidebar-nav><div class=gb-sidebar-section><div class=gb-sidebar-title>V6.0s</div><a href=/v6.0/guides/6-0-readiness-status/ class=gb-sidebar-link>GridBuilding 6.0 Readiness Status
+</a><a href=/v6.0/guides/getting_started/ class=gb-sidebar-link>Getting Started with GridBuilding
+</a><a href=/v6.0/guides/mode-architecture/ class=gb-sidebar-link>GridBuilding 6.0 Mode Architecture
+</a><a href=/v6.0/guides/gdscript-to-csharp-mapping/ class=gb-sidebar-link>GDScript to C# Migration Guide
+</a><a href=/v6.0/guides/csharp_state_integration/ class=gb-sidebar-link>C# State Integration with Godot Frontend
+</a><a href=/v6.0/guides/troubleshooting/ class=gb-sidebar-link>Troubleshooting Guide
+</a><a href=/v6.0/examples/godot_integration_example/ class=gb-sidebar-link>Godot Integration Example
+</a><a href=/v6.0/guides/service_based_architecture/ class=gb-sidebar-link>Service-Based Architecture
+</a><a href=/gridbuilding/v6-0/api/ class=gb-sidebar-link>GridBuilding API Reference</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.1.0</div><a href=/v5.1/overview/ class=gb-sidebar-link>Grid Building Plugin Overview
+</a><a href=/v5.1/guides/ class=gb-sidebar-link>Getting Started Guides
+</a><a href=/v5.1/api/ class=gb-sidebar-link>C# API Reference
+</a><a href=/v5.1/examples/ class=gb-sidebar-link>Code Examples
+</a><a href=/v5.1/architecture-diagrams/ class=gb-sidebar-link>Architecture Diagrams
+</a><a href=/v5.1/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.1/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.1/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.1/validation/ class=gb-sidebar-link>Validation Tools</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.0.0</div><a href=/v5.0/api/ class=gb-sidebar-link>GDScript API Reference
+</a><a href=/v5.0/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.0/overview/ class=gb-sidebar-link>Grid Building Plugin v5.0.0
+</a><a href=/v5.0/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.0/guides/ class=gb-sidebar-link>Plugin Overview
+</a><a href=/v5.0/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.0/validation/ class=gb-sidebar-link>Validation Tools</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>V6.0-Publics</div><a href=/gridbuilding/v6-0-public/api/ class=gb-sidebar-link>GridBuilding API Reference</a></div></nav></aside><main class=gb-main><div class=gb-content><h1>ModeState</h1><h1 id=modestate>ModeState</h1><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>GridBuilding.Core.State.Mode
+</span></span><span style=display:flex><span><span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>ModeState</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Members...</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><p>Core mode state data - pure data container only
+Contains only the current mode values and basic data operations
+No business logic, validation, or event dispatching</p><p><strong>Project:</strong> GridBuilding v6.0<br><strong>Layer:</strong> Core<br><strong>Source:</strong> <code>Core/State/Mode/ModeState.cs</code><br><strong>Namespace:</strong> <code>GridBuilding.Core.State.Mode</code><br><strong>Parsing Method:</strong> AST-based (Roslyn) - NOT regex</p><p><strong>⚠️ IMPORTANT</strong>: This documentation was generated using AST parsing, not regex.</p><h2 id=properties>Properties</h2><h3 id=stateid>StateId</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">8
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>#endregion</span>
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>#region</span> Public Properties
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// Unique identifier for this state</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>string</span> StateId =&gt; _stateId;
+</span></span></code></pre></td></tr></table></div></div><p>Unique identifier for this state</p><h3 id=createdat>CreatedAt</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// Timestamp when this state was created</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> DateTime CreatedAt =&gt; _createdAt;
+</span></span></code></pre></td></tr></table></div></div><p>Timestamp when this state was created</p><h3 id=updatedat>UpdatedAt</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// Timestamp when this state was last updated</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> DateTime UpdatedAt =&gt; _updatedAt;
+</span></span></code></pre></td></tr></table></div></div><p>Timestamp when this state was last updated</p><h3 id=isvalid>IsValid</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// Whether this state is valid (basic data integrity only)</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>bool</span> IsValid =&gt; !<span style=color:#ff7b72>string</span>.IsNullOrEmpty(_stateId);
+</span></span></code></pre></td></tr></table></div></div><p>Whether this state is valid (basic data integrity only)</p><h3 id=currentapplicationmode>CurrentApplicationMode</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// Current application mode</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> ApplicationMode CurrentApplicationMode
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>get</span> =&gt; _currentApplicationMode;
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>set</span>
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _currentApplicationMode = <span style=color:#ff7b72>value</span>;
+</span></span><span style=display:flex><span>                UpdateTimestamp();
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p>Current application mode</p><h3 id=currentuimode>CurrentUIMode</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// Current UI mode</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> UIMode CurrentUIMode
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>get</span> =&gt; _currentUIMode;
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>set</span>
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _currentUIMode = <span style=color:#ff7b72>value</span>;
+</span></span><span style=display:flex><span>                UpdateTimestamp();
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p>Current UI mode</p><h3 id=currenteditmode>CurrentEditMode</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// Current edit mode</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> EditMode CurrentEditMode
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>get</span> =&gt; _currentEditMode;
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>set</span>
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _currentEditMode = <span style=color:#ff7b72>value</span>;
+</span></span><span style=display:flex><span>                UpdateTimestamp();
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p>Current edit mode</p><h3 id=currentviewmode>CurrentViewMode</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// Current view mode</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> ViewMode CurrentViewMode
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>get</span> =&gt; _currentViewMode;
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>set</span>
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _currentViewMode = <span style=color:#ff7b72>value</span>;
+</span></span><span style=display:flex><span>                UpdateTimestamp();
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p>Current view mode</p><h3 id=currentgamemode>CurrentGameMode</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// Current game mode</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> GameMode CurrentGameMode
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>get</span> =&gt; _currentGameMode;
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>set</span>
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _currentGameMode = <span style=color:#ff7b72>value</span>;
+</span></span><span style=display:flex><span>                UpdateTimestamp();
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p>Current game mode</p><h3 id=combinedmodestring>CombinedModeString</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// Combined mode string for easy display</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>string</span> CombinedModeString =&gt; <span style=color:#a5d6ff>$&#34;{_currentApplicationMode}|{_currentUIMode}|{_currentEditMode}|{_currentViewMode}|{_currentGameMode}&#34;</span>;
+</span></span></code></pre></td></tr></table></div></div><p>Combined mode string for easy display</p><h2 id=methods>Methods</h2><h3 id=clone>Clone</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>#endregion</span>
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>#region</span> IState Implementation
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// Creates a deep copy of this state (pure data operation)</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;returns&gt;A new state instance with the same data&lt;/returns&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> IState Clone()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> clone = <span style=color:#ff7b72>new</span> ModeState
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _currentApplicationMode = _currentApplicationMode,
+</span></span><span style=display:flex><span>                _currentUIMode = _currentUIMode,
+</span></span><span style=display:flex><span>                _currentEditMode = _currentEditMode,
+</span></span><span style=display:flex><span>                _currentViewMode = _currentViewMode,
+</span></span><span style=display:flex><span>                _currentGameMode = _currentGameMode,
+</span></span><span style=display:flex><span>                _createdAt = _createdAt,
+</span></span><span style=display:flex><span>                _updatedAt = _updatedAt,
+</span></span><span style=display:flex><span>                _stateId = Guid.NewGuid().ToString() <span style=color:#8b949e;font-style:italic>// New ID for clone</span>
+</span></span><span style=display:flex><span>            };
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> clone;
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p>Creates a deep copy of this state (pure data operation)</p><p><strong>Returns:</strong> <code>IState</code></p><h3 id=updatetimestamp>UpdateTimestamp</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// Updates the internal timestamp (data operation only)</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> UpdateTimestamp()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _updatedAt = DateTime.UtcNow;
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p>Updates the internal timestamp (data operation only)</p><p><strong>Returns:</strong> <code>void</code></p><h3 id=validate>Validate</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// Validates basic data integrity (data validation only)</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// Note: Business logic validation should be handled by services</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;returns&gt;List of data validation errors&lt;/returns&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> List&lt;<span style=color:#ff7b72>string</span>&gt; Validate()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> errors = <span style=color:#ff7b72>new</span> List&lt;<span style=color:#ff7b72>string</span>&gt;();
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>if</span> (<span style=color:#ff7b72>string</span>.IsNullOrEmpty(_stateId))
+</span></span><span style=display:flex><span>                errors.Add(<span style=color:#a5d6ff>&#34;StateId cannot be null or empty&#34;</span>);
+</span></span><span style=display:flex><span>                
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>if</span> (_createdAt &gt; _updatedAt)
+</span></span><span style=display:flex><span>                errors.Add(<span style=color:#a5d6ff>&#34;CreatedAt cannot be after UpdatedAt&#34;</span>);
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> errors;
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p>Validates basic data integrity (data validation only)
+Note: Business logic validation should be handled by services</p><p><strong>Returns:</strong> <code>List&lt;string></code></p><h3 id=create>Create</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>#endregion</span>
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>#region</span> Static Factory Methods
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// Creates a new mode state with default values</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>static</span> ModeState Create(ApplicationMode appMode = ApplicationMode.Building)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> <span style=color:#ff7b72>new</span> ModeState
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _currentApplicationMode = appMode
+</span></span><span style=display:flex><span>            };
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p>Creates a new mode state with default values</p><p><strong>Returns:</strong> <code>ModeState</code></p><p><strong>Parameters:</strong></p><ul><li><code>ApplicationMode appMode</code></li></ul><h3 id=createfromtemplate>CreateFromTemplate</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">8
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// Creates a mode state from template</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>static</span> ModeState CreateFromTemplate(ModeState template)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> state = (ModeState)template.Clone();
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> state;
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p>Creates a mode state from template</p><p><strong>Returns:</strong> <code>ModeState</code></p><p><strong>Parameters:</strong></p><ul><li><code>ModeState template</code></li></ul><h3 id=setmodes>SetModes</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">45
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>#endregion</span>
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>#region</span> Public Methods
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// Sets multiple modes at once (data operation only)</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> SetModes(ApplicationMode? appMode = <span style=color:#79c0ff>null</span>, UIMode? uiMode = <span style=color:#79c0ff>null</span>, 
+</span></span><span style=display:flex><span>                           EditMode? editMode = <span style=color:#79c0ff>null</span>, ViewMode? viewMode = <span style=color:#79c0ff>null</span>, GameMode? gameMode = <span style=color:#79c0ff>null</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> changed = <span style=color:#79c0ff>false</span>;
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>if</span> (appMode.HasValue &amp;&amp; appMode.Value != _currentApplicationMode)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _currentApplicationMode = appMode.Value;
+</span></span><span style=display:flex><span>                changed = <span style=color:#79c0ff>true</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>if</span> (uiMode.HasValue &amp;&amp; uiMode.Value != _currentUIMode)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _currentUIMode = uiMode.Value;
+</span></span><span style=display:flex><span>                changed = <span style=color:#79c0ff>true</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>if</span> (editMode.HasValue &amp;&amp; editMode.Value != _currentEditMode)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _currentEditMode = editMode.Value;
+</span></span><span style=display:flex><span>                changed = <span style=color:#79c0ff>true</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>if</span> (viewMode.HasValue &amp;&amp; viewMode.Value != _currentViewMode)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _currentViewMode = viewMode.Value;
+</span></span><span style=display:flex><span>                changed = <span style=color:#79c0ff>true</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>if</span> (gameMode.HasValue &amp;&amp; gameMode.Value != _currentGameMode)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _currentGameMode = gameMode.Value;
+</span></span><span style=display:flex><span>                changed = <span style=color:#79c0ff>true</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>if</span> (changed)
+</span></span><span style=display:flex><span>                UpdateTimestamp();
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p>Sets multiple modes at once (data operation only)</p><p><strong>Returns:</strong> <code>void</code></p><p><strong>Parameters:</strong></p><ul><li><code>ApplicationMode? appMode</code></li><li><code>UIMode? uiMode</code></li><li><code>EditMode? editMode</code></li><li><code>ViewMode? viewMode</code></li><li><code>GameMode? gameMode</code></li></ul><h3 id=tostring>ToString</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// Gets a string representation of the mode state</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>override</span> <span style=color:#ff7b72>string</span> ToString()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> <span style=color:#a5d6ff>$&#34;ModeState({CombinedModeString}) - Updated: {_updatedAt:u}&#34;</span>;
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p>Gets a string representation of the mode state</p><p><strong>Returns:</strong> <code>string</code></p></div></main><aside class=gb-toc><div class=gb-toc-title>On this page</div><nav id=TableOfContents><ul><li><a href=#properties>Properties</a><ul><li><a href=#stateid>StateId</a></li><li><a href=#createdat>CreatedAt</a></li><li><a href=#updatedat>UpdatedAt</a></li><li><a href=#isvalid>IsValid</a></li><li><a href=#currentapplicationmode>CurrentApplicationMode</a></li><li><a href=#currentuimode>CurrentUIMode</a></li><li><a href=#currenteditmode>CurrentEditMode</a></li><li><a href=#currentviewmode>CurrentViewMode</a></li><li><a href=#currentgamemode>CurrentGameMode</a></li><li><a href=#combinedmodestring>CombinedModeString</a></li></ul></li><li><a href=#methods>Methods</a><ul><li><a href=#clone>Clone</a></li><li><a href=#updatetimestamp>UpdateTimestamp</a></li><li><a href=#validate>Validate</a></li><li><a href=#create>Create</a></li><li><a href=#createfromtemplate>CreateFromTemplate</a></li><li><a href=#setmodes>SetModes</a></li><li><a href=#tostring>ToString</a></li></ul></li></ul></nav></aside><footer class=gb-footer><p>&copy; 2025 Chris Tutorials. All rights reserved.</p><p>Built with <a href=https://gohugo.io/ target=_blank>Hugo</a> and
+<a href=https://godotengine.org/ target=_blank>Godot</a>.</p></footer></div></body></html>

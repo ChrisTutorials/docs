@@ -1,0 +1,541 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>BoundsValidationTest | GridBuilding Plugin</title>
+<meta name=description content><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel=stylesheet><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css><link rel=stylesheet href=/css/custom.css><meta name=generator content="Hugo 0.146.5"></head><body><div class=gb-layout><header class=gb-header><a href=/ class=gb-brand><i class="fas fa-cubes" style=color:var(--gb-primary)></i>
+<span>GridBuilding Plugin</span></a><div class=gb-search><i class="fas fa-search"></i>
+<input type=text placeholder="Search documentation..." aria-label=Search></div><nav class=gb-nav><a href=/ class=gb-nav-link>Home
+</a><a href=/v6.0/overview/ class=gb-nav-link>Documentation
+</a><a href=/v5.1/overview/ class=gb-nav-link>Grid Building Plugin Overview
+</a><a href=/v6.0/api/ class=gb-nav-link>API Reference
+</a><a href=/v5.1/guides/ class=gb-nav-link>Getting Started Guides
+</a><a href=/v6.0/examples/ class=gb-nav-link>Examples
+</a><a href=/v5.1/examples/ class=gb-nav-link>Code Examples
+</a><a href=/community/ class=gb-nav-link>Community
+</a><a href=/v5.1/architecture-diagrams/ class=gb-nav-link>Architecture Diagrams</a></nav></header><aside class=gb-sidebar><nav class=gb-sidebar-nav><div class=gb-sidebar-section><div class=gb-sidebar-title>V6.0s</div><a href=/v6.0/guides/6-0-readiness-status/ class=gb-sidebar-link>GridBuilding 6.0 Readiness Status
+</a><a href=/v6.0/guides/getting_started/ class=gb-sidebar-link>Getting Started with GridBuilding
+</a><a href=/v6.0/guides/mode-architecture/ class=gb-sidebar-link>GridBuilding 6.0 Mode Architecture
+</a><a href=/v6.0/guides/gdscript-to-csharp-mapping/ class=gb-sidebar-link>GDScript to C# Migration Guide
+</a><a href=/v6.0/guides/csharp_state_integration/ class=gb-sidebar-link>C# State Integration with Godot Frontend
+</a><a href=/v6.0/guides/troubleshooting/ class=gb-sidebar-link>Troubleshooting Guide
+</a><a href=/v6.0/examples/godot_integration_example/ class=gb-sidebar-link>Godot Integration Example
+</a><a href=/v6.0/guides/service_based_architecture/ class=gb-sidebar-link>Service-Based Architecture
+</a><a href=/gridbuilding/v6-0/api/ class=gb-sidebar-link>GridBuilding API Reference</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.1.0</div><a href=/v5.1/overview/ class=gb-sidebar-link>Grid Building Plugin Overview
+</a><a href=/v5.1/guides/ class=gb-sidebar-link>Getting Started Guides
+</a><a href=/v5.1/api/ class=gb-sidebar-link>C# API Reference
+</a><a href=/v5.1/examples/ class=gb-sidebar-link>Code Examples
+</a><a href=/v5.1/architecture-diagrams/ class=gb-sidebar-link>Architecture Diagrams
+</a><a href=/v5.1/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.1/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.1/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.1/validation/ class=gb-sidebar-link>Validation Tools</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.0.0</div><a href=/v5.0/api/ class=gb-sidebar-link>GDScript API Reference
+</a><a href=/v5.0/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.0/overview/ class=gb-sidebar-link>Grid Building Plugin v5.0.0
+</a><a href=/v5.0/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.0/guides/ class=gb-sidebar-link>Plugin Overview
+</a><a href=/v5.0/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.0/validation/ class=gb-sidebar-link>Validation Tools</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>V6.0-Publics</div><a href=/gridbuilding/v6-0-public/api/ class=gb-sidebar-link>GridBuilding API Reference</a></div></nav></aside><main class=gb-main><div class=gb-content><h1>BoundsValidationTest</h1><h1 id=boundsvalidationtest>BoundsValidationTest</h1><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>GridBuilding.Godot.Tests.Validation
+</span></span><span style=display:flex><span><span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>BoundsValidationTest</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Members...</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><p>Unit tests for bounds validation utilities.
+Tests rectangle bounds, tile range calculations, and boundary checking.
+Ported from: godot/addons/grid_building/test/grid_building/systems/building/unit/validators/rect4x2_bounds_validation_unit_test.gd</p><p><strong>Project:</strong> GridBuilding v6.0<br><strong>Layer:</strong> Godot<br><strong>Source:</strong> <code>Godot/Tests/Unit/Validation/BoundsValidationTest.cs</code><br><strong>Namespace:</strong> <code>GridBuilding.Godot.Tests.Validation</code><br><strong>Parsing Method:</strong> AST-based (Roslyn) - NOT regex</p><p><strong>⚠️ IMPORTANT</strong>: This documentation was generated using AST parsing, not regex.</p><h2 id=methods>Methods</h2><h3 id=createrect_withvaliddimensions_returnscorrectbounds>CreateRect_WithValidDimensions_ReturnsCorrectBounds</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>#region</span> Rect Bounds Creation Tests
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    [Fact]
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> CreateRect_WithValidDimensions_ReturnsCorrectBounds()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> rect = <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>10.0f</span>, <span style=color:#a5d6ff>20.0f</span>, <span style=color:#a5d6ff>100.0f</span>, <span style=color:#a5d6ff>50.0f</span>);
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        rect.X.ShouldBe(<span style=color:#a5d6ff>10.0f</span>);
+</span></span><span style=display:flex><span>        rect.Y.ShouldBe(<span style=color:#a5d6ff>20.0f</span>);
+</span></span><span style=display:flex><span>        rect.Width.ShouldBe(<span style=color:#a5d6ff>100.0f</span>);
+</span></span><span style=display:flex><span>        rect.Height.ShouldBe(<span style=color:#a5d6ff>50.0f</span>);
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=createrect_withzerodimensions_isvalid>CreateRect_WithZeroDimensions_IsValid</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">9
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> CreateRect_WithZeroDimensions_IsValid()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> rect = <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0</span>);
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        rect.Width.ShouldBe(<span style=color:#a5d6ff>0</span>);
+</span></span><span style=display:flex><span>        rect.Height.ShouldBe(<span style=color:#a5d6ff>0</span>);
+</span></span><span style=display:flex><span>        rect.Area.ShouldBe(<span style=color:#a5d6ff>0</span>);
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=createrect_negativedimensions_throwsexception>CreateRect_NegativeDimensions_ThrowsException</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> CreateRect_NegativeDimensions_ThrowsException()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        Should.Throw&lt;ArgumentException&gt;(() =&gt; <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0</span>, -<span style=color:#a5d6ff>10</span>, <span style=color:#a5d6ff>10</span>));
+</span></span><span style=display:flex><span>        Should.Throw&lt;ArgumentException&gt;(() =&gt; <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>10</span>, -<span style=color:#a5d6ff>10</span>));
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=area_calculatescorrectly>Area_CalculatesCorrectly</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>#endregion</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>#region</span> Area Calculations
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    [Theory]
+</span></span><span style=display:flex><span>    [InlineData(10, 10, 100)]
+</span></span><span style=display:flex><span>    [InlineData(4, 2, 8)]
+</span></span><span style=display:flex><span>    [InlineData(16, 16, 256)]
+</span></span><span style=display:flex><span>    [InlineData(1, 1, 1)]
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> Area_CalculatesCorrectly(<span style=color:#ff7b72>float</span> width, <span style=color:#ff7b72>float</span> height, <span style=color:#ff7b72>float</span> expectedArea)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> rect = <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0</span>, width, height);
+</span></span><span style=display:flex><span>        rect.Area.ShouldBe(expectedArea);
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><p><strong>Parameters:</strong></p><ul><li><code>float width</code></li><li><code>float height</code></li><li><code>float expectedArea</code></li></ul><h3 id=perimeter_calculatescorrectly>Perimeter_CalculatesCorrectly</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> Perimeter_CalculatesCorrectly()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> rect = <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>10</span>, <span style=color:#a5d6ff>5</span>);
+</span></span><span style=display:flex><span>        rect.Perimeter.ShouldBe(<span style=color:#a5d6ff>30</span>);  <span style=color:#8b949e;font-style:italic>// 2 * (10 + 5)</span>
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=contains_pointinside_returnstrue>Contains_PointInside_ReturnsTrue</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>#endregion</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>#region</span> Bounds Checking
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    [Fact]
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> Contains_PointInside_ReturnsTrue()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> rect = <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>100</span>, <span style=color:#a5d6ff>100</span>);
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        rect.Contains(<span style=color:#a5d6ff>50</span>, <span style=color:#a5d6ff>50</span>).ShouldBeTrue();
+</span></span><span style=display:flex><span>        rect.Contains(<span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0</span>).ShouldBeTrue();
+</span></span><span style=display:flex><span>        rect.Contains(<span style=color:#a5d6ff>99</span>, <span style=color:#a5d6ff>99</span>).ShouldBeTrue();
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=contains_pointoutside_returnsfalse>Contains_PointOutside_ReturnsFalse</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> Contains_PointOutside_ReturnsFalse()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> rect = <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>100</span>, <span style=color:#a5d6ff>100</span>);
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        rect.Contains(-<span style=color:#a5d6ff>1</span>, <span style=color:#a5d6ff>50</span>).ShouldBeFalse();
+</span></span><span style=display:flex><span>        rect.Contains(<span style=color:#a5d6ff>50</span>, -<span style=color:#a5d6ff>1</span>).ShouldBeFalse();
+</span></span><span style=display:flex><span>        rect.Contains(<span style=color:#a5d6ff>100</span>, <span style=color:#a5d6ff>50</span>).ShouldBeFalse();
+</span></span><span style=display:flex><span>        rect.Contains(<span style=color:#a5d6ff>50</span>, <span style=color:#a5d6ff>100</span>).ShouldBeFalse();
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=contains_pointonedge_returnstrue>Contains_PointOnEdge_ReturnsTrue</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> Contains_PointOnEdge_ReturnsTrue()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> rect = <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>100</span>, <span style=color:#a5d6ff>100</span>);
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        rect.Contains(<span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>50</span>).ShouldBeTrue();  <span style=color:#8b949e;font-style:italic>// Left edge</span>
+</span></span><span style=display:flex><span>        rect.Contains(<span style=color:#a5d6ff>50</span>, <span style=color:#a5d6ff>0</span>).ShouldBeTrue();  <span style=color:#8b949e;font-style:italic>// Top edge</span>
+</span></span><span style=display:flex><span>        rect.Contains(<span style=color:#a5d6ff>99.9f</span>, <span style=color:#a5d6ff>50</span>).ShouldBeTrue();  <span style=color:#8b949e;font-style:italic>// Near right edge</span>
+</span></span><span style=display:flex><span>        rect.Contains(<span style=color:#a5d6ff>50</span>, <span style=color:#a5d6ff>99.9f</span>).ShouldBeTrue();  <span style=color:#8b949e;font-style:italic>// Near bottom edge</span>
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=intersects_overlappingrects_returnstrue>Intersects_OverlappingRects_ReturnsTrue</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>#endregion</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>#region</span> Intersection Tests
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    [Fact]
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> Intersects_OverlappingRects_ReturnsTrue()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> rect1 = <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>100</span>, <span style=color:#a5d6ff>100</span>);
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> rect2 = <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>50</span>, <span style=color:#a5d6ff>50</span>, <span style=color:#a5d6ff>100</span>, <span style=color:#a5d6ff>100</span>);
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        rect1.Intersects(rect2).ShouldBeTrue();
+</span></span><span style=display:flex><span>        rect2.Intersects(rect1).ShouldBeTrue();
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=intersects_nonoverlappingrects_returnsfalse>Intersects_NonOverlappingRects_ReturnsFalse</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">9
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> Intersects_NonOverlappingRects_ReturnsFalse()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> rect1 = <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>100</span>, <span style=color:#a5d6ff>100</span>);
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> rect2 = <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>200</span>, <span style=color:#a5d6ff>200</span>, <span style=color:#a5d6ff>100</span>, <span style=color:#a5d6ff>100</span>);
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        rect1.Intersects(rect2).ShouldBeFalse();
+</span></span><span style=display:flex><span>        rect2.Intersects(rect1).ShouldBeFalse();
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=intersects_touchingrects_returnsfalse>Intersects_TouchingRects_ReturnsFalse</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">8
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> Intersects_TouchingRects_ReturnsFalse()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> rect1 = <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>100</span>, <span style=color:#a5d6ff>100</span>);
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> rect2 = <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>100</span>, <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>100</span>, <span style=color:#a5d6ff>100</span>);  <span style=color:#8b949e;font-style:italic>// Right edge touches left edge of rect2</span>
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        rect1.Intersects(rect2).ShouldBeFalse();
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=getintersection_overlappingrects_returnscorrectbounds>GetIntersection_OverlappingRects_ReturnsCorrectBounds</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> GetIntersection_OverlappingRects_ReturnsCorrectBounds()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> rect1 = <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>100</span>, <span style=color:#a5d6ff>100</span>);
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> rect2 = <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>50</span>, <span style=color:#a5d6ff>50</span>, <span style=color:#a5d6ff>100</span>, <span style=color:#a5d6ff>100</span>);
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> intersection = rect1.GetIntersection(rect2);
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        intersection.ShouldNotBeNull();
+</span></span><span style=display:flex><span>        intersection!.X.ShouldBe(<span style=color:#a5d6ff>50</span>);
+</span></span><span style=display:flex><span>        intersection.Y.ShouldBe(<span style=color:#a5d6ff>50</span>);
+</span></span><span style=display:flex><span>        intersection.Width.ShouldBe(<span style=color:#a5d6ff>50</span>);
+</span></span><span style=display:flex><span>        intersection.Height.ShouldBe(<span style=color:#a5d6ff>50</span>);
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=getintersection_nonoverlapping_returnsnull>GetIntersection_NonOverlapping_ReturnsNull</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> GetIntersection_NonOverlapping_ReturnsNull()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> rect1 = <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>100</span>, <span style=color:#a5d6ff>100</span>);
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> rect2 = <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>200</span>, <span style=color:#a5d6ff>200</span>, <span style=color:#a5d6ff>100</span>, <span style=color:#a5d6ff>100</span>);
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> intersection = rect1.GetIntersection(rect2);
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        intersection.ShouldBeNull();
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=totilebounds_convertstocellcoordinates>ToTileBounds_ConvertsToCellCoordinates</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>#endregion</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>#region</span> Tile Bounds Tests
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    [Fact]
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> ToTileBounds_ConvertsToCellCoordinates()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> rect = <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>32</span>, <span style=color:#a5d6ff>64</span>, <span style=color:#a5d6ff>64</span>, <span style=color:#a5d6ff>32</span>);  <span style=color:#8b949e;font-style:italic>// 2x1 tiles at (2,4)</span>
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> tileBounds = rect.ToTileBounds(<span style=color:#a5d6ff>16</span>);  <span style=color:#8b949e;font-style:italic>// 16x16 tiles</span>
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        tileBounds.StartX.ShouldBe(<span style=color:#a5d6ff>2</span>);
+</span></span><span style=display:flex><span>        tileBounds.StartY.ShouldBe(<span style=color:#a5d6ff>4</span>);
+</span></span><span style=display:flex><span>        tileBounds.EndX.ShouldBe(<span style=color:#a5d6ff>6</span>);  <span style=color:#8b949e;font-style:italic>// (32+64)/16 = 6</span>
+</span></span><span style=display:flex><span>        tileBounds.EndY.ShouldBe(<span style=color:#a5d6ff>6</span>);  <span style=color:#8b949e;font-style:italic>// (64+32)/16 = 6</span>
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=totilebounds_handlesnonalignedbounds>ToTileBounds_HandlesNonAlignedBounds</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> ToTileBounds_HandlesNonAlignedBounds()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Rect that doesn&#39;t align to tile boundaries</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> rect = <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>10</span>, <span style=color:#a5d6ff>10</span>, <span style=color:#a5d6ff>50</span>, <span style=color:#a5d6ff>50</span>);
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> tileBounds = rect.ToTileBounds(<span style=color:#a5d6ff>16</span>);
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Should encompass all tiles the rect touches</span>
+</span></span><span style=display:flex><span>        tileBounds.StartX.ShouldBe(<span style=color:#a5d6ff>0</span>);  <span style=color:#8b949e;font-style:italic>// floor(10/16) = 0</span>
+</span></span><span style=display:flex><span>        tileBounds.StartY.ShouldBe(<span style=color:#a5d6ff>0</span>);  <span style=color:#8b949e;font-style:italic>// floor(10/16) = 0</span>
+</span></span><span style=display:flex><span>        tileBounds.EndX.ShouldBe(<span style=color:#a5d6ff>4</span>);    <span style=color:#8b949e;font-style:italic>// ceil((10+50)/16) = 4</span>
+</span></span><span style=display:flex><span>        tileBounds.EndY.ShouldBe(<span style=color:#a5d6ff>4</span>);    <span style=color:#8b949e;font-style:italic>// ceil((10+50)/16) = 4</span>
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=tilebounds_tilecount_calculatescorrectly>TileBounds_TileCount_CalculatesCorrectly</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Theory]
+</span></span><span style=display:flex><span>    [InlineData(16, 4, 4, 16)]  <span style=color:#8b949e;font-style:italic>// 4x4 tiles = 16 tiles</span>
+</span></span><span style=display:flex><span>    [InlineData(32, 2, 2, 4)]   <span style=color:#8b949e;font-style:italic>// 2x2 tiles = 4 tiles</span>
+</span></span><span style=display:flex><span>    [InlineData(8, 8, 8, 64)]   <span style=color:#8b949e;font-style:italic>// 8x8 tiles = 64 tiles</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> TileBounds_TileCount_CalculatesCorrectly(<span style=color:#ff7b72>int</span> tileSize, <span style=color:#ff7b72>int</span> expectedWidth, <span style=color:#ff7b72>int</span> expectedHeight, <span style=color:#ff7b72>int</span> expectedCount)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> rect = <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0</span>, tileSize * expectedWidth, tileSize * expectedHeight);
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> tileBounds = rect.ToTileBounds(tileSize);
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        tileBounds.TileCount.ShouldBe(expectedCount);
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><p><strong>Parameters:</strong></p><ul><li><code>int tileSize</code></li><li><code>int expectedWidth</code></li><li><code>int expectedHeight</code></li><li><code>int expectedCount</code></li></ul><h3 id=rect4x2_atorigin_hascorrectbounds>Rect4x2_AtOrigin_HasCorrectBounds</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>#endregion</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>#region</span> <span style=color:#a5d6ff>4</span>x2 Rect Specific Tests (<span style=color:#ff7b72>from</span> GDScript)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    [Fact]
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> Rect4x2_AtOrigin_HasCorrectBounds()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// A 4x2 tile rect at origin with 16px tiles</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> rect = <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>64</span>, <span style=color:#a5d6ff>32</span>);  <span style=color:#8b949e;font-style:italic>// 4*16, 2*16</span>
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        rect.Area.ShouldBe(<span style=color:#a5d6ff>64</span> * <span style=color:#a5d6ff>32</span>);
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> tileBounds = rect.ToTileBounds(<span style=color:#a5d6ff>16</span>);
+</span></span><span style=display:flex><span>        tileBounds.TileWidth.ShouldBe(<span style=color:#a5d6ff>4</span>);
+</span></span><span style=display:flex><span>        tileBounds.TileHeight.ShouldBe(<span style=color:#a5d6ff>2</span>);
+</span></span><span style=display:flex><span>        tileBounds.TileCount.ShouldBe(<span style=color:#a5d6ff>8</span>);
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=rect4x2_offset_hascorrectbounds>Rect4x2_Offset_HasCorrectBounds</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> Rect4x2_Offset_HasCorrectBounds()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// A 4x2 tile rect offset by 2 tiles</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> rect = <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>32</span>, <span style=color:#a5d6ff>32</span>, <span style=color:#a5d6ff>64</span>, <span style=color:#a5d6ff>32</span>);  <span style=color:#8b949e;font-style:italic>// Start at (2,2) tiles</span>
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> tileBounds = rect.ToTileBounds(<span style=color:#a5d6ff>16</span>);
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        tileBounds.StartX.ShouldBe(<span style=color:#a5d6ff>2</span>);
+</span></span><span style=display:flex><span>        tileBounds.StartY.ShouldBe(<span style=color:#a5d6ff>2</span>);
+</span></span><span style=display:flex><span>        tileBounds.EndX.ShouldBe(<span style=color:#a5d6ff>6</span>);  <span style=color:#8b949e;font-style:italic>// 2 + 4</span>
+</span></span><span style=display:flex><span>        tileBounds.EndY.ShouldBe(<span style=color:#a5d6ff>4</span>);  <span style=color:#8b949e;font-style:italic>// 2 + 2</span>
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=rect4x2_enumeratetiles_returnsalltiles>Rect4x2_EnumerateTiles_ReturnsAllTiles</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> Rect4x2_EnumerateTiles_ReturnsAllTiles()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> rect = <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>64</span>, <span style=color:#a5d6ff>32</span>);
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> tileBounds = rect.ToTileBounds(<span style=color:#a5d6ff>16</span>);
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> tiles = tileBounds.EnumerateTiles().ToList();
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        tiles.Count.ShouldBe(<span style=color:#a5d6ff>8</span>);
+</span></span><span style=display:flex><span>        tiles.ShouldContain((<span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0</span>));
+</span></span><span style=display:flex><span>        tiles.ShouldContain((<span style=color:#a5d6ff>1</span>, <span style=color:#a5d6ff>0</span>));
+</span></span><span style=display:flex><span>        tiles.ShouldContain((<span style=color:#a5d6ff>2</span>, <span style=color:#a5d6ff>0</span>));
+</span></span><span style=display:flex><span>        tiles.ShouldContain((<span style=color:#a5d6ff>3</span>, <span style=color:#a5d6ff>0</span>));
+</span></span><span style=display:flex><span>        tiles.ShouldContain((<span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>1</span>));
+</span></span><span style=display:flex><span>        tiles.ShouldContain((<span style=color:#a5d6ff>1</span>, <span style=color:#a5d6ff>1</span>));
+</span></span><span style=display:flex><span>        tiles.ShouldContain((<span style=color:#a5d6ff>2</span>, <span style=color:#a5d6ff>1</span>));
+</span></span><span style=display:flex><span>        tiles.ShouldContain((<span style=color:#a5d6ff>3</span>, <span style=color:#a5d6ff>1</span>));
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=singletile_hascorrectbounds>SingleTile_HasCorrectBounds</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>#endregion</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>#region</span> Validation Edge Cases
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    [Fact]
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> SingleTile_HasCorrectBounds()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> rect = <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>16</span>, <span style=color:#a5d6ff>16</span>, <span style=color:#a5d6ff>16</span>, <span style=color:#a5d6ff>16</span>);
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> tileBounds = rect.ToTileBounds(<span style=color:#a5d6ff>16</span>);
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        tileBounds.TileCount.ShouldBe(<span style=color:#a5d6ff>1</span>);
+</span></span><span style=display:flex><span>        tileBounds.StartX.ShouldBe(<span style=color:#a5d6ff>1</span>);
+</span></span><span style=display:flex><span>        tileBounds.StartY.ShouldBe(<span style=color:#a5d6ff>1</span>);
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=verylargerect_handlesboundscorrectly>VeryLargeRect_HandlesBoundsCorrectly</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> VeryLargeRect_HandlesBoundsCorrectly()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> rect = <span style=color:#ff7b72>new</span> RectBounds(<span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>10000</span>, <span style=color:#a5d6ff>10000</span>);
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> tileBounds = rect.ToTileBounds(<span style=color:#a5d6ff>16</span>);
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        tileBounds.TileCount.ShouldBe(<span style=color:#a5d6ff>625</span> * <span style=color:#a5d6ff>625</span>);  <span style=color:#8b949e;font-style:italic>// 625 * 625 = 390625</span>
+</span></span><span style=display:flex><span>        tileBounds.TileWidth.ShouldBe(<span style=color:#a5d6ff>625</span>);
+</span></span><span style=display:flex><span>        tileBounds.TileHeight.ShouldBe(<span style=color:#a5d6ff>625</span>);
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p></div></main><aside class=gb-toc><div class=gb-toc-title>On this page</div><nav id=TableOfContents><ul><li><a href=#methods>Methods</a><ul><li><a href=#createrect_withvaliddimensions_returnscorrectbounds>CreateRect_WithValidDimensions_ReturnsCorrectBounds</a></li><li><a href=#createrect_withzerodimensions_isvalid>CreateRect_WithZeroDimensions_IsValid</a></li><li><a href=#createrect_negativedimensions_throwsexception>CreateRect_NegativeDimensions_ThrowsException</a></li><li><a href=#area_calculatescorrectly>Area_CalculatesCorrectly</a></li><li><a href=#perimeter_calculatescorrectly>Perimeter_CalculatesCorrectly</a></li><li><a href=#contains_pointinside_returnstrue>Contains_PointInside_ReturnsTrue</a></li><li><a href=#contains_pointoutside_returnsfalse>Contains_PointOutside_ReturnsFalse</a></li><li><a href=#contains_pointonedge_returnstrue>Contains_PointOnEdge_ReturnsTrue</a></li><li><a href=#intersects_overlappingrects_returnstrue>Intersects_OverlappingRects_ReturnsTrue</a></li><li><a href=#intersects_nonoverlappingrects_returnsfalse>Intersects_NonOverlappingRects_ReturnsFalse</a></li><li><a href=#intersects_touchingrects_returnsfalse>Intersects_TouchingRects_ReturnsFalse</a></li><li><a href=#getintersection_overlappingrects_returnscorrectbounds>GetIntersection_OverlappingRects_ReturnsCorrectBounds</a></li><li><a href=#getintersection_nonoverlapping_returnsnull>GetIntersection_NonOverlapping_ReturnsNull</a></li><li><a href=#totilebounds_convertstocellcoordinates>ToTileBounds_ConvertsToCellCoordinates</a></li><li><a href=#totilebounds_handlesnonalignedbounds>ToTileBounds_HandlesNonAlignedBounds</a></li><li><a href=#tilebounds_tilecount_calculatescorrectly>TileBounds_TileCount_CalculatesCorrectly</a></li><li><a href=#rect4x2_atorigin_hascorrectbounds>Rect4x2_AtOrigin_HasCorrectBounds</a></li><li><a href=#rect4x2_offset_hascorrectbounds>Rect4x2_Offset_HasCorrectBounds</a></li><li><a href=#rect4x2_enumeratetiles_returnsalltiles>Rect4x2_EnumerateTiles_ReturnsAllTiles</a></li><li><a href=#singletile_hascorrectbounds>SingleTile_HasCorrectBounds</a></li><li><a href=#verylargerect_handlesboundscorrectly>VeryLargeRect_HandlesBoundsCorrectly</a></li></ul></li></ul></nav></aside><footer class=gb-footer><p>&copy; 2025 Chris Tutorials. All rights reserved.</p><p>Built with <a href=https://gohugo.io/ target=_blank>Hugo</a> and
+<a href=https://godotengine.org/ target=_blank>Godot</a>.</p></footer></div></body></html>

@@ -1,0 +1,799 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>ManipulationSystem | GridBuilding Plugin</title>
+<meta name=description content><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel=stylesheet><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css><link rel=stylesheet href=/css/custom.css><meta name=generator content="Hugo 0.146.5"></head><body><div class=gb-layout><header class=gb-header><a href=/ class=gb-brand><i class="fas fa-cubes" style=color:var(--gb-primary)></i>
+<span>GridBuilding Plugin</span></a><div class=gb-search><i class="fas fa-search"></i>
+<input type=text placeholder="Search documentation..." aria-label=Search></div><nav class=gb-nav><a href=/ class=gb-nav-link>Home
+</a><a href=/v6.0/overview/ class=gb-nav-link>Documentation
+</a><a href=/v5.1/overview/ class=gb-nav-link>Grid Building Plugin Overview
+</a><a href=/v6.0/api/ class=gb-nav-link>API Reference
+</a><a href=/v5.1/guides/ class=gb-nav-link>Getting Started Guides
+</a><a href=/v6.0/examples/ class=gb-nav-link>Examples
+</a><a href=/v5.1/examples/ class=gb-nav-link>Code Examples
+</a><a href=/community/ class=gb-nav-link>Community
+</a><a href=/v5.1/architecture-diagrams/ class=gb-nav-link>Architecture Diagrams</a></nav></header><aside class=gb-sidebar><nav class=gb-sidebar-nav><div class=gb-sidebar-section><div class=gb-sidebar-title>V6.0s</div><a href=/v6.0/guides/6-0-readiness-status/ class=gb-sidebar-link>GridBuilding 6.0 Readiness Status
+</a><a href=/v6.0/guides/getting_started/ class=gb-sidebar-link>Getting Started with GridBuilding
+</a><a href=/v6.0/guides/mode-architecture/ class=gb-sidebar-link>GridBuilding 6.0 Mode Architecture
+</a><a href=/v6.0/guides/gdscript-to-csharp-mapping/ class=gb-sidebar-link>GDScript to C# Migration Guide
+</a><a href=/v6.0/guides/csharp_state_integration/ class=gb-sidebar-link>C# State Integration with Godot Frontend
+</a><a href=/v6.0/guides/troubleshooting/ class=gb-sidebar-link>Troubleshooting Guide
+</a><a href=/v6.0/examples/godot_integration_example/ class=gb-sidebar-link>Godot Integration Example
+</a><a href=/v6.0/guides/service_based_architecture/ class=gb-sidebar-link>Service-Based Architecture
+</a><a href=/gridbuilding/v6-0/api/ class=gb-sidebar-link>GridBuilding API Reference</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.1.0</div><a href=/v5.1/overview/ class=gb-sidebar-link>Grid Building Plugin Overview
+</a><a href=/v5.1/guides/ class=gb-sidebar-link>Getting Started Guides
+</a><a href=/v5.1/api/ class=gb-sidebar-link>C# API Reference
+</a><a href=/v5.1/examples/ class=gb-sidebar-link>Code Examples
+</a><a href=/v5.1/architecture-diagrams/ class=gb-sidebar-link>Architecture Diagrams
+</a><a href=/v5.1/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.1/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.1/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.1/validation/ class=gb-sidebar-link>Validation Tools</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.0.0</div><a href=/v5.0/api/ class=gb-sidebar-link>GDScript API Reference
+</a><a href=/v5.0/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.0/overview/ class=gb-sidebar-link>Grid Building Plugin v5.0.0
+</a><a href=/v5.0/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.0/guides/ class=gb-sidebar-link>Plugin Overview
+</a><a href=/v5.0/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.0/validation/ class=gb-sidebar-link>Validation Tools</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>V6.0-Publics</div><a href=/gridbuilding/v6-0-public/api/ class=gb-sidebar-link>GridBuilding API Reference</a></div></nav></aside><main class=gb-main><div class=gb-content><h1>ManipulationSystem</h1><h1 id=manipulationsystem>ManipulationSystem</h1><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>GridBuilding.Core.Systems.Manipulation
+</span></span><span style=display:flex><span><span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>ManipulationSystem</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Members...</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><p>Core manipulation system for grid building objects.
+Provides the pure C# logic foundation for move, rotate, flip, and demolish operations.
+Ported from: godot/addons/grid_building/systems/manipulation/manipulation_system.gd</p><p><strong>Project:</strong> GridBuilding v6.0<br><strong>Layer:</strong> Core<br><strong>Source:</strong> <code>Core/_incomplete/Systems/Placement/Manipulation/ManipulationSystem.cs</code><br><strong>Namespace:</strong> <code>GridBuilding.Core.Systems.Manipulation</code><br><strong>Parsing Method:</strong> AST-based (Roslyn) - NOT regex</p><p><strong>⚠️ IMPORTANT</strong>: This documentation was generated using AST parsing, not regex.</p><h2 id=properties>Properties</h2><h3 id=currentstate>CurrentState</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">8
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>#endregion</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>#region</span> Public Properties
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// Current manipulation state.</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> ManipulationState? CurrentState =&gt; GetActiveManipulation();
+</span></span></code></pre></td></tr></table></div></div><p>Current manipulation state.</p><h3 id=isactive>IsActive</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// Whether the system is currently active.</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>bool</span> IsActive =&gt; _isActive;
+</span></span></code></pre></td></tr></table></div></div><p>Whether the system is currently active.</p><h3 id=manipulationservice>ManipulationService</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// Access to the manipulation service.</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> ManipulationService ManipulationService =&gt; _manipulationService;
+</span></span></code></pre></td></tr></table></div></div><p>Access to the manipulation service.</p><h3 id=transformhandler>TransformHandler</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// Access to the transform handler.</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> ManipulationTransformHandler TransformHandler =&gt; _transformHandler;
+</span></span></code></pre></td></tr></table></div></div><p>Access to the transform handler.</p><h3 id=physicsmanager>PhysicsManager</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// Access to the physics layer manager.</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> PhysicsLayerManager PhysicsManager =&gt; _physicsManager;
+</span></span></code></pre></td></tr></table></div></div><p>Access to the physics layer manager.</p><h3 id=movemanager>MoveManager</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// Access to the move workflow manager.</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> MoveWorkflowManager MoveManager =&gt; _moveManager;
+</span></span></code></pre></td></tr></table></div></div><p>Access to the move workflow manager.</p><h3 id=placementmanager>PlacementManager</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// Access to the placement manager.</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> PlacementManager PlacementManager =&gt; _placementManager;
+</span></span></code></pre></td></tr></table></div></div><p>Access to the placement manager.</p><h3 id=demolishmanager>DemolishManager</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// Access to the demolish manager.</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> DemolishManager DemolishManager =&gt; _demolishManager;
+</span></span></code></pre></td></tr></table></div></div><p>Access to the demolish manager.</p><h3 id=settings>Settings</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// Current manipulation settings.</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> ManipulationSettings Settings =&gt; _settings;
+</span></span></code></pre></td></tr></table></div></div><p>Current manipulation settings.</p><h2 id=methods>Methods</h2><h3 id=startmove>StartMove</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">51
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">52
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">53
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">54
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">55
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">56
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">57
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">58
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">59
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">60
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">61
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">62
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">63
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>#endregion</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>#region</span> Public Methods
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// Starts a move operation for the specified target.</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;param name=&#34;target&#34;&gt;Target to move&lt;/param&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;param name=&#34;context&#34;&gt;Manipulation context&lt;/param&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;returns&gt;Result of starting the move operation&lt;/returns&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> ManipulationResult StartMove(ManipulationTarget target, ManipulationContext context)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> (_isActive)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> ManipulationResult.Failed(<span style=color:#a5d6ff>&#34;Another manipulation operation is already active&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> (target == <span style=color:#79c0ff>null</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> ManipulationResult.Failed(<span style=color:#a5d6ff>&#34;Target cannot be null&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> (context == <span style=color:#79c0ff>null</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> ManipulationResult.Failed(<span style=color:#a5d6ff>&#34;Context cannot be null&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>try</span>
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Start manipulation using the service</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> manipulationState = _manipulationService.StartManipulation(ManipulationMode.Move, target.GridPosition);
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Start move workflow</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> moveSuccess = _moveManager.StartMove(manipulationState, target.ObjectId, target.GridPosition);
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>if</span> (!moveSuccess)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _manipulationService.CancelManipulation(manipulationState.ManipulationId);
+</span></span><span style=display:flex><span>                <span style=color:#ff7b72>return</span> ManipulationResult.Failed(<span style=color:#a5d6ff>&#34;Failed to start move workflow&#34;</span>);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Set context data</span>
+</span></span><span style=display:flex><span>            manipulationState.SetContextData(<span style=color:#a5d6ff>&#34;targetObjectId&#34;</span>, target.ObjectId);
+</span></span><span style=display:flex><span>            manipulationState.SetContextData(<span style=color:#a5d6ff>&#34;targetNodePath&#34;</span>, target.NodePath);
+</span></span><span style=display:flex><span>            manipulationState.SetContextData(<span style=color:#a5d6ff>&#34;manipulationContext&#34;</span>, context);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> <span style=color:#ff7b72>new</span> ManipulationResult
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                IsSuccess = <span style=color:#79c0ff>true</span>,
+</span></span><span style=display:flex><span>                ManipulationType = ManipulationMode.Move,
+</span></span><span style=display:flex><span>                OriginalPosition = target.GridPosition,
+</span></span><span style=display:flex><span>                NewPosition = target.GridPosition,
+</span></span><span style=display:flex><span>                Data = <span style=color:#ff7b72>new</span> Dictionary&lt;<span style=color:#ff7b72>string</span>, <span style=color:#ff7b72>object</span>&gt;
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    [&#34;manipulationId&#34;] = manipulationState.ManipulationId,
+</span></span><span style=display:flex><span>                    [&#34;workflowId&#34;] = manipulationState.GetContextData&lt;<span style=color:#ff7b72>string</span>&gt;(<span style=color:#a5d6ff>&#34;moveWorkflowId&#34;</span>)
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            };
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>catch</span> (Exception ex)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> ManipulationResult.Failed(<span style=color:#a5d6ff>$&#34;Move operation failed: {ex.Message}&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p>Starts a move operation for the specified target.</p><p><strong>Returns:</strong> <code>ManipulationResult</code></p><p><strong>Parameters:</strong></p><ul><li><code>ManipulationTarget target</code></li><li><code>ManipulationContext context</code></li></ul><h3 id=startrotate>StartRotate</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">51
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">52
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">53
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// Starts a rotate operation for the specified target.</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;param name=&#34;target&#34;&gt;Target to rotate&lt;/param&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;param name=&#34;rotationAngle&#34;&gt;Rotation angle in degrees&lt;/param&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;param name=&#34;context&#34;&gt;Manipulation context&lt;/param&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;returns&gt;Result of starting the rotate operation&lt;/returns&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> ManipulationResult StartRotate(ManipulationTarget target, <span style=color:#ff7b72>float</span> rotationAngle, ManipulationContext context)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> (_isActive)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> ManipulationResult.Failed(<span style=color:#a5d6ff>&#34;Another manipulation operation is already active&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> (target == <span style=color:#79c0ff>null</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> ManipulationResult.Failed(<span style=color:#a5d6ff>&#34;Target cannot be null&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> (context == <span style=color:#79c0ff>null</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> ManipulationResult.Failed(<span style=color:#a5d6ff>&#34;Context cannot be null&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>try</span>
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Start manipulation using the service</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> manipulationState = _manipulationService.StartManipulation(ManipulationMode.Rotate, target.GridPosition);
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Set context data</span>
+</span></span><span style=display:flex><span>            manipulationState.SetContextData(<span style=color:#a5d6ff>&#34;targetObjectId&#34;</span>, target.ObjectId);
+</span></span><span style=display:flex><span>            manipulationState.SetContextData(<span style=color:#a5d6ff>&#34;targetNodePath&#34;</span>, target.NodePath);
+</span></span><span style=display:flex><span>            manipulationState.SetContextData(<span style=color:#a5d6ff>&#34;rotationAngle&#34;</span>, rotationAngle);
+</span></span><span style=display:flex><span>            manipulationState.SetContextData(<span style=color:#a5d6ff>&#34;manipulationContext&#34;</span>, context);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> <span style=color:#ff7b72>new</span> ManipulationResult
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                IsSuccess = <span style=color:#79c0ff>true</span>,
+</span></span><span style=display:flex><span>                ManipulationType = ManipulationMode.Rotate,
+</span></span><span style=display:flex><span>                OriginalPosition = target.GridPosition,
+</span></span><span style=display:flex><span>                NewPosition = target.GridPosition,
+</span></span><span style=display:flex><span>                Data = <span style=color:#ff7b72>new</span> Dictionary&lt;<span style=color:#ff7b72>string</span>, <span style=color:#ff7b72>object</span>&gt;
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    [&#34;manipulationId&#34;] = manipulationState.ManipulationId,
+</span></span><span style=display:flex><span>                    [&#34;rotationAngle&#34;] = rotationAngle
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            };
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>catch</span> (Exception ex)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> ManipulationResult.Failed(<span style=color:#a5d6ff>$&#34;Rotate operation failed: {ex.Message}&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p>Starts a rotate operation for the specified target.</p><p><strong>Returns:</strong> <code>ManipulationResult</code></p><p><strong>Parameters:</strong></p><ul><li><code>ManipulationTarget target</code></li><li><code>float rotationAngle</code></li><li><code>ManipulationContext context</code></li></ul><h3 id=startflip>StartFlip</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">51
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">52
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">53
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// Starts a flip operation for the specified target.</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;param name=&#34;target&#34;&gt;Target to flip&lt;/param&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;param name=&#34;flipDirection&#34;&gt;Direction to flip&lt;/param&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;param name=&#34;context&#34;&gt;Manipulation context&lt;/param&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;returns&gt;Result of starting the flip operation&lt;/returns&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> ManipulationResult StartFlip(ManipulationTarget target, FlipDirection flipDirection, ManipulationContext context)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> (_isActive)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> ManipulationResult.Failed(<span style=color:#a5d6ff>&#34;Another manipulation operation is already active&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> (target == <span style=color:#79c0ff>null</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> ManipulationResult.Failed(<span style=color:#a5d6ff>&#34;Target cannot be null&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> (context == <span style=color:#79c0ff>null</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> ManipulationResult.Failed(<span style=color:#a5d6ff>&#34;Context cannot be null&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>try</span>
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Start manipulation using the service</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> manipulationState = _manipulationService.StartManipulation(ManipulationMode.Flip, target.GridPosition);
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Set context data</span>
+</span></span><span style=display:flex><span>            manipulationState.SetContextData(<span style=color:#a5d6ff>&#34;targetObjectId&#34;</span>, target.ObjectId);
+</span></span><span style=display:flex><span>            manipulationState.SetContextData(<span style=color:#a5d6ff>&#34;targetNodePath&#34;</span>, target.NodePath);
+</span></span><span style=display:flex><span>            manipulationState.SetContextData(<span style=color:#a5d6ff>&#34;flipDirection&#34;</span>, flipDirection);
+</span></span><span style=display:flex><span>            manipulationState.SetContextData(<span style=color:#a5d6ff>&#34;manipulationContext&#34;</span>, context);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> <span style=color:#ff7b72>new</span> ManipulationResult
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                IsSuccess = <span style=color:#79c0ff>true</span>,
+</span></span><span style=display:flex><span>                ManipulationType = ManipulationMode.Flip,
+</span></span><span style=display:flex><span>                OriginalPosition = target.GridPosition,
+</span></span><span style=display:flex><span>                NewPosition = target.GridPosition,
+</span></span><span style=display:flex><span>                Data = <span style=color:#ff7b72>new</span> Dictionary&lt;<span style=color:#ff7b72>string</span>, <span style=color:#ff7b72>object</span>&gt;
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    [&#34;manipulationId&#34;] = manipulationState.ManipulationId,
+</span></span><span style=display:flex><span>                    [&#34;flipDirection&#34;] = flipDirection
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            };
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>catch</span> (Exception ex)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> ManipulationResult.Failed(<span style=color:#a5d6ff>$&#34;Flip operation failed: {ex.Message}&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p>Starts a flip operation for the specified target.</p><p><strong>Returns:</strong> <code>ManipulationResult</code></p><p><strong>Parameters:</strong></p><ul><li><code>ManipulationTarget target</code></li><li><code>FlipDirection flipDirection</code></li><li><code>ManipulationContext context</code></li></ul><h3 id=startdemolish>StartDemolish</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">51
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">52
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">53
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">54
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">55
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">56
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">57
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">58
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">59
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// Starts a demolish operation for the specified target.</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;param name=&#34;target&#34;&gt;Target to demolish&lt;/param&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;param name=&#34;context&#34;&gt;Manipulation context&lt;/param&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;returns&gt;Result of starting the demolish operation&lt;/returns&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> ManipulationResult StartDemolish(ManipulationTarget target, ManipulationContext context)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> (_isActive)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> ManipulationResult.Failed(<span style=color:#a5d6ff>&#34;Another manipulation operation is already active&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> (target == <span style=color:#79c0ff>null</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> ManipulationResult.Failed(<span style=color:#a5d6ff>&#34;Target cannot be null&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> (context == <span style=color:#79c0ff>null</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> ManipulationResult.Failed(<span style=color:#a5d6ff>&#34;Context cannot be null&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>try</span>
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Start manipulation using the service</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> manipulationState = _manipulationService.StartManipulation(ManipulationMode.Remove, target.GridPosition);
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Start demolish workflow</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> demolishSuccess = _demolishManager.StartDemolish(manipulationState, target.ObjectId, target.GridPosition);
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>if</span> (!demolishSuccess)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                _manipulationService.CancelManipulation(manipulationState.ManipulationId);
+</span></span><span style=display:flex><span>                <span style=color:#ff7b72>return</span> ManipulationResult.Failed(<span style=color:#a5d6ff>&#34;Failed to start demolish workflow&#34;</span>);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Set context data</span>
+</span></span><span style=display:flex><span>            manipulationState.SetContextData(<span style=color:#a5d6ff>&#34;targetObjectId&#34;</span>, target.ObjectId);
+</span></span><span style=display:flex><span>            manipulationState.SetContextData(<span style=color:#a5d6ff>&#34;targetNodePath&#34;</span>, target.NodePath);
+</span></span><span style=display:flex><span>            manipulationState.SetContextData(<span style=color:#a5d6ff>&#34;manipulationContext&#34;</span>, context);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> <span style=color:#ff7b72>new</span> ManipulationResult
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                IsSuccess = <span style=color:#79c0ff>true</span>,
+</span></span><span style=display:flex><span>                ManipulationType = ManipulationMode.Remove,
+</span></span><span style=display:flex><span>                OriginalPosition = target.GridPosition,
+</span></span><span style=display:flex><span>                NewPosition = target.GridPosition,
+</span></span><span style=display:flex><span>                Data = <span style=color:#ff7b72>new</span> Dictionary&lt;<span style=color:#ff7b72>string</span>, <span style=color:#ff7b72>object</span>&gt;
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    [&#34;manipulationId&#34;] = manipulationState.ManipulationId,
+</span></span><span style=display:flex><span>                    [&#34;demolishWorkflowId&#34;] = manipulationState.GetContextData&lt;<span style=color:#ff7b72>string</span>&gt;(<span style=color:#a5d6ff>&#34;demolishWorkflowId&#34;</span>)
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            };
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>catch</span> (Exception ex)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> ManipulationResult.Failed(<span style=color:#a5d6ff>$&#34;Demolish operation failed: {ex.Message}&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p>Starts a demolish operation for the specified target.</p><p><strong>Returns:</strong> <code>ManipulationResult</code></p><p><strong>Parameters:</strong></p><ul><li><code>ManipulationTarget target</code></li><li><code>ManipulationContext context</code></li></ul><h3 id=completeoperation>CompleteOperation</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">51
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">52
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">53
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">54
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">55
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">56
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">57
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">58
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">59
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">60
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">61
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">62
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">63
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">64
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">65
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">66
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">67
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">68
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// Completes the current manipulation operation.</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;returns&gt;Result of completing the operation&lt;/returns&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> ManipulationResult CompleteOperation()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> activeManipulation = GetActiveManipulation();
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> (activeManipulation == <span style=color:#79c0ff>null</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> ManipulationResult.Failed(<span style=color:#a5d6ff>&#34;No active manipulation operation to complete&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>try</span>
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>switch</span> (activeManipulation.CurrentMode)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#ff7b72>case</span> ManipulationMode.Move:
+</span></span><span style=display:flex><span>                    <span style=color:#ff7b72>var</span> moveResult = _moveManager.CompleteMove(activeManipulation);
+</span></span><span style=display:flex><span>                    <span style=color:#ff7b72>if</span> (moveResult.IsSuccess)
+</span></span><span style=display:flex><span>                    {
+</span></span><span style=display:flex><span>                        <span style=color:#ff7b72>var</span> placementResult = _placementManager.CompletePlacement(activeManipulation);
+</span></span><span style=display:flex><span>                        <span style=color:#ff7b72>return</span> <span style=color:#ff7b72>new</span> ManipulationResult
+</span></span><span style=display:flex><span>                        {
+</span></span><span style=display:flex><span>                            IsSuccess = placementResult.IsSuccess,
+</span></span><span style=display:flex><span>                            ErrorMessage = placementResult.ErrorMessage,
+</span></span><span style=display:flex><span>                            ManipulationType = ManipulationMode.Move,
+</span></span><span style=display:flex><span>                            OriginalPosition = moveResult.OriginalPosition,
+</span></span><span style=display:flex><span>                            NewPosition = moveResult.FinalPosition
+</span></span><span style=display:flex><span>                        };
+</span></span><span style=display:flex><span>                    }
+</span></span><span style=display:flex><span>                    <span style=color:#ff7b72>return</span> ManipulationResult.Failed(moveResult.ErrorMessage);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#ff7b72>case</span> ManipulationMode.Rotate:
+</span></span><span style=display:flex><span>                    <span style=color:#8b949e;font-style:italic>// Complete rotation by applying the transform</span>
+</span></span><span style=display:flex><span>                    <span style=color:#ff7b72>var</span> rotationAngle = activeManipulation.GetContextData&lt;<span style=color:#ff7b72>float</span>&gt;(<span style=color:#a5d6ff>&#34;rotationAngle&#34;</span>);
+</span></span><span style=display:flex><span>                    <span style=color:#8b949e;font-style:italic>// In a real implementation, this would apply the rotation to the actual object</span>
+</span></span><span style=display:flex><span>                    <span style=color:#ff7b72>return</span> _manipulationService.CompleteManipulation(activeManipulation.ManipulationId).IsSuccess
+</span></span><span style=display:flex><span>                        ? <span style=color:#ff7b72>new</span> ManipulationResult { IsSuccess = <span style=color:#79c0ff>true</span>, ManipulationType = ManipulationMode.Rotate }
+</span></span><span style=display:flex><span>                        : ManipulationResult.Failed(<span style=color:#a5d6ff>&#34;Failed to complete rotation&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#ff7b72>case</span> ManipulationMode.Flip:
+</span></span><span style=display:flex><span>                    <span style=color:#8b949e;font-style:italic>// Complete flip by applying the transform</span>
+</span></span><span style=display:flex><span>                    <span style=color:#ff7b72>var</span> flipDirection = activeManipulation.GetContextData&lt;FlipDirection&gt;(<span style=color:#a5d6ff>&#34;flipDirection&#34;</span>);
+</span></span><span style=display:flex><span>                    <span style=color:#8b949e;font-style:italic>// In a real implementation, this would apply the flip to the actual object</span>
+</span></span><span style=display:flex><span>                    <span style=color:#ff7b72>return</span> _manipulationService.CompleteManipulation(activeManipulation.ManipulationId).IsSuccess
+</span></span><span style=display:flex><span>                        ? <span style=color:#ff7b72>new</span> ManipulationResult { IsSuccess = <span style=color:#79c0ff>true</span>, ManipulationType = ManipulationMode.Flip }
+</span></span><span style=display:flex><span>                        : ManipulationResult.Failed(<span style=color:#a5d6ff>&#34;Failed to complete flip&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#ff7b72>case</span> ManipulationMode.Remove:
+</span></span><span style=display:flex><span>                    <span style=color:#ff7b72>var</span> demolishResult = _demolishManager.CompleteDemolish(activeManipulation);
+</span></span><span style=display:flex><span>                    <span style=color:#ff7b72>return</span> <span style=color:#ff7b72>new</span> ManipulationResult
+</span></span><span style=display:flex><span>                    {
+</span></span><span style=display:flex><span>                        IsSuccess = demolishResult.IsSuccess,
+</span></span><span style=display:flex><span>                        ErrorMessage = demolishResult.ErrorMessage,
+</span></span><span style=display:flex><span>                        ManipulationType = ManipulationMode.Remove,
+</span></span><span style=display:flex><span>                        OriginalPosition = demolishResult.TargetPosition,
+</span></span><span style=display:flex><span>                        NewPosition = demolishResult.TargetPosition
+</span></span><span style=display:flex><span>                    };
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>                <span style=color:#ff7b72>default</span>:
+</span></span><span style=display:flex><span>                    <span style=color:#ff7b72>return</span> ManipulationResult.Failed(<span style=color:#a5d6ff>$&#34;Unsupported manipulation mode: {activeManipulation.CurrentMode}&#34;</span>);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>catch</span> (Exception ex)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> ManipulationResult.Failed(<span style=color:#a5d6ff>$&#34;Failed to complete operation: {ex.Message}&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p>Completes the current manipulation operation.</p><p><strong>Returns:</strong> <code>ManipulationResult</code></p><h3 id=canceloperation>CancelOperation</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">40
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// Cancels the current manipulation operation.</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;returns&gt;Result of canceling the operation&lt;/returns&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> ManipulationResult CancelOperation()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> activeManipulation = GetActiveManipulation();
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> (activeManipulation == <span style=color:#79c0ff>null</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> ManipulationResult.Failed(<span style=color:#a5d6ff>&#34;No active manipulation operation to cancel&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>try</span>
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Cancel based on operation type</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>switch</span> (activeManipulation.CurrentMode)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#ff7b72>case</span> ManipulationMode.Move:
+</span></span><span style=display:flex><span>                    _moveManager.CancelMove(activeManipulation);
+</span></span><span style=display:flex><span>                    <span style=color:#ff7b72>break</span>;
+</span></span><span style=display:flex><span>                <span style=color:#ff7b72>case</span> ManipulationMode.Remove:
+</span></span><span style=display:flex><span>                    _demolishManager.CancelDemolish(activeManipulation);
+</span></span><span style=display:flex><span>                    <span style=color:#ff7b72>break</span>;
+</span></span><span style=display:flex><span>                <span style=color:#ff7b72>default</span>:
+</span></span><span style=display:flex><span>                    <span style=color:#8b949e;font-style:italic>// For other operations, just cancel the manipulation</span>
+</span></span><span style=display:flex><span>                    <span style=color:#ff7b72>break</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Cancel the manipulation service</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> success = _manipulationService.CancelManipulation(activeManipulation.ManipulationId);
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> success 
+</span></span><span style=display:flex><span>                ? <span style=color:#ff7b72>new</span> ManipulationResult { IsSuccess = <span style=color:#79c0ff>true</span>, ManipulationType = activeManipulation.CurrentMode }
+</span></span><span style=display:flex><span>                : ManipulationResult.Failed(<span style=color:#a5d6ff>&#34;Failed to cancel manipulation&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>catch</span> (Exception ex)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> ManipulationResult.Failed(<span style=color:#a5d6ff>$&#34;Failed to cancel operation: {ex.Message}&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p>Cancels the current manipulation operation.</p><p><strong>Returns:</strong> <code>ManipulationResult</code></p></div></main><aside class=gb-toc><div class=gb-toc-title>On this page</div><nav id=TableOfContents><ul><li><a href=#properties>Properties</a><ul><li><a href=#currentstate>CurrentState</a></li><li><a href=#isactive>IsActive</a></li><li><a href=#manipulationservice>ManipulationService</a></li><li><a href=#transformhandler>TransformHandler</a></li><li><a href=#physicsmanager>PhysicsManager</a></li><li><a href=#movemanager>MoveManager</a></li><li><a href=#placementmanager>PlacementManager</a></li><li><a href=#demolishmanager>DemolishManager</a></li><li><a href=#settings>Settings</a></li></ul></li><li><a href=#methods>Methods</a><ul><li><a href=#startmove>StartMove</a></li><li><a href=#startrotate>StartRotate</a></li><li><a href=#startflip>StartFlip</a></li><li><a href=#startdemolish>StartDemolish</a></li><li><a href=#completeoperation>CompleteOperation</a></li><li><a href=#canceloperation>CancelOperation</a></li></ul></li></ul></nav></aside><footer class=gb-footer><p>&copy; 2025 Chris Tutorials. All rights reserved.</p><p>Built with <a href=https://gohugo.io/ target=_blank>Hugo</a> and
+<a href=https://godotengine.org/ target=_blank>Godot</a>.</p></footer></div></body></html>

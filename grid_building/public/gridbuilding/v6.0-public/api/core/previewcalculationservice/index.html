@@ -1,0 +1,504 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>PreviewCalculationService | GridBuilding Plugin</title>
+<meta name=description content><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel=stylesheet><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css><link rel=stylesheet href=/css/custom.css><meta name=generator content="Hugo 0.146.5"></head><body><div class=gb-layout><header class=gb-header><a href=/ class=gb-brand><i class="fas fa-cubes" style=color:var(--gb-primary)></i>
+<span>GridBuilding Plugin</span></a><div class=gb-search><i class="fas fa-search"></i>
+<input type=text placeholder="Search documentation..." aria-label=Search></div><nav class=gb-nav><a href=/ class=gb-nav-link>Home
+</a><a href=/v6.0/overview/ class=gb-nav-link>Documentation
+</a><a href=/v5.1/overview/ class=gb-nav-link>Grid Building Plugin Overview
+</a><a href=/v6.0/api/ class=gb-nav-link>API Reference
+</a><a href=/v5.1/guides/ class=gb-nav-link>Getting Started Guides
+</a><a href=/v6.0/examples/ class=gb-nav-link>Examples
+</a><a href=/v5.1/examples/ class=gb-nav-link>Code Examples
+</a><a href=/community/ class=gb-nav-link>Community
+</a><a href=/v5.1/architecture-diagrams/ class=gb-nav-link>Architecture Diagrams</a></nav></header><aside class=gb-sidebar><nav class=gb-sidebar-nav><div class=gb-sidebar-section><div class=gb-sidebar-title>V6.0s</div><a href=/v6.0/guides/6-0-readiness-status/ class=gb-sidebar-link>GridBuilding 6.0 Readiness Status
+</a><a href=/v6.0/guides/getting_started/ class=gb-sidebar-link>Getting Started with GridBuilding
+</a><a href=/v6.0/guides/mode-architecture/ class=gb-sidebar-link>GridBuilding 6.0 Mode Architecture
+</a><a href=/v6.0/guides/gdscript-to-csharp-mapping/ class=gb-sidebar-link>GDScript to C# Migration Guide
+</a><a href=/v6.0/guides/csharp_state_integration/ class=gb-sidebar-link>C# State Integration with Godot Frontend
+</a><a href=/v6.0/guides/troubleshooting/ class=gb-sidebar-link>Troubleshooting Guide
+</a><a href=/v6.0/examples/godot_integration_example/ class=gb-sidebar-link>Godot Integration Example
+</a><a href=/v6.0/guides/service_based_architecture/ class=gb-sidebar-link>Service-Based Architecture
+</a><a href=/gridbuilding/v6-0/api/ class=gb-sidebar-link>GridBuilding API Reference</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.1.0</div><a href=/v5.1/overview/ class=gb-sidebar-link>Grid Building Plugin Overview
+</a><a href=/v5.1/guides/ class=gb-sidebar-link>Getting Started Guides
+</a><a href=/v5.1/api/ class=gb-sidebar-link>C# API Reference
+</a><a href=/v5.1/examples/ class=gb-sidebar-link>Code Examples
+</a><a href=/v5.1/architecture-diagrams/ class=gb-sidebar-link>Architecture Diagrams
+</a><a href=/v5.1/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.1/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.1/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.1/validation/ class=gb-sidebar-link>Validation Tools</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.0.0</div><a href=/v5.0/api/ class=gb-sidebar-link>GDScript API Reference
+</a><a href=/v5.0/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.0/overview/ class=gb-sidebar-link>Grid Building Plugin v5.0.0
+</a><a href=/v5.0/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.0/guides/ class=gb-sidebar-link>Plugin Overview
+</a><a href=/v5.0/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.0/validation/ class=gb-sidebar-link>Validation Tools</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>V6.0-Publics</div><a href=/gridbuilding/v6-0-public/api/ class=gb-sidebar-link>GridBuilding API Reference</a></div></nav></aside><main class=gb-main><div class=gb-content><h1>PreviewCalculationService</h1><h1 id=previewcalculationservice>PreviewCalculationService</h1><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>GridBuilding.Core.Services.Placement
+</span></span><span style=display:flex><span><span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>PreviewCalculationService</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Members...</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><p>Core service for calculating placement preview data.
+Contains pure business logic without Godot dependencies.</p><p><strong>Project:</strong> GridBuilding v6.0<br><strong>Layer:</strong> Core<br><strong>Source:</strong> <code>Core/_incomplete/Services/Placement/PreviewCalculationService.cs</code><br><strong>Namespace:</strong> <code>GridBuilding.Core.Services.Placement</code><br><strong>Parsing Method:</strong> AST-based (Roslyn) - NOT regex</p><p><strong>⚠️ IMPORTANT</strong>: This documentation was generated using AST parsing, not regex.</p><h2 id=methods>Methods</h2><h3 id=calculatepreview>CalculatePreview</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">51
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">52
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">53
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">54
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">55
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">56
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">57
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">58
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">59
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">60
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">61
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">62
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">63
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">64
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">65
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">66
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">67
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">68
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">69
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">70
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">71
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">72
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">73
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">74
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">75
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">76
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">77
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">78
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">79
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">80
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">81
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">82
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">83
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">84
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">85
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">86
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">87
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">88
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">89
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// Calculates preview data for a building at the given grid position.</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> PreviewCalculationResult CalculatePreview(
+</span></span><span style=display:flex><span>        FootprintData footprintData,
+</span></span><span style=display:flex><span>        Vector2I gridPosition,
+</span></span><span style=display:flex><span>        IGridOccupancy existingOccupancy,
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>bool</span> validityCheck = <span style=color:#79c0ff>true</span>)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> result = <span style=color:#ff7b72>new</span> PreviewCalculationResult
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            FootprintData = footprintData
+</span></span><span style=display:flex><span>        };
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>try</span>
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Validate inputs</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>if</span> (footprintData == <span style=color:#79c0ff>null</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                result.AddIssue(<span style=color:#a5d6ff>&#34;Footprint data is null&#34;</span>);
+</span></span><span style=display:flex><span>                <span style=color:#ff7b72>return</span> result;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>if</span> (existingOccupancy == <span style=color:#79c0ff>null</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                result.AddIssue(<span style=color:#a5d6ff>&#34;Grid occupancy data is null&#34;</span>);
+</span></span><span style=display:flex><span>                <span style=color:#ff7b72>return</span> result;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Calculate footprint positions</span>
+</span></span><span style=display:flex><span>            result.FootprintPositions = footprintData.GetOccupiedPositions(gridPosition);
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Calculate bounds</span>
+</span></span><span style=display:flex><span>            result.Bounds = CalculateBounds(result.FootprintPositions);
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Check grid bounds</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> gridSize = existingOccupancy.GetGridSize();
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> inBounds = CheckGridBounds(footprintData, gridPosition, gridSize);
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>if</span> (!inBounds)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                result.IsValidPlacement = <span style=color:#79c0ff>false</span>;
+</span></span><span style=display:flex><span>                result.AddIssue(<span style=color:#a5d6ff>$&#34;Building extends beyond grid bounds&#34;</span>);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Perform validity check if requested</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>if</span> (validityCheck)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#8b949e;font-style:italic>// Check for collisions</span>
+</span></span><span style=display:flex><span>                <span style=color:#ff7b72>var</span> hasCollision = existingOccupancy.HasOccupancy(result.FootprintPositions);
+</span></span><span style=display:flex><span>                
+</span></span><span style=display:flex><span>                <span style=color:#ff7b72>if</span> (hasCollision)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    result.IsValidPlacement = <span style=color:#79c0ff>false</span>;
+</span></span><span style=display:flex><span>                    result.AddIssue(<span style=color:#a5d6ff>&#34;Building would collide with existing objects&#34;</span>);
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>                <span style=color:#ff7b72>else</span> <span style=color:#ff7b72>if</span> (inBounds)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    result.IsValidPlacement = <span style=color:#79c0ff>true</span>;
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>else</span>
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                result.IsValidPlacement = <span style=color:#79c0ff>true</span>; <span style=color:#8b949e;font-style:italic>// Assume valid for preview-only mode</span>
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Calculate shape configuration</span>
+</span></span><span style=display:flex><span>            result.ShapeData = CalculateShapeConfiguration(buildingData.Footprint);
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Calculate visual appearance</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> visualSettings = CalculateVisualAppearance(
+</span></span><span style=display:flex><span>                result.IsValidPlacement,
+</span></span><span style=display:flex><span>                buildingData.DefaultTransparency,
+</span></span><span style=display:flex><span>                buildingData.ValidColor,
+</span></span><span style=display:flex><span>                buildingData.InvalidColor);
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            result.Transparency = visualSettings.Transparency;
+</span></span><span style=display:flex><span>            result.TintColor = visualSettings.TintColor;
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            result.AddNote(<span style=color:#a5d6ff>$&#34;Preview calculated for {buildingData.Name} at position {gridPosition}&#34;</span>);
+</span></span><span style=display:flex><span>            result.AddNote(<span style=color:#a5d6ff>$&#34;Footprint: {result.FootprintPositions.Count} tiles, Valid: {result.IsValidPlacement}&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>catch</span> (System.Exception ex)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            result.AddIssue(<span style=color:#a5d6ff>$&#34;Exception during preview calculation: {ex.Message}&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> result;
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p>Calculates preview data for a building at the given grid position.</p><p><strong>Returns:</strong> <code>PreviewCalculationResult</code></p><p><strong>Parameters:</strong></p><ul><li><code>FootprintData footprintData</code></li><li><code>Vector2I gridPosition</code></li><li><code>IGridOccupancy existingOccupancy</code></li><li><code>bool validityCheck</code></li></ul><h3 id=updatepreviewposition>UpdatePreviewPosition</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">51
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">52
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">53
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">54
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">55
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">56
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">57
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">58
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">59
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">60
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">61
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">62
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">63
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">64
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">65
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">66
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">67
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">68
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">69
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">70
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">71
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">72
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">73
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">74
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">75
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">76
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">77
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">78
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// Updates preview data when the grid position changes.</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> PreviewCalculationResult UpdatePreviewPosition(
+</span></span><span style=display:flex><span>        PreviewCalculationResult previousResult,
+</span></span><span style=display:flex><span>        Vector2I newGridPosition,
+</span></span><span style=display:flex><span>        IGridOccupancy existingOccupancy)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> (previousResult == <span style=color:#79c0ff>null</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> <span style=color:#ff7b72>new</span> PreviewCalculationResult
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                IsValidPlacement = <span style=color:#79c0ff>false</span>,
+</span></span><span style=display:flex><span>                Issues = <span style=color:#ff7b72>new</span> List&lt;<span style=color:#ff7b72>string</span>&gt; { <span style=color:#a5d6ff>&#34;Previous result is null&#34;</span> }
+</span></span><span style=display:flex><span>            };
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic>// Create a new result with updated position</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> updatedResult = <span style=color:#ff7b72>new</span> PreviewCalculationResult
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            ShapeData = previousResult.ShapeData,
+</span></span><span style=display:flex><span>            Transparency = previousResult.Transparency,
+</span></span><span style=display:flex><span>            TintColor = previousResult.TintColor
+</span></span><span style=display:flex><span>        };
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>try</span>
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Recalculate footprint positions for new position</span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Note: We&#39;d need the original building data to do this properly</span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// For now, we&#39;ll update the positions by offsetting them</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> oldBounds = previousResult.Bounds;
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> offset = newGridPosition - oldBounds.Position;
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            updatedResult.FootprintPositions = previousResult.FootprintPositions
+</span></span><span style=display:flex><span>                .Select(pos =&gt; pos + offset)
+</span></span><span style=display:flex><span>                .ToList();
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            updatedResult.Bounds = <span style=color:#ff7b72>new</span> RectangleI(newGridPosition, oldBounds.Size);
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Check validity at new position</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> inBounds = existingOccupancy.IsInBounds(newGridPosition) &amp;&amp;
+</span></span><span style=display:flex><span>                          updatedResult.FootprintPositions.All(pos =&gt; existingOccupancy.IsInBounds(pos));
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>if</span> (!inBounds)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                updatedResult.IsValidPlacement = <span style=color:#79c0ff>false</span>;
+</span></span><span style=display:flex><span>                updatedResult.AddIssue(<span style=color:#a5d6ff>&#34;Building extends beyond grid bounds at new position&#34;</span>);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>else</span>
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#ff7b72>var</span> hasCollision = existingOccupancy.HasOccupancy(updatedResult.FootprintPositions);
+</span></span><span style=display:flex><span>                updatedResult.IsValidPlacement = !hasCollision;
+</span></span><span style=display:flex><span>                
+</span></span><span style=display:flex><span>                <span style=color:#ff7b72>if</span> (hasCollision)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    updatedResult.AddIssue(<span style=color:#a5d6ff>&#34;Building would collide with existing objects at new position&#34;</span>);
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Update visual appearance based on new validity</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> visualSettings = CalculateVisualAppearance(
+</span></span><span style=display:flex><span>                updatedResult.IsValidPlacement,
+</span></span><span style=display:flex><span>                updatedResult.Transparency,
+</span></span><span style=display:flex><span>                previousResult.TintColor, <span style=color:#8b949e;font-style:italic>// Use previous as &#34;valid&#34; color</span>
+</span></span><span style=display:flex><span>                <span style=color:#ff7b72>new</span> Color(<span style=color:#a5d6ff>1.0f</span>, <span style=color:#a5d6ff>0.0f</span>, <span style=color:#a5d6ff>0.0f</span>, updatedResult.Transparency * <span style=color:#a5d6ff>0.7f</span>)); <span style=color:#8b949e;font-style:italic>// Red for invalid</span>
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            updatedResult.Transparency = visualSettings.Transparency;
+</span></span><span style=display:flex><span>            updatedResult.TintColor = visualSettings.TintColor;
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            updatedResult.AddNote(<span style=color:#a5d6ff>$&#34;Preview updated to position {newGridPosition}&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>catch</span> (System.Exception ex)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            updatedResult.AddIssue(<span style=color:#a5d6ff>$&#34;Exception during preview update: {ex.Message}&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> updatedResult;
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p>Updates preview data when the grid position changes.</p><p><strong>Returns:</strong> <code>PreviewCalculationResult</code></p><p><strong>Parameters:</strong></p><ul><li><code>PreviewCalculationResult previousResult</code></li><li><code>Vector2I newGridPosition</code></li><li><code>IGridOccupancy existingOccupancy</code></li></ul><h3 id=calculatevisualappearance>CalculateVisualAppearance</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// Calculates the visual appearance of the preview based on validity.</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> GridBuilding.Core.Interfaces.Placement.PreviewVisualSettings CalculateVisualAppearance(
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>bool</span> isValid,
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>float</span> baseTransparency,
+</span></span><span style=display:flex><span>        Color validColor,
+</span></span><span style=display:flex><span>        Color invalidColor)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> <span style=color:#ff7b72>new</span> GridBuilding.Core.Interfaces.Placement.PreviewVisualSettings
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            Transparency = isValid ? baseTransparency : baseTransparency * <span style=color:#a5d6ff>0.7f</span>,
+</span></span><span style=display:flex><span>            TintColor = isValid ? validColor : invalidColor,
+</span></span><span style=display:flex><span>            ShowGridSnapping = <span style=color:#79c0ff>true</span>,
+</span></span><span style=display:flex><span>            ZIndex = <span style=color:#a5d6ff>10</span>
+</span></span><span style=display:flex><span>        };
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p>Calculates the visual appearance of the preview based on validity.</p><p><strong>Returns:</strong> <code>GridBuilding.Core.Interfaces.Placement.PreviewVisualSettings</code></p><p><strong>Parameters:</strong></p><ul><li><code>bool isValid</code></li><li><code>float baseTransparency</code></li><li><code>Color validColor</code></li><li><code>Color invalidColor</code></li></ul><h3 id=calculateshapeconfiguration>CalculateShapeConfiguration</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// Calculates shape configuration for a building footprint.</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> GridBuilding.Core.Data.Placement.PreviewShapeData CalculateShapeConfiguration(FootprintData footprint)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> (footprint == <span style=color:#79c0ff>null</span>)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> <span style=color:#ff7b72>new</span> GridBuilding.Core.Data.Placement.PreviewShapeData
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                ShapeType = PreviewShapeType.Rectangle,
+</span></span><span style=display:flex><span>                Size = <span style=color:#ff7b72>new</span> Vector2I(<span style=color:#a5d6ff>1</span>, <span style=color:#a5d6ff>1</span>)
+</span></span><span style=display:flex><span>            };
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> <span style=color:#ff7b72>new</span> GridBuilding.Core.Data.Placement.PreviewShapeData
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            ShapeType = footprint.ShapeType <span style=color:#ff7b72>switch</span>
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                FootprintShapeType.Rectangle =&gt; PreviewShapeType.Rectangle,
+</span></span><span style=display:flex><span>                FootprintShapeType.Circle =&gt; PreviewShapeType.Circle,
+</span></span><span style=display:flex><span>                FootprintShapeType.Custom =&gt; PreviewShapeType.Custom,
+</span></span><span style=display:flex><span>                _ =&gt; PreviewShapeType.Rectangle
+</span></span><span style=display:flex><span>            },
+</span></span><span style=display:flex><span>            Size = footprint.Size,
+</span></span><span style=display:flex><span>            PolygonPoints = footprint.PolygonPoints,
+</span></span><span style=display:flex><span>            Radius = footprint.Radius
+</span></span><span style=display:flex><span>        };
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p>Calculates shape configuration for a building footprint.</p><p><strong>Returns:</strong> <code>GridBuilding.Core.Data.Placement.PreviewShapeData</code></p><p><strong>Parameters:</strong></p><ul><li><code>FootprintData footprint</code></li></ul><h3 id=checkgridbounds>CheckGridBounds</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// Checks if a building fits within grid bounds at the given position.</span>
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-weight:700;font-style:italic>/// &lt;/summary&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>bool</span> CheckGridBounds(
+</span></span><span style=display:flex><span>        FootprintData footprintData,
+</span></span><span style=display:flex><span>        Vector2I gridPosition,
+</span></span><span style=display:flex><span>        Vector2I gridSize)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>if</span> (footprintData == <span style=color:#79c0ff>null</span>)
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>return</span> <span style=color:#79c0ff>false</span>;
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>var</span> footprintPositions = footprintData.GetOccupiedPositions(gridPosition);
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>return</span> footprintPositions.All(pos =&gt; 
+</span></span><span style=display:flex><span>            pos.X &gt;= <span style=color:#a5d6ff>0</span> &amp;&amp; pos.X &lt; gridSize.X &amp;&amp;
+</span></span><span style=display:flex><span>            pos.Y &gt;= <span style=color:#a5d6ff>0</span> &amp;&amp; pos.Y &lt; gridSize.Y);
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></td></tr></table></div></div><p>Checks if a building fits within grid bounds at the given position.</p><p><strong>Returns:</strong> <code>bool</code></p><p><strong>Parameters:</strong></p><ul><li><code>FootprintData footprintData</code></li><li><code>Vector2I gridPosition</code></li><li><code>Vector2I gridSize</code></li></ul></div></main><aside class=gb-toc><div class=gb-toc-title>On this page</div><nav id=TableOfContents><ul><li><a href=#methods>Methods</a><ul><li><a href=#calculatepreview>CalculatePreview</a></li><li><a href=#updatepreviewposition>UpdatePreviewPosition</a></li><li><a href=#calculatevisualappearance>CalculateVisualAppearance</a></li><li><a href=#calculateshapeconfiguration>CalculateShapeConfiguration</a></li><li><a href=#checkgridbounds>CheckGridBounds</a></li></ul></li></ul></nav></aside><footer class=gb-footer><p>&copy; 2025 Chris Tutorials. All rights reserved.</p><p>Built with <a href=https://gohugo.io/ target=_blank>Hugo</a> and
+<a href=https://godotengine.org/ target=_blank>Godot</a>.</p></footer></div></body></html>

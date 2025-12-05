@@ -16,7 +16,7 @@ This repo contains the Hugo source for the GridBuilding documentation website. F
 ## Hugo Best Practices
 - Keep `/vX.Y/` as source of truth; remove legacy `/gridbuilding/` or `/latest/` folders.
 - Use aliases in frontmatter to expose `/latest/` or other friendly URLs.
-- Prefer AST-generated API docs under `/gridbuilding/v6-0/api/` for accuracy.
+- Prefer AST-generated API docs under `/gridbuilding/v6.0/api/` for accuracy.
 
 ## Notes
 - This directory is part of the same repo as the GridBuilding codebase; update docs from the `docs/grid_building` folder.

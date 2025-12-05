@@ -1,0 +1,1102 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>GridTargetingCoordinatorTests | GridBuilding Plugin</title>
+<meta name=description content><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel=stylesheet><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css><link rel=stylesheet href=/css/custom.css><meta name=generator content="Hugo 0.146.5"></head><body><div class=gb-layout><header class=gb-header><a href=/ class=gb-brand><i class="fas fa-cubes" style=color:var(--gb-primary)></i>
+<span>GridBuilding Plugin</span></a><div class=gb-search><i class="fas fa-search"></i>
+<input type=text placeholder="Search documentation..." aria-label=Search></div><nav class=gb-nav><a href=/ class=gb-nav-link>Home
+</a><a href=/v6.0/overview/ class=gb-nav-link>Documentation
+</a><a href=/v5.1/overview/ class=gb-nav-link>Grid Building Plugin Overview
+</a><a href=/v6.0/api/ class=gb-nav-link>API Reference
+</a><a href=/v5.1/guides/ class=gb-nav-link>Getting Started Guides
+</a><a href=/v6.0/examples/ class=gb-nav-link>Examples
+</a><a href=/v5.1/examples/ class=gb-nav-link>Code Examples
+</a><a href=/community/ class=gb-nav-link>Community
+</a><a href=/v5.1/architecture-diagrams/ class=gb-nav-link>Architecture Diagrams</a></nav></header><aside class=gb-sidebar><nav class=gb-sidebar-nav><div class=gb-sidebar-section><div class=gb-sidebar-title>V6.0s</div><a href=/v6.0/guides/6-0-readiness-status/ class=gb-sidebar-link>GridBuilding 6.0 Readiness Status
+</a><a href=/v6.0/guides/getting_started/ class=gb-sidebar-link>Getting Started with GridBuilding
+</a><a href=/v6.0/guides/mode-architecture/ class=gb-sidebar-link>GridBuilding 6.0 Mode Architecture
+</a><a href=/v6.0/guides/gdscript-to-csharp-mapping/ class=gb-sidebar-link>GDScript to C# Migration Guide
+</a><a href=/v6.0/guides/csharp_state_integration/ class=gb-sidebar-link>C# State Integration with Godot Frontend
+</a><a href=/v6.0/guides/troubleshooting/ class=gb-sidebar-link>Troubleshooting Guide
+</a><a href=/v6.0/examples/godot_integration_example/ class=gb-sidebar-link>Godot Integration Example
+</a><a href=/v6.0/guides/service_based_architecture/ class=gb-sidebar-link>Service-Based Architecture
+</a><a href=/gridbuilding/v6-0/api/ class=gb-sidebar-link>GridBuilding API Reference</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.1.0</div><a href=/v5.1/overview/ class=gb-sidebar-link>Grid Building Plugin Overview
+</a><a href=/v5.1/guides/ class=gb-sidebar-link>Getting Started Guides
+</a><a href=/v5.1/api/ class=gb-sidebar-link>C# API Reference
+</a><a href=/v5.1/examples/ class=gb-sidebar-link>Code Examples
+</a><a href=/v5.1/architecture-diagrams/ class=gb-sidebar-link>Architecture Diagrams
+</a><a href=/v5.1/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.1/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.1/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.1/validation/ class=gb-sidebar-link>Validation Tools</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.0.0</div><a href=/v5.0/api/ class=gb-sidebar-link>GDScript API Reference
+</a><a href=/v5.0/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.0/overview/ class=gb-sidebar-link>Grid Building Plugin v5.0.0
+</a><a href=/v5.0/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.0/guides/ class=gb-sidebar-link>Plugin Overview
+</a><a href=/v5.0/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.0/validation/ class=gb-sidebar-link>Validation Tools</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>V6.0-Publics</div><a href=/gridbuilding/v6-0-public/api/ class=gb-sidebar-link>GridBuilding API Reference</a></div></nav></aside><main class=gb-main><div class=gb-content><h1>GridTargetingCoordinatorTests</h1><h1 id=gridtargetingcoordinatortests>GridTargetingCoordinatorTests</h1><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>GridBuilding.Godot.Tests.Unit.Systems
+</span></span><span style=display:flex><span><span style=color:#ff7b72>class</span> <span style=color:#f0883e;font-weight:700>GridTargetingCoordinatorTests</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#8b949e;font-style:italic>// Members...</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><p>Unit tests for GridTargetingCoordinator.
+Tests the lightweight coordinator that replaces GridTargetingSystem.</p><p><strong>Project:</strong> GridBuilding v6.0<br><strong>Layer:</strong> Godot<br><strong>Source:</strong> <code>Godot/Tests/Unit/Systems/GridTargetingCoordinatorTests.cs</code><br><strong>Namespace:</strong> <code>GridBuilding.Godot.Tests.Unit.Systems</code><br><strong>Parsing Method:</strong> AST-based (Roslyn) - NOT regex</p><p><strong>⚠️ IMPORTANT</strong>: This documentation was generated using AST parsing, not regex.</p><h2 id=methods>Methods</h2><h3 id=dispose>Dispose</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> Dispose()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            _coordinator?.QueueFree();
+</span></span><span style=display:flex><span>            _sceneTree?.Quit();
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=_ready_withvalidserviceregistry_initializessuccessfully>_Ready_WithValidServiceRegistry_InitializesSuccessfully</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>#endregion</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>#region</span> Initialization Tests
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        [Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> _Ready_WithValidServiceRegistry_InitializesSuccessfully()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange - Mock ServiceRegistry</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> mockServiceRegistry = <span style=color:#ff7b72>new</span> Mock&lt;IServiceRegistry&gt;();
+</span></span><span style=display:flex><span>            mockServiceRegistry.Setup(x =&gt; x.GetService&lt;IGridTargetingService&gt;()).Returns(_mockTargetingService.Object);
+</span></span><span style=display:flex><span>            mockServiceRegistry.Setup(x =&gt; x.GetService&lt;ILogger&gt;()).Returns(_mockLogger.Object);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            _coordinator._Ready();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            _coordinator.IsInitialized.ShouldBeTrue();
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=_ready_withoutserviceregistry_failsinitialization>_Ready_WithoutServiceRegistry_FailsInitialization</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> _Ready_WithoutServiceRegistry_FailsInitialization()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange - Mock ServiceRegistry returning null</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> mockServiceRegistry = <span style=color:#ff7b72>new</span> Mock&lt;IServiceRegistry&gt;();
+</span></span><span style=display:flex><span>            mockServiceRegistry.Setup(x =&gt; x.GetService&lt;IGridTargetingService&gt;()).Returns((IGridTargetingService)<span style=color:#79c0ff>null</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            _coordinator._Ready();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            _coordinator.IsInitialized.ShouldBeFalse();
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=registertargetingcomponent_withvalidcomponent_registerscomponent>RegisterTargetingComponent_WithValidComponent_RegistersComponent</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>#endregion</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>#region</span> Component Management Tests
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        [Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> RegisterTargetingComponent_WithValidComponent_RegistersComponent()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> mockComponent = <span style=color:#ff7b72>new</span> Mock&lt;TargetingShapeCast2DRefactored&gt;();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            _coordinator.RegisterTargetingComponent(mockComponent.Object);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            _coordinator.ComponentCount.ShouldBe(<span style=color:#a5d6ff>1</span>);
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> registeredComponents = _coordinator.GetRegisteredComponents();
+</span></span><span style=display:flex><span>            registeredComponents.ShouldContain(mockComponent.Object);
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=registertargetingcomponent_withnullcomponent_doesnotthrow>RegisterTargetingComponent_WithNullComponent_DoesNotThrow</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> RegisterTargetingComponent_WithNullComponent_DoesNotThrow()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act &amp; Assert</span>
+</span></span><span style=display:flex><span>            Should.NotThrow(() =&gt; _coordinator.RegisterTargetingComponent(<span style=color:#79c0ff>null</span>));
+</span></span><span style=display:flex><span>            _coordinator.ComponentCount.ShouldBe(<span style=color:#a5d6ff>0</span>);
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=registertargetingcomponent_withduplicatecomponent_doesnotregistertwice>RegisterTargetingComponent_WithDuplicateComponent_DoesNotRegisterTwice</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> RegisterTargetingComponent_WithDuplicateComponent_DoesNotRegisterTwice()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> mockComponent = <span style=color:#ff7b72>new</span> Mock&lt;TargetingShapeCast2DRefactored&gt;();
+</span></span><span style=display:flex><span>            _coordinator.RegisterTargetingComponent(mockComponent.Object);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            _coordinator.RegisterTargetingComponent(mockComponent.Object);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            _coordinator.ComponentCount.ShouldBe(<span style=color:#a5d6ff>1</span>);
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=unregistertargetingcomponent_withregisteredcomponent_unregisterscomponent>UnregisterTargetingComponent_WithRegisteredComponent_UnregistersComponent</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> UnregisterTargetingComponent_WithRegisteredComponent_UnregistersComponent()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> mockComponent = <span style=color:#ff7b72>new</span> Mock&lt;TargetingShapeCast2DRefactored&gt;();
+</span></span><span style=display:flex><span>            _coordinator.RegisterTargetingComponent(mockComponent.Object);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            _coordinator.UnregisterTargetingComponent(mockComponent.Object);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            _coordinator.ComponentCount.ShouldBe(<span style=color:#a5d6ff>0</span>);
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> registeredComponents = _coordinator.GetRegisteredComponents();
+</span></span><span style=display:flex><span>            registeredComponents.ShouldNotContain(mockComponent.Object);
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=unregistertargetingcomponent_withnullcomponent_doesnotthrow>UnregisterTargetingComponent_WithNullComponent_DoesNotThrow</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> UnregisterTargetingComponent_WithNullComponent_DoesNotThrow()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act &amp; Assert</span>
+</span></span><span style=display:flex><span>            Should.NotThrow(() =&gt; _coordinator.UnregisterTargetingComponent(<span style=color:#79c0ff>null</span>));
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=unregistertargetingcomponent_withunregisteredcomponent_doesnotthrow>UnregisterTargetingComponent_WithUnregisteredComponent_DoesNotThrow</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">9
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> UnregisterTargetingComponent_WithUnregisteredComponent_DoesNotThrow()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> mockComponent = <span style=color:#ff7b72>new</span> Mock&lt;TargetingShapeCast2DRefactored&gt;();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act &amp; Assert</span>
+</span></span><span style=display:flex><span>            Should.NotThrow(() =&gt; _coordinator.UnregisterTargetingComponent(mockComponent.Object));
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=findcomponentbyname_withexistingcomponent_returnscomponent>FindComponentByName_WithExistingComponent_ReturnsComponent</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> FindComponentByName_WithExistingComponent_ReturnsComponent()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> mockComponent = <span style=color:#ff7b72>new</span> Mock&lt;TargetingShapeCast2DRefactored&gt;();
+</span></span><span style=display:flex><span>            mockComponent.Setup(x =&gt; x.Name).Returns(<span style=color:#a5d6ff>&#34;TestComponent&#34;</span>);
+</span></span><span style=display:flex><span>            _coordinator.RegisterTargetingComponent(mockComponent.Object);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> foundComponent = _coordinator.FindComponentByName(<span style=color:#a5d6ff>&#34;TestComponent&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            foundComponent.ShouldBe(mockComponent.Object);
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=findcomponentbyname_withnonexistentcomponent_returnsnull>FindComponentByName_WithNonExistentComponent_ReturnsNull</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">9
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> FindComponentByName_WithNonExistentComponent_ReturnsNull()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> foundComponent = _coordinator.FindComponentByName(<span style=color:#a5d6ff>&#34;NonExistent&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            foundComponent.ShouldBeNull();
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=getcomponentswithvalidtargets_withvalidcomponents_returnsonlyvalidones>GetComponentsWithValidTargets_WithValidComponents_ReturnsOnlyValidOnes</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> GetComponentsWithValidTargets_WithValidComponents_ReturnsOnlyValidOnes()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> validComponent = <span style=color:#ff7b72>new</span> Mock&lt;TargetingShapeCast2DRefactored&gt;();
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> invalidComponent = <span style=color:#ff7b72>new</span> Mock&lt;TargetingShapeCast2DRefactored&gt;();
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            validComponent.Setup(x =&gt; x.HasValidTarget).Returns(<span style=color:#79c0ff>true</span>);
+</span></span><span style=display:flex><span>            invalidComponent.Setup(x =&gt; x.HasValidTarget).Returns(<span style=color:#79c0ff>false</span>);
+</span></span><span style=display:flex><span>            
+</span></span><span style=display:flex><span>            _coordinator.RegisterTargetingComponent(validComponent.Object);
+</span></span><span style=display:flex><span>            _coordinator.RegisterTargetingComponent(invalidComponent.Object);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> validComponents = _coordinator.GetComponentsWithValidTargets();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            validComponents.Count.ShouldBe(<span style=color:#a5d6ff>1</span>);
+</span></span><span style=display:flex><span>            validComponents.ShouldContain(validComponent.Object);
+</span></span><span style=display:flex><span>            validComponents.ShouldNotContain(invalidComponent.Object);
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=setastargrid_withvalidgrid_updatescoreservice>SetAstarGrid_WithValidGrid_UpdatesCoreService</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>#endregion</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>#region</span> AStar Grid Management Tests
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        [Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> SetAstarGrid_WithValidGrid_UpdatesCoreService()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> mockAstarGrid = <span style=color:#ff7b72>new</span> Mock&lt;AStarGrid2D&gt;();
+</span></span><span style=display:flex><span>            mockAstarGrid.Setup(x =&gt; x.Region).Returns(<span style=color:#ff7b72>new</span> Rect2I(<span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>10</span>, <span style=color:#a5d6ff>10</span>));
+</span></span><span style=display:flex><span>            mockAstarGrid.Setup(x =&gt; x.IsPointSolid(It.IsAny&lt;Vector2I&gt;())).Returns(<span style=color:#79c0ff>false</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            _coordinator.SetAstarGrid(mockAstarGrid.Object);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            _coordinator.AstarGrid.ShouldBe(mockAstarGrid.Object);
+</span></span><span style=display:flex><span>            _mockTargetingService.Verify(x =&gt; x.UpdateGridNavigation(It.IsAny&lt;GridNavigationData&gt;()), Times.Once);
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=setastargrid_withnullgrid_clearsgrid>SetAstarGrid_WithNullGrid_ClearsGrid</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">9
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> SetAstarGrid_WithNullGrid_ClearsGrid()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            _coordinator.SetAstarGrid(<span style=color:#79c0ff>null</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            _coordinator.AstarGrid.ShouldBeNull();
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=setastargrid_withsamegrid_doesnotupdatecoreservice>SetAstarGrid_WithSameGrid_DoesNotUpdateCoreService</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> SetAstarGrid_WithSameGrid_DoesNotUpdateCoreService()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> mockAstarGrid = <span style=color:#ff7b72>new</span> Mock&lt;AStarGrid2D&gt;();
+</span></span><span style=display:flex><span>            _coordinator.SetAstarGrid(mockAstarGrid.Object);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            _coordinator.SetAstarGrid(mockAstarGrid.Object);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            _mockTargetingService.Verify(x =&gt; x.UpdateGridNavigation(It.IsAny&lt;GridNavigationData&gt;()), Times.Once);
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=enablealltargeting_enablescoreserviceandcomponents>EnableAllTargeting_EnablesCoreServiceAndComponents</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>#endregion</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>#region</span> Global Operations Tests
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        [Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> EnableAllTargeting_EnablesCoreServiceAndComponents()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> mockComponent = <span style=color:#ff7b72>new</span> Mock&lt;TargetingShapeCast2DRefactored&gt;();
+</span></span><span style=display:flex><span>            _coordinator.RegisterTargetingComponent(mockComponent.Object);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            _coordinator.EnableAllTargeting();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            _mockTargetingService.Verify(x =&gt; x.SetTargetingEnabled(<span style=color:#79c0ff>true</span>), Times.Once);
+</span></span><span style=display:flex><span>            mockComponent.VerifySet(x =&gt; x.AutoUpdate = <span style=color:#79c0ff>true</span>, Times.Once);
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=disablealltargeting_disablescoreserviceandcomponents>DisableAllTargeting_DisablesCoreServiceAndComponents</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> DisableAllTargeting_DisablesCoreServiceAndComponents()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> mockComponent = <span style=color:#ff7b72>new</span> Mock&lt;TargetingShapeCast2DRefactored&gt;();
+</span></span><span style=display:flex><span>            _coordinator.RegisterTargetingComponent(mockComponent.Object);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            _coordinator.DisableAllTargeting();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            _mockTargetingService.Verify(x =&gt; x.SetTargetingEnabled(<span style=color:#79c0ff>false</span>), Times.Once);
+</span></span><span style=display:flex><span>            mockComponent.VerifySet(x =&gt; x.AutoUpdate = <span style=color:#79c0ff>false</span>, Times.Once);
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=updateallcomponents_updatesallregisteredcomponents>UpdateAllComponents_UpdatesAllRegisteredComponents</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> UpdateAllComponents_UpdatesAllRegisteredComponents()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> mockComponent1 = <span style=color:#ff7b72>new</span> Mock&lt;TargetingShapeCast2DRefactored&gt;();
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> mockComponent2 = <span style=color:#ff7b72>new</span> Mock&lt;TargetingShapeCast2DRefactored&gt;();
+</span></span><span style=display:flex><span>            _coordinator.RegisterTargetingComponent(mockComponent1.Object);
+</span></span><span style=display:flex><span>            _coordinator.RegisterTargetingComponent(mockComponent2.Object);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            _coordinator.UpdateAllComponents();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            mockComponent1.Verify(x =&gt; x.UpdateTargeting(), Times.Once);
+</span></span><span style=display:flex><span>            mockComponent2.Verify(x =&gt; x.UpdateTargeting(), Times.Once);
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=clearalltargets_clearscoreservicetarget>ClearAllTargets_ClearsCoreServiceTarget</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">9
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> ClearAllTargets_ClearsCoreServiceTarget()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            _coordinator.ClearAllTargets();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            _mockTargetingService.Verify(x =&gt; x.ClearTarget(), Times.Once);
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=getruntimeissues_withvalidsetup_returnsemptyissues>GetRuntimeIssues_WithValidSetup_ReturnsEmptyIssues</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>#endregion</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>#region</span> Validation Tests
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        [Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> GetRuntimeIssues_WithValidSetup_ReturnsEmptyIssues()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>            _mockTargetingService.Setup(x =&gt; x.ValidateSetup()).Returns(<span style=color:#ff7b72>new</span> List&lt;<span style=color:#ff7b72>string</span>&gt;());
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> issues = _coordinator.GetRuntimeIssues();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            issues.ShouldBeEmpty();
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=getruntimeissues_withoutservice_returnsissues>GetRuntimeIssues_WithoutService_ReturnsIssues</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> GetRuntimeIssues_WithoutService_ReturnsIssues()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> mockServiceRegistry = <span style=color:#ff7b72>new</span> Mock&lt;IServiceRegistry&gt;();
+</span></span><span style=display:flex><span>            mockServiceRegistry.Setup(x =&gt; x.GetService&lt;IGridTargetingService&gt;()).Returns((IGridTargetingService)<span style=color:#79c0ff>null</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> issues = _coordinator.GetRuntimeIssues();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            issues.ShouldNotBeEmpty();
+</span></span><span style=display:flex><span>            issues.ShouldContain(<span style=color:#a5d6ff>&#34;IGridTargetingService is not set&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=getruntimeissues_withoutlogger_returnsissues>GetRuntimeIssues_WithoutLogger_ReturnsIssues</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> GetRuntimeIssues_WithoutLogger_ReturnsIssues()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> mockServiceRegistry = <span style=color:#ff7b72>new</span> Mock&lt;IServiceRegistry&gt;();
+</span></span><span style=display:flex><span>            mockServiceRegistry.Setup(x =&gt; x.GetService&lt;IGridTargetingService&gt;()).Returns(_mockTargetingService.Object);
+</span></span><span style=display:flex><span>            mockServiceRegistry.Setup(x =&gt; x.GetService&lt;ILogger&gt;()).Returns((ILogger)<span style=color:#79c0ff>null</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> issues = _coordinator.GetRuntimeIssues();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            issues.ShouldNotBeEmpty();
+</span></span><span style=display:flex><span>            issues.ShouldContain(<span style=color:#a5d6ff>&#34;ILogger is not set&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=getruntimeissues_withcoreserviceissues_returnscombinedissues>GetRuntimeIssues_WithCoreServiceIssues_ReturnsCombinedIssues</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> GetRuntimeIssues_WithCoreServiceIssues_ReturnsCombinedIssues()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> coreIssues = <span style=color:#ff7b72>new</span> List&lt;<span style=color:#ff7b72>string</span>&gt; { <span style=color:#a5d6ff>&#34;Core issue 1&#34;</span>, <span style=color:#a5d6ff>&#34;Core issue 2&#34;</span> };
+</span></span><span style=display:flex><span>            _mockTargetingService.Setup(x =&gt; x.ValidateSetup()).Returns(coreIssues);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> issues = _coordinator.GetRuntimeIssues();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            issues.Count.ShouldBeGreaterThanOrEqualTo(<span style=color:#a5d6ff>2</span>);
+</span></span><span style=display:flex><span>            issues.ShouldContain(<span style=color:#a5d6ff>&#34;Core Service: Core issue 1&#34;</span>);
+</span></span><span style=display:flex><span>            issues.ShouldContain(<span style=color:#a5d6ff>&#34;Core Service: Core issue 2&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=validateready_withvalidsetup_returnstrue>ValidateReady_WithValidSetup_ReturnsTrue</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> ValidateReady_WithValidSetup_ReturnsTrue()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>            _mockTargetingService.Setup(x =&gt; x.ValidateSetup()).Returns(<span style=color:#ff7b72>new</span> List&lt;<span style=color:#ff7b72>string</span>&gt;());
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> isReady = _coordinator.ValidateReady();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            isReady.ShouldBeTrue();
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=validateready_withissues_returnsfalse>ValidateReady_WithIssues_ReturnsFalse</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> ValidateReady_WithIssues_ReturnsFalse()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> mockServiceRegistry = <span style=color:#ff7b72>new</span> Mock&lt;IServiceRegistry&gt;();
+</span></span><span style=display:flex><span>            mockServiceRegistry.Setup(x =&gt; x.GetService&lt;IGridTargetingService&gt;()).Returns((IGridTargetingService)<span style=color:#79c0ff>null</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> isReady = _coordinator.ValidateReady();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            isReady.ShouldBeFalse();
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=getdebuginfo_withinitializedcoordinator_returnsdebuginformation>GetDebugInfo_WithInitializedCoordinator_ReturnsDebugInformation</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">29
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>#endregion</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>#region</span> Debug Tests
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        [Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> GetDebugInfo_WithInitializedCoordinator_ReturnsDebugInformation()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> mockComponent = <span style=color:#ff7b72>new</span> Mock&lt;TargetingShapeCast2DRefactored&gt;();
+</span></span><span style=display:flex><span>            mockComponent.Setup(x =&gt; x.Name).Returns(<span style=color:#a5d6ff>&#34;TestComponent&#34;</span>);
+</span></span><span style=display:flex><span>            mockComponent.Setup(x =&gt; x.HasValidTarget).Returns(<span style=color:#79c0ff>true</span>);
+</span></span><span style=display:flex><span>            mockComponent.Setup(x =&gt; x.CurrentGridPosition).Returns(<span style=color:#ff7b72>new</span> Vector2I(<span style=color:#a5d6ff>2</span>, <span style=color:#a5d6ff>3</span>));
+</span></span><span style=display:flex><span>            _coordinator.RegisterTargetingComponent(mockComponent.Object);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            _mockTargetingService.Setup(x =&gt; x.CurrentTargetTile).Returns(<span style=color:#ff7b72>new</span> Vector2I(<span style=color:#a5d6ff>5</span>, <span style=color:#a5d6ff>6</span>));
+</span></span><span style=display:flex><span>            _mockTargetingService.Setup(x =&gt; x.IsTargetingActive).Returns(<span style=color:#79c0ff>true</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> debugInfo = _coordinator.GetDebugInfo();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            debugInfo.ShouldContain(<span style=color:#a5d6ff>&#34;GridTargetingCoordinator Debug Info&#34;</span>);
+</span></span><span style=display:flex><span>            debugInfo.ShouldContain(<span style=color:#a5d6ff>&#34;Initialized: True&#34;</span>);
+</span></span><span style=display:flex><span>            debugInfo.ShouldContain(<span style=color:#a5d6ff>&#34;Registered Components: 1&#34;</span>);
+</span></span><span style=display:flex><span>            debugInfo.ShouldContain(<span style=color:#a5d6ff>&#34;Core Service Available: True&#34;</span>);
+</span></span><span style=display:flex><span>            debugInfo.ShouldContain(<span style=color:#a5d6ff>&#34;TestComponent: Valid=True, Pos=(2, 3)&#34;</span>);
+</span></span><span style=display:flex><span>            debugInfo.ShouldContain(<span style=color:#a5d6ff>&#34;Core Service Target: (5, 6)&#34;</span>);
+</span></span><span style=display:flex><span>            debugInfo.ShouldContain(<span style=color:#a5d6ff>&#34;Core Service Active: True&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=printdebuginfo_doesnotthrow>PrintDebugInfo_DoesNotThrow</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> PrintDebugInfo_DoesNotThrow()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act &amp; Assert</span>
+</span></span><span style=display:flex><span>            Should.NotThrow(() =&gt; _coordinator.PrintDebugInfo());
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=coreservicetargetingstatechanged_updatescomponents>CoreServiceTargetingStateChanged_UpdatesComponents</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>#endregion</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>#region</span> Event Tests
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        [Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> CoreServiceTargetingStateChanged_UpdatesComponents()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> mockComponent = <span style=color:#ff7b72>new</span> Mock&lt;TargetingShapeCast2DRefactored&gt;();
+</span></span><span style=display:flex><span>            _coordinator.RegisterTargetingComponent(mockComponent.Object);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> eventArgs = <span style=color:#ff7b72>new</span> TargetingStateChangedEventArgs(Vector2I.Zero, <span style=color:#ff7b72>new</span> Vector2I(<span style=color:#a5d6ff>3</span>, <span style=color:#a5d6ff>4</span>), <span style=color:#79c0ff>true</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            _mockTargetingService.Raise(x =&gt; x.TargetingStateChanged += <span style=color:#79c0ff>null</span>, eventArgs);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            mockComponent.Verify(x =&gt; x.UpdateTargeting(), Times.Once);
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=coreservicepathcalculated_logsdebuginfo>CoreServicePathCalculated_LogsDebugInfo</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> CoreServicePathCalculated_LogsDebugInfo()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> eventArgs = <span style=color:#ff7b72>new</span> PathCalculatedEventArgs(<span style=color:#ff7b72>new</span> List&lt;Vector2I&gt; { Vector2I.Zero, <span style=color:#ff7b72>new</span> Vector2I(<span style=color:#a5d6ff>1</span>, <span style=color:#a5d6ff>1</span>) }, <span style=color:#a5d6ff>2.0f</span>, Vector2I.Zero, <span style=color:#ff7b72>new</span> Vector2I(<span style=color:#a5d6ff>1</span>, <span style=color:#a5d6ff>1</span>));
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            _mockTargetingService.Raise(x =&gt; x.PathCalculated += <span style=color:#79c0ff>null</span>, eventArgs);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            _mockLogger.Verify(x =&gt; x.LogDebug(It.Is&lt;<span style=color:#ff7b72>string</span>&gt;(s =&gt; s.Contains(<span style=color:#a5d6ff>&#34;Path calculated&#34;</span>) &amp;&amp; s.Contains(<span style=color:#a5d6ff>&#34;2 tiles&#34;</span>) &amp;&amp; s.Contains(<span style=color:#a5d6ff>&#34;2.0&#34;</span>))), Times.Once);
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=coreservicepathcalculationfailed_logserror>CoreServicePathCalculationFailed_LogsError</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> CoreServicePathCalculationFailed_LogsError()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> eventArgs = <span style=color:#ff7b72>new</span> PathCalculationFailedEventArgs(<span style=color:#a5d6ff>&#34;Test failure&#34;</span>, Vector2I.Zero, <span style=color:#ff7b72>new</span> Vector2I(<span style=color:#a5d6ff>1</span>, <span style=color:#a5d6ff>1</span>));
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            _mockTargetingService.Raise(x =&gt; x.PathCalculationFailed += <span style=color:#79c0ff>null</span>, eventArgs);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            _mockLogger.Verify(x =&gt; x.LogError(It.Is&lt;<span style=color:#ff7b72>string</span>&gt;(s =&gt; s.Contains(<span style=color:#a5d6ff>&#34;Path calculation failed&#34;</span>) &amp;&amp; s.Contains(<span style=color:#a5d6ff>&#34;Test failure&#34;</span>))), Times.Once);
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=_exittree_cleansupresources>_ExitTree_CleansUpResources</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>#endregion</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>#region</span> Cleanup Tests
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        [Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> _ExitTree_CleansUpResources()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>            _coordinator._Ready();
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> mockComponent = <span style=color:#ff7b72>new</span> Mock&lt;TargetingShapeCast2DRefactored&gt;();
+</span></span><span style=display:flex><span>            _coordinator.RegisterTargetingComponent(mockComponent.Object);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            _coordinator._ExitTree();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            _coordinator.IsInitialized.ShouldBeFalse();
+</span></span><span style=display:flex><span>            _coordinator.ComponentCount.ShouldBe(<span style=color:#a5d6ff>0</span>);
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=findpath_withvalidpositions_returnspath>FindPath_WithValidPositions_ReturnsPath</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>#endregion</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>#region</span> Backward Compatibility Tests
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        [Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> FindPath_WithValidPositions_ReturnsPath()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> expectedPath = <span style=color:#ff7b72>new</span> List&lt;Vector2I&gt; { Vector2I.Zero, <span style=color:#ff7b72>new</span> Vector2I(<span style=color:#a5d6ff>1</span>, <span style=color:#a5d6ff>1</span>) };
+</span></span><span style=display:flex><span>            _mockTargetingService.Setup(x =&gt; x.FindPath(Vector2I.Zero, <span style=color:#ff7b72>new</span> Vector2I(<span style=color:#a5d6ff>1</span>, <span style=color:#a5d6ff>1</span>))).Returns(expectedPath);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> path = _coordinator.FindPath(Vector2I.Zero, <span style=color:#ff7b72>new</span> Vector2I(<span style=color:#a5d6ff>1</span>, <span style=color:#a5d6ff>1</span>));
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            path.ShouldBe(expectedPath);
+</span></span><span style=display:flex><span>            _mockTargetingService.Verify(x =&gt; x.FindPath(Vector2I.Zero, <span style=color:#ff7b72>new</span> Vector2I(<span style=color:#a5d6ff>1</span>, <span style=color:#a5d6ff>1</span>)), Times.Once);
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=ispathclear_withvalidpositions_returnstrue>IsPathClear_WithValidPositions_ReturnsTrue</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> IsPathClear_WithValidPositions_ReturnsTrue()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>            _mockTargetingService.Setup(x =&gt; x.IsPathClear(Vector2I.Zero, <span style=color:#ff7b72>new</span> Vector2I(<span style=color:#a5d6ff>1</span>, <span style=color:#a5d6ff>1</span>))).Returns(<span style=color:#79c0ff>true</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> isClear = _coordinator.IsPathClear(Vector2I.Zero, <span style=color:#ff7b72>new</span> Vector2I(<span style=color:#a5d6ff>1</span>, <span style=color:#a5d6ff>1</span>));
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            isClear.ShouldBeTrue();
+</span></span><span style=display:flex><span>            _mockTargetingService.Verify(x =&gt; x.IsPathClear(Vector2I.Zero, <span style=color:#ff7b72>new</span> Vector2I(<span style=color:#a5d6ff>1</span>, <span style=color:#a5d6ff>1</span>)), Times.Once);
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=getclosestvalidtile_withvalidparameters_returnstile>GetClosestValidTile_WithValidParameters_ReturnsTile</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> GetClosestValidTile_WithValidParameters_ReturnsTile()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> expectedTile = <span style=color:#ff7b72>new</span> Vector2I(<span style=color:#a5d6ff>2</span>, <span style=color:#a5d6ff>2</span>);
+</span></span><span style=display:flex><span>            _mockTargetingService.Setup(x =&gt; x.GetClosestValidTile(<span style=color:#ff7b72>new</span> Vector2I(<span style=color:#a5d6ff>3</span>, <span style=color:#a5d6ff>3</span>), <span style=color:#ff7b72>new</span> Vector2I(<span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0</span>), <span style=color:#a5d6ff>10</span>)).Returns(expectedTile);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> tile = _coordinator.GetClosestValidTile(<span style=color:#ff7b72>new</span> Vector2I(<span style=color:#a5d6ff>3</span>, <span style=color:#a5d6ff>3</span>), <span style=color:#79c0ff>null</span>, <span style=color:#79c0ff>null</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            tile.ShouldBe(expectedTile);
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=createwithinjection_createsconfiguredcoordinator>CreateWithInjection_CreatesConfiguredCoordinator</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">25
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>#endregion</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>#region</span> Static Factory Method Tests
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        [Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> CreateWithInjection_CreatesConfiguredCoordinator()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Arrange</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> parent = <span style=color:#ff7b72>new</span> Node();
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> mockContainer = <span style=color:#ff7b72>new</span> Mock&lt;GBCompositionContainer&gt;();
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> mockLogger = <span style=color:#ff7b72>new</span> Mock&lt;ILogger&gt;();
+</span></span><span style=display:flex><span>            mockContainer.Setup(x =&gt; x.GetLogger()).Returns(mockLogger.Object);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> coordinator = GridTargetingCoordinator.CreateWithInjection(parent, mockContainer.Object);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            coordinator.ShouldNotBeNull();
+</span></span><span style=display:flex><span>            coordinator.GetParent().ShouldBe(parent);
+</span></span><span style=display:flex><span>            coordinator.Name.ShouldBe(<span style=color:#a5d6ff>&#34;GridTargetingCoordinator&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Cleanup</span>
+</span></span><span style=display:flex><span>            coordinator.QueueFree();
+</span></span><span style=display:flex><span>            parent.QueueFree();
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=updateallcomponents_withoutcomponents_doesnotthrow>UpdateAllComponents_WithoutComponents_DoesNotThrow</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">10
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>#endregion</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-weight:700;font-style:italic>#region</span> Edge Case Tests
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        [Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> UpdateAllComponents_WithoutComponents_DoesNotThrow()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act &amp; Assert</span>
+</span></span><span style=display:flex><span>            Should.NotThrow(() =&gt; _coordinator.UpdateAllComponents());
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=enablealltargeting_withoutcomponents_doesnotthrow>EnableAllTargeting_WithoutComponents_DoesNotThrow</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> EnableAllTargeting_WithoutComponents_DoesNotThrow()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act &amp; Assert</span>
+</span></span><span style=display:flex><span>            Should.NotThrow(() =&gt; _coordinator.EnableAllTargeting());
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=disablealltargeting_withoutcomponents_doesnotthrow>DisableAllTargeting_WithoutComponents_DoesNotThrow</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> DisableAllTargeting_WithoutComponents_DoesNotThrow()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act &amp; Assert</span>
+</span></span><span style=display:flex><span>            Should.NotThrow(() =&gt; _coordinator.DisableAllTargeting());
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p><h3 id=getcomponentswithvalidtargets_withoutcomponents_returnsemptylist>GetComponentsWithValidTargets_WithoutComponents_ReturnsEmptyList</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">9
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span>[Fact]
+</span></span><span style=display:flex><span>        <span style=color:#ff7b72>public</span> <span style=color:#ff7b72>void</span> GetComponentsWithValidTargets_WithoutComponents_ReturnsEmptyList()
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Act</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff7b72>var</span> validComponents = _coordinator.GetComponentsWithValidTargets();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8b949e;font-style:italic>// Assert</span>
+</span></span><span style=display:flex><span>            validComponents.ShouldBeEmpty();
+</span></span><span style=display:flex><span>        }
+</span></span></code></pre></td></tr></table></div></div><p><strong>Returns:</strong> <code>void</code></p></div></main><aside class=gb-toc><div class=gb-toc-title>On this page</div><nav id=TableOfContents><ul><li><a href=#methods>Methods</a><ul><li><a href=#dispose>Dispose</a></li><li><a href=#_ready_withvalidserviceregistry_initializessuccessfully>_Ready_WithValidServiceRegistry_InitializesSuccessfully</a></li><li><a href=#_ready_withoutserviceregistry_failsinitialization>_Ready_WithoutServiceRegistry_FailsInitialization</a></li><li><a href=#registertargetingcomponent_withvalidcomponent_registerscomponent>RegisterTargetingComponent_WithValidComponent_RegistersComponent</a></li><li><a href=#registertargetingcomponent_withnullcomponent_doesnotthrow>RegisterTargetingComponent_WithNullComponent_DoesNotThrow</a></li><li><a href=#registertargetingcomponent_withduplicatecomponent_doesnotregistertwice>RegisterTargetingComponent_WithDuplicateComponent_DoesNotRegisterTwice</a></li><li><a href=#unregistertargetingcomponent_withregisteredcomponent_unregisterscomponent>UnregisterTargetingComponent_WithRegisteredComponent_UnregistersComponent</a></li><li><a href=#unregistertargetingcomponent_withnullcomponent_doesnotthrow>UnregisterTargetingComponent_WithNullComponent_DoesNotThrow</a></li><li><a href=#unregistertargetingcomponent_withunregisteredcomponent_doesnotthrow>UnregisterTargetingComponent_WithUnregisteredComponent_DoesNotThrow</a></li><li><a href=#findcomponentbyname_withexistingcomponent_returnscomponent>FindComponentByName_WithExistingComponent_ReturnsComponent</a></li><li><a href=#findcomponentbyname_withnonexistentcomponent_returnsnull>FindComponentByName_WithNonExistentComponent_ReturnsNull</a></li><li><a href=#getcomponentswithvalidtargets_withvalidcomponents_returnsonlyvalidones>GetComponentsWithValidTargets_WithValidComponents_ReturnsOnlyValidOnes</a></li><li><a href=#setastargrid_withvalidgrid_updatescoreservice>SetAstarGrid_WithValidGrid_UpdatesCoreService</a></li><li><a href=#setastargrid_withnullgrid_clearsgrid>SetAstarGrid_WithNullGrid_ClearsGrid</a></li><li><a href=#setastargrid_withsamegrid_doesnotupdatecoreservice>SetAstarGrid_WithSameGrid_DoesNotUpdateCoreService</a></li><li><a href=#enablealltargeting_enablescoreserviceandcomponents>EnableAllTargeting_EnablesCoreServiceAndComponents</a></li><li><a href=#disablealltargeting_disablescoreserviceandcomponents>DisableAllTargeting_DisablesCoreServiceAndComponents</a></li><li><a href=#updateallcomponents_updatesallregisteredcomponents>UpdateAllComponents_UpdatesAllRegisteredComponents</a></li><li><a href=#clearalltargets_clearscoreservicetarget>ClearAllTargets_ClearsCoreServiceTarget</a></li><li><a href=#getruntimeissues_withvalidsetup_returnsemptyissues>GetRuntimeIssues_WithValidSetup_ReturnsEmptyIssues</a></li><li><a href=#getruntimeissues_withoutservice_returnsissues>GetRuntimeIssues_WithoutService_ReturnsIssues</a></li><li><a href=#getruntimeissues_withoutlogger_returnsissues>GetRuntimeIssues_WithoutLogger_ReturnsIssues</a></li><li><a href=#getruntimeissues_withcoreserviceissues_returnscombinedissues>GetRuntimeIssues_WithCoreServiceIssues_ReturnsCombinedIssues</a></li><li><a href=#validateready_withvalidsetup_returnstrue>ValidateReady_WithValidSetup_ReturnsTrue</a></li><li><a href=#validateready_withissues_returnsfalse>ValidateReady_WithIssues_ReturnsFalse</a></li><li><a href=#getdebuginfo_withinitializedcoordinator_returnsdebuginformation>GetDebugInfo_WithInitializedCoordinator_ReturnsDebugInformation</a></li><li><a href=#printdebuginfo_doesnotthrow>PrintDebugInfo_DoesNotThrow</a></li><li><a href=#coreservicetargetingstatechanged_updatescomponents>CoreServiceTargetingStateChanged_UpdatesComponents</a></li><li><a href=#coreservicepathcalculated_logsdebuginfo>CoreServicePathCalculated_LogsDebugInfo</a></li><li><a href=#coreservicepathcalculationfailed_logserror>CoreServicePathCalculationFailed_LogsError</a></li><li><a href=#_exittree_cleansupresources>_ExitTree_CleansUpResources</a></li><li><a href=#findpath_withvalidpositions_returnspath>FindPath_WithValidPositions_ReturnsPath</a></li><li><a href=#ispathclear_withvalidpositions_returnstrue>IsPathClear_WithValidPositions_ReturnsTrue</a></li><li><a href=#getclosestvalidtile_withvalidparameters_returnstile>GetClosestValidTile_WithValidParameters_ReturnsTile</a></li><li><a href=#createwithinjection_createsconfiguredcoordinator>CreateWithInjection_CreatesConfiguredCoordinator</a></li><li><a href=#updateallcomponents_withoutcomponents_doesnotthrow>UpdateAllComponents_WithoutComponents_DoesNotThrow</a></li><li><a href=#enablealltargeting_withoutcomponents_doesnotthrow>EnableAllTargeting_WithoutComponents_DoesNotThrow</a></li><li><a href=#disablealltargeting_withoutcomponents_doesnotthrow>DisableAllTargeting_WithoutComponents_DoesNotThrow</a></li><li><a href=#getcomponentswithvalidtargets_withoutcomponents_returnsemptylist>GetComponentsWithValidTargets_WithoutComponents_ReturnsEmptyList</a></li></ul></li></ul></nav></aside><footer class=gb-footer><p>&copy; 2025 Chris Tutorials. All rights reserved.</p><p>Built with <a href=https://gohugo.io/ target=_blank>Hugo</a> and
+<a href=https://godotengine.org/ target=_blank>Godot</a>.</p></footer></div></body></html>
