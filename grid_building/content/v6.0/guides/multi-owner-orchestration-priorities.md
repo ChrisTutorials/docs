@@ -81,19 +81,24 @@ Goal: a small, stable set of Core types that all higher layers use when talking 
   - Use the session object (or a helper/service) to pull the **user scope** for that `UserId`.
   - Never read player-specific UI nodes directly.
 
-- Conceptual API sketch (Godot side uses this via injected services):
+- Conceptual API sketch (Godot side uses this via injected services). These
+- now map directly to concrete Core interfaces `IPlacementCommands` and
+- `IManipulationCommands`:
 
   ```csharp
-  public interface IBuildingCommands
+  public interface IPlacementCommands
   {
-      PlacementResult TryPlace(UserId user, TargetingSnapshot targeting, PlaceableRequest request);
-      PlacementResult TryDemolish(UserId user, TargetingSnapshot targeting);
+      PlacementResult TryPlace(UserId user, Placeable placeable, Vector2 worldPosition);
+      PlacementResult TryDemolish(UserId user, Vector2 worldPosition);
   }
 
   public interface IManipulationCommands
   {
-      ManipulationResult TryMove(UserId user, TargetingSnapshot from, TargetingSnapshot to);
-      ManipulationResult TryRotate(UserId user, TargetingSnapshot target, RotationDirection direction);
+      ManipulationResult TryMove(UserId user, Vector2I from, Vector2I to);
+      ManipulationResult TryRotateLeft(UserId user, Vector2I origin);
+      ManipulationResult TryRotateRight(UserId user, Vector2I origin);
+      ManipulationResult TryFlipHorizontal(UserId user, Vector2I origin);
+      ManipulationResult TryFlipVertical(UserId user, Vector2I origin);
   }
   ```
 

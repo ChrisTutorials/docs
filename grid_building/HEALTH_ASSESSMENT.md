@@ -278,3 +278,11 @@ The plugin's Core layer now **builds with 0 errors**. All critical reflection pa
 - Create pure C# MathUtils to replace Mathf usage
 - Delete or move logging files with reflection to Godot layer
 - ✅ **FIXED**: Tests moved to plugin level - no more test exclusion anti-pattern
+
+### Completed Today (Dec 5, 2025):
+- ✅ Introduced Core interfaces `IGridBuildingSession`, `IPlacementCommands`, and `IUserScope` to formalize session and Owner scopes.
+- ✅ Added `PlacementService` and supporting Core types (`Mode`, `UserId`) to move more placement and mode logic into pure C#.
+- ✅ Implemented new Core tests (`ModeServiceTests`, `PlacementServiceTests`) to cover session/mode and placement flows.
+- ✅ Added Godot-side tests for the v6.0 `PlacementSystem` (unit + integration coverage).
+- ✅ Authored multiplayer and UI user-id architecture reports (`MULTIPLAYER_SERVICE_ARCHITECTURE.md`, `UI_USER_ID_ARCHITECTURE.md`) and wired them into the v6 readiness hub.
+- ✅ Synced GridBuilding, docs, toolkits, and tools repos to GitHub (and Bitbucket where configured) as the new baseline for v6 work.

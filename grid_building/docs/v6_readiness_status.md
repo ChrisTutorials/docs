@@ -107,3 +107,27 @@ This table centralizes the major open items that affect GridBuilding 6.0 readine
 - **[Automation]**
   - Integrate Orchestration `docs_v6` and `gridbuilding_health` commands into CI.
   - Treat any **critical failures** from these profiles as **release blockers** for version 6.
+
+#### Recent Updates (Dec 5, 2025)
+
+- **Core + Godot architecture**
+  - Added Core services and interfaces for session/Owner-aware flows (`IGridBuildingSession`, `IPlacementCommands`, `IUserScope`, `PlacementService`, `Mode`, `UserId`).
+  - Extended tests for placement and mode services in both Core and Godot layers.
+- **Architecture documentation**
+  - Published v6 guides:
+    - `content/v6.0/guides/building-system-architecture.md`
+    - `content/v6.0/guides/placement-system-architecture.md`
+    - `content/v6.0/guides/manipulation-system-architecture.md`
+  - Added detailed reports for:
+    - UI user-id architecture (`UI_USER_ID_ARCHITECTURE.md`).
+    - Multiplayer building/targeting architecture (`MULTIPLAYER_SERVICE_ARCHITECTURE.md`).
+- **Repo alignment**
+  - All main repos (GridBuilding C#, docs, toolkits, tools plugin) are committed and synced to GitHub; toolkits is also mirrored to Bitbucket.
+
+##### Tooling Gate Exit Codes
+
+- Orchestration profiles now use the following contract:
+  - Exit code **0**: all runs succeeded, no critical failures.
+  - Exit code **1**: non-critical failures (warnings); should be investigated but do not block v6 by default.
+  - Exit code **2**: **critical failures** in the profile (e.g. `docs_v6` or `gridbuilding_health`) and **must fail CI / release pipelines**.
+- CI should treat any `dotnet run --project Orchestration -- --profile docs_v6` or `--profile gridbuilding_health` invocation that returns **2** as a hard gate failure.

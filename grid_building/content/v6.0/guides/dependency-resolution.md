@@ -32,6 +32,7 @@ It is a Godot `Node` you add to your scene. When it enters the tree, it:
    - `IPlacementValidator`, `ICollisionCalculator`
    - `IGridTargetingState` (POCS state wrapper)
    - `IPlacementService`, `IManipulationService`, `IGridTargetingService`
+   - `IPlacementCommands`, `IManipulationCommands` (high-level command facades)
 4. Registers **Godot services**:
    - `ISceneService` for scene/node operations
    - `IndicatorService` for placement indicators
@@ -110,7 +111,7 @@ Key points:
 
 ### 2.1.1 Key runtime services (what they do and consume)
 
-At runtime, three services are central to placement flows:
+At runtime, a small set of services are central to placement flows:
 
 - **`IPlacementService` (Core.Services.Placement)**
   - **Role:** Pure C# placement engine (validate + execute placement, remove/move objects, query occupancy).
@@ -121,6 +122,15 @@ At runtime, three services are central to placement flows:
   - **Produces:**
     - `PlacementReport` (detailed validation results).
     - `PlacementResult` (success flag, errors, and placed-instance metadata for the Godot layer to consume).
+
+- **`IPlacementCommands` / `IManipulationCommands` (Core.Interfaces)**
+  - **Role:** High-level, user-scoped command facades over `IPlacementService` and `IManipulationService`.
+  - **Consumes:**
+    - `IPlacementService` / `IManipulationService` from the service registry.
+  - **Produces:**
+    - `PlacementResult` / `ManipulationResult` for controllers and UI.
+  - Controllers and session/owner roots call these interfaces first, instead of
+    directly invoking the lower-level services.
 
 - **`PlacementSystem` (Godot.Systems.Placement)**
   - **Role:** Lightweight Godot `Node` that orchestrates placement using the Enhanced Service Registry pattern.
@@ -356,25 +366,162 @@ This node:
 
 This should be treated as a convenience bootstrap for GridBuilding only scenes. For multi-plugin or advanced multiplayer scenarios, prefer the central session and owner APIs described above.
 
-### 6.6 Session-Level systems and Owner-Level controllers
+### 6.7 Game-owned UserId and plugin integration (public guidance)
 
-GridBuilding distinguishes between:
+In v6.x, **user identity is game-owned**, and GridBuilding treats `UserId` as an opaque handle that answers:
 
-- Session-level systems with one instance per game session
-  - BuildingSystem which orchestrates building and placement for the session
-  - ManipulationSystemNode which orchestrates moving and removing objects for the session
+> *“Which user/owner is this command or UI element acting on behalf of?”*
 
-- Owner-level controllers with one instance per owner
-  - Input and UI controllers for human and AI owners
-  - Targeting nodes such as TargetingShapeCast2D tied to that owner view or camera
+There are two practical integration patterns for plugin consumers:
 
-In a four owner game you still have one BuildingSystem node and one ManipulationSystemNode node. You have four owners, each with their own owner scope for selection and preview state and their own targeting and controller nodes.
+#### 6.7.1 Simple setup – single local user
 
-When an owner issues a command:
+Use this for prototypes or games with a single local player.
 
-1. An owner-level controller reads input and consults that owners state from the owner scope
-2. It calls the shared BuildingSystem or ManipulationSystemNode with an owner handle and current targeting data
-3. The system uses session scoped services for world and rules and owner scoped services for who is acting and how
+- **Scene wiring**
+  - Add `ServiceCompositionRoot` to your main scene so the **ServiceRegistry** exists.
+  - Add the GridBuilding nodes you need (targeting, placement, manipulation, HUD).
+- **Create a single `UserId` in your game code**
+  - Your game allocates a `UserId` for the local player (for example via a constructor or helper in your own code).
+  - You then always pass that `UserId` into GridBuilding’s **command facades**:
+    - `IPlacementCommands.TryPlace(userId, ...)`
+    - `IPlacementCommands.TryDemolish(userId, ...)`
+    - `IManipulationCommands.TryMove(userId, ...)`, etc.
+  - For UI that has been made user-aware (e.g. v6 `TargetInformer`, `ActionLog`), you initialize them with:
+    - `TargetInformer.InitializeForUser(userId, ...)`
+    - `ActionLog.InitializeForUser(userId, ...)`.
+- **What lives where**
+  - GridBuilding owns **services and systems** via `ServiceCompositionRoot` and `ServiceRegistry`.
+  - Your game owns **who the user is** and which `UserId` to use.
 
-This lets multiple owners use the same systems in parallel without duplicating system nodes or leaking state between owners.
+This keeps setup straightforward while matching the v6 owner/session design.
 
+#### 6.7.2 Advanced setup – multi-owner and multiplayer
+
+For splitscreen, networked games, AI, or tools, you typically move to a
+**game-owned session/owner model** that coordinates all `UserId`s.
+
+- **Game/session model owns identity**
+  - Define game-side types such as `PlayerSession` or `GameUserSession` that store:
+    - Engine or network identifiers (controller index, peer ID, account ID, etc.).
+    - The corresponding GridBuilding `UserId`.
+  - Maintain a small registry (e.g. `PlayerSessionManager`) that maps from engine/network IDs to `UserId`.
+- **Bootstrap + services**
+  - Continue to use `ServiceCompositionRoot` (or a central game bootstrap) to register GridBuilding services.
+  - During session/owner creation your game:
+    - Creates the required `UserId`s for each owner.
+    - Resolves `IPlacementCommands`, `IManipulationCommands`, and other services from the registry.
+    - Wires controllers and HUD by passing in the correct `UserId`.
+- **Per-owner controllers and UI**
+  - Owner-level controllers (per player or per character) read input and consult the game’s owner/session model to obtain the right `UserId`.
+  - They call the shared systems/commands with that `UserId` and targeting data.
+  - Per-owner HUD (target info, action log, etc.) is initialized with `InitializeForUser(userId, ...)` so that each HUD clearly represents a specific user.
+
+GridBuilding remains **engine/network agnostic**: it never derives users from scene tree names, peer IDs, or controllers. It only sees `UserId` and relies on your game to decide what that means.
+
+#### 6.7.3 CompositionContainer and legacy scope nodes
+
+`CompositionContainer` and older scope-style helpers are still available, but primarily as
+**migration and test scaffolding**:
+
+- They provide a convenient way to stand up services and state for older projects or tests that expect a container object.
+- Internally, they forward to the same `ServiceRegistry` built by `ServiceCompositionRoot`.
+- They should **not** be the primary owner of user/session identity in new games.
+
+For new or actively maintained projects:
+
+- Prefer **game-owned `UserId` + ServiceCompositionRoot** and the session/owner patterns described above.
+- Use `CompositionContainer` in tests and legacy content where refactoring to the new pattern is not yet complete.
+
+#### 6.7.4 TargetingShapeCast2D and per-user targeting
+
+`TargetingShapeCast2D` is the Godot-side physics component that drives **what the user is looking at on the grid**. It does **not** know about `UserId` directly. Instead, it updates an owner-scoped `GridTargetingState`, and the service layer associates that state with a specific `UserId`.
+
+At a high level:
+
+- The **game** owns `UserId` and a session/owner model.
+- GridBuilding creates an **owner scope per (session, UserId)** that includes:
+  - `IGridTargetingState` (Core)
+  - A Godot `GridTargetingState` / `GBCompositionContainer` bound to that owner.
+- `TargetingShapeCast2D` is wired to the **owner’s targeting state** via dependency resolution.
+
+##### Node layout (not parented under the player)
+
+Per owner, a typical scene layout is:
+
+- `SessionRoot` (represents the game session)
+  - `OwnerRoot` (represents one owner/user)
+    - `Character` (optional: player character / pawn)
+    - `GridBuildingCursorRoot` (cursor / targeting stack)
+      - `TargetingShapeCast2D`
+      - Optional cursor visuals
+
+`TargetingShapeCast2D` is **not** a child of the player character. Its transform is driven by input:
+
+- Mouse input: move `GridBuildingCursorRoot` to the mouse world position.
+- Keyboard / gamepad: move in discrete grid steps.
+- AI: move according to AI decisions.
+
+The ShapeCast only cares about **where** it is in the world, not who moved it.
+
+##### How TargetingShapeCast2D becomes per-user
+
+Per owner:
+
+1. The game creates a `UserId` and an owner scope (see sections 6.4–6.7).
+2. During bootstrap, GridBuilding registers:
+   - An `IGridTargetingState` for that owner.
+   - A Godot `GridTargetingState` / `GBCompositionContainer` bound to the same owner.
+3. In Godot, a per-owner cursor/controller node:
+   - Knows which `UserId` it represents (from the game’s session model).
+   - Resolves `ServiceCompositionRoot` and the owner’s container/state using that `UserId`.
+   - Calls something conceptually like:
+
+     ```gdscript
+     # Pseudocode
+     var container_for_owner = OwnerService.resolve_container_for_user(user_id)
+     targeting_shape_cast.resolve_gb_dependencies(container_for_owner)
+     ```
+
+4. From this point on:
+   - `TargetingShapeCast2D` updates **that owner’s** `GridTargetingState`.
+   - Core commands (`IPlacementCommands`, `IManipulationCommands`) use the same owner-scoped targeting state when called with that `UserId`.
+
+The ShapeCast does not store or export a `UserId`. Its effective identity is derived entirely from **which targeting state it is bound to**, and that targeting state is owner-scoped in the service layer.
+
+##### Human, AI, and multi-player
+
+This pattern works the same way regardless of input source:
+
+- **Human local player**: controller reads input, looks up the correct `UserId`, and moves the cursor root.
+- **AI controller**: AI logic decides a desired grid position and moves the cursor root programmatically.
+- **Multiplayer / splitscreen**: each owner has its own:
+  - `UserId`
+  - Owner scope in the service layer
+  - `GridBuildingCursorRoot` + `TargetingShapeCast2D` bound to that owner’s targeting state
+
+GridBuilding itself remains **user-id-centric and engine-agnostic**:
+
+- It never inspects scene paths or node names to figure out "which player".
+- It sees `UserId` at the command/service layer.
+- Godot-side components like `TargetingShapeCast2D` become per-user by being wired to the correct **owner-scoped targeting state**, not by their position in the node hierarchy.
+
+#### 6.7.5 Per-user runtime state objects and orchestrator services
+
+In the owner-scoped model, **each user has its own copy of the key runtime “state” objects**, and **services/command facades orchestrate across all users**:
+
+- **Per-user state (one instance per (session, UserId))**
+  - `GridTargetingState` – what this user is currently pointing at, which map(s) they are targeting, tile size, collision exclusions.
+  - `ManipulationState` – what this user is currently manipulating (move/rotate/flip), current operation state.
+  - `ModeState` – this user’s current building/mode (build, move, demolish, info, etc.).
+  - (Deprecated) `BuildingState` – per-building runtime state, not per-user; kept for legacy visualizers and will be replaced by newer placement-centric state.
+
+- **Orchestrator services (multi-user aware)**
+  - `IPlacementCommands` / `IManipulationCommands` take `UserId` and route work to the **correct per-user state** and core services.
+  - `IGridTargetingService` and other core services operate over grid/navigation data and **consume per-user state via session/owner scopes** rather than Godot nodes.
+
+The intent for v6.x is that:
+
+- **Controllers and UI are per-user** and always call command facades with a `UserId`.
+- **Session/owner scopes** hold the per-user state instances (targeting, manipulation, mode) for that `UserId`.
+- **Services/commands** act as **orchestrators over all users** by accepting `UserId` and resolving the appropriate owner scope, instead of being tied to a single global targeting/mode state.
