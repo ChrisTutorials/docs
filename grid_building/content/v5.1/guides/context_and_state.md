@@ -22,7 +22,7 @@ Separating them helps keep rule evaluation & indicators **pure** (depend on inpu
 | [GBCompositionContainer](../api/GBCompositionContainer/) | Dependency Injection root; registers systems & provides lookup. | Construction‑phase only mutations. |
 | [GBSystemsContext](../api/GBSystemsContext/) | Aggregates references to active systems (Building, GridTargeting, Manipulation). Emits system change signals. | Signals: `building_system_changed`, `grid_targeting_system_changed`, `manipulation_system_changed`. |
 | [GBLevelContext](../api/GBLevelContext/) | World/scene level references and wiring for runtime. | Exports: `target_map`, `maps`, `objects_parent`. Applies to states: sets `GridTargetingState.target_map`, `GridTargetingState.maps`, and `BuildingState.placed_parent`. Stable across a gameplay session. |
-| [GBOwnerContext](../api/GBOwnerContext/) | Owner/Player centric info (player id, permissions, team). | Enables multiplayer separation later. Used by [BuildingState](../api/BuildingState/), [ManipulationState](../api/ManipulationState/), and [GridTargetingState](../api/GridTargetingState/). |
+| [GBOwnerContext](../api/GBOwnerContext/) / GBUserScope | Per-user / player centric info (user id, permissions, team). | Enables multiplayer separation later. Backed by a [GBOwner](../api/GBOwner/) node (often added as `GBUser (GBOwner)` on the player) and used by [BuildingState](../api/BuildingState/), [ManipulationState](../api/ManipulationState/), and [GridTargetingState](../api/GridTargetingState/). |
 | [GBConfig](../api/GBConfig/) | Root configuration resource; groups settings classes. | Read‑mostly at runtime. |
 | [GBMessages](../api/GBMessages/) | Messaging / event bus (if enabled) for decoupled notifications. | Optional injection. |
 
@@ -82,8 +82,8 @@ Summary:
 
 - Keep rules pure over [GridTargetingState](../api/GridTargetingState/). Configure the state via [GBLevelContext](../api/GBLevelContext/) and DI once, then let rules evaluate.
 - Use [BuildingState](../api/BuildingState/) for post-validation signals and instantiation via `placed_parent`.
-- For rules that need owner context (e.g., inventory spending), read the placer from [GridTargetingState](../api/GridTargetingState/):
-	- `GridTargetingState.get_owner()` or `get_owner_root()` provide access to the owner entity/root.
+- For rules that need user/owner context (e.g., inventory spending), read the placer from [GridTargetingState](../api/GridTargetingState/):
+    - `GridTargetingState.get_owner()` or `get_owner_root()` provide access to the user/owner entity/root (typically driven by a `GBUser (GBOwner)` node wired via the owner context).
 	- Example: [SpendMaterialsRuleGeneric](../api/SpendMaterialsRuleGeneric/) pulls its spender via the targeting state and locates the material container from there.
 
 ## Immutability Guidelines

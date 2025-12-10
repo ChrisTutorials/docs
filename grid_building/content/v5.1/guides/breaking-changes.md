@@ -103,7 +103,7 @@ Search your project for these patterns and update:
 - **🔄 Functionality redistribution:** [GridTargetingSystem](../api/GridTargetingSystem/) and [ManipulationSystem](../api/ManipulationSystem/) simplified to coordination roles; core functionality moved to specific component classes.
 - Validation contract standardized: `validate()` results are represented as boolean success + diagnostic collections via `get_runtime_issues()` / `get_editor_issues()` (multiple files expose these methods).
 - Godot API change: migrate any `TileMap` usage to `TileMapLayer` for 2D tile placement/queries.
-- Important signature/rename breaks (examples): `GBOwnerContext.set_owner(...)` now requires a [GBOwner](../api/GBOwner/); `DragBuildManager` was renamed to [DragManager](../api/DragManager/) and exposes `is_dragging()`.
+- Important signature/rename breaks (examples): `GBOwnerContext.set_owner(...)` now requires a [GBOwner](../api/GBOwner/) (5.1 bridge name: `GBUser`); `DragBuildManager` was renamed to [DragManager](../api/DragManager/) and exposes `is_dragging()`.
 
 The sections below expand each item with concrete before/after examples and file references.
 

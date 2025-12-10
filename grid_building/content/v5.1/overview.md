@@ -69,8 +69,9 @@ The main orchestrator that manages grid operations, building processes, and syst
 </div>
 {{< /card >}}
 
-{{< card title="GBOwner" icon="fas fa-user" >}}
-Interface for grid ownership, allowing entities (players, AI) to own and manage grid contexts.
+{{< card title="GBOwner / GBUser" icon="fas fa-user" >}}
+Interface for grid ownership / user identity, allowing entities (players, AI) to own and manage grid contexts.
+Maps to the 6.0 user model (`UserId` / `IUserScope`) via the 5.1 bridge types `GBUser` and `GBUserScope`.
 <div style="margin-top: 1rem;">
     <code style="background: var(--gray-100); padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem;">GridBuilding.Core.Base</code>
 </div>

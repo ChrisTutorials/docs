@@ -18,8 +18,8 @@ This page collects short, hand-authored compatibility mappings for common rename
 
 - [GBOwnerContext](/v5-0/api/GBOwnerContext/).set_owner(...) signature
 
-  - Quick mapping: `GBOwnerContext.set_owner(value)` now expects a typed `GBOwner` instance. Update callsites to construct or pass a `GBOwner` object.
-  - API: `../api/GBOwnerContext/` and `../api/GBOwner/`
+  - Quick mapping: `GBOwnerContext.set_owner(value)` now expects a typed `GBOwner` instance. In 5.1 docs this is often described as wiring a `GBUser (GBOwner)` node into the owner/user scope. Update callsites to construct or pass a `GBOwner` / `GBUser` object.
+  - API: `../api/GBOwnerContext/` and `../api/GBOwner/` (see also the Owner/User bridge rows in `plugins/gameplay/GridPlacement/docs/Core/GRIDBUILDING_CLASS_MAPPING.md`).
 
 - GBLogger access
 

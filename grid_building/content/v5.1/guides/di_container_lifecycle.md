@@ -15,9 +15,9 @@ The intended model: each player (or character) that can build independently gets
 
 ## Ownership and lifecycle rules
 
-- The [GBOwner](../api/GBOwner/) (or player root) owns the container and the injector. Create the container when the player joins or when the level spawns the player, and free it when the player leaves.
+- The [GBOwner](../api/GBOwner/) / **GBUser** (per-user bridge name) owns the container and the injector. Create the container when the player joins or when the level spawns the player, and free it when the player leaves.
 - The container lifetime should match the player's game lifetime. Avoid putting a player container under a global root.
-- The container should have a stable id or owner reference to make logs and validation messages clear (for example: `container.owner_id` or `container.owner_name`).
+- The container should have a stable id or owner/user reference to make logs and validation messages clear (for example: `container.owner_id` or `container.owner_name`).
 
 ## Injector placement and injection roots
 

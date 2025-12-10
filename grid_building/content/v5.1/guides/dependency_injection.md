@@ -63,7 +63,7 @@ The system validates all dependencies **immediately after injection**:
 **What Gets Validated:**
 - Configuration structure and resources exist
 - Required templates and settings are present
-- Game-specific dependencies (GBLevelContext, GBOwner) are available
+- Game-specific dependencies (GBLevelContext, GBUser / GBOwner) are available
 - System interconnections are properly wired
 - Component contracts are satisfied
 
@@ -228,11 +228,11 @@ ______________________________________________________________________
 
 Typical startup order:
 
-1. Create or assign a [GBCompositionContainer](../api/GBCompositionContainer/) with at least a [GBConfig](../api/GBConfig/) resource.
+1. Create or assign a [GBCompositionContainer](../api/GBCompositionContainer/) (or its 5.1 session alias `GBSession`) with at least a [GBConfig](../api/GBConfig/) resource.
 1. Add a [GBInjectorSystem](../api/GBInjectorSystem/) node, set its `composition_container`, optionally define `injection_roots`.
 1. Let `_ready()` trigger initial injection; nodes with `resolve_gb_dependencies` now have access to configuration.
    - **Editor validation runs automatically** during injector `_ready()`
-1. After game dependencies are ready (GBLevelContext, GBOwner), call `run_validation()` on the injector to trigger runtime validation and log any issues.
+1. After game dependencies are ready (GBLevelContext, GBUser / GBOwner), call `run_validation()` on the injector to trigger runtime validation and log any issues.
 
 **Manual Runtime Validation:**
 ```gdscript
@@ -263,6 +263,34 @@ func resolve_gb_dependencies(p_config: GBCompositionContainer) -> void:
     _logger = p_config.get_logger()
     _targeting_state = p_config.get_targeting_state()
     _logger.log_debug( "Dependencies resolved for %s" % name)
+```
+
+### User & Session example (5.1 bridge)
+
+The 5.1 GDScript bridge exposes `GBSession` (alias for `GBCompositionContainer`) and `GBUser` (alias for `GBOwner`) so you can use the same terminology as the 6.0 user/session model:
+
+```gdscript
+extends Node
+
+@export var composition_container: GBSession
+@export var user: GBUser
+
+func resolve_gb_dependencies(p_container: GBCompositionContainer) -> void:
+	# Use the injected container as the active session
+	composition_container = p_container
+
+	# Wire the per-user component into the owner context (user scope)
+	var contexts := composition_container.get_contexts()
+	var owner_context := contexts.owner
+	owner_context.set_owner(user)
+
+	# Access states through the session
+	var states := composition_container.get_states()
+	var building_state := states.building
+	var targeting_state := states.targeting
+
+	# From here, BuildingState.get_owner() / GridTargetingState.get_owner_root()
+	# will reflect the GBUser configured above.
 ```
 
 ______________________________________________________________________
