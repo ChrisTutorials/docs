@@ -1,5 +1,6 @@
 ---
 description: Repository sync (status → commit → push)
+auto_execution_mode: always
 ---
 
 ## git-sync Workflow
@@ -9,6 +10,10 @@ Follow these steps whenever you need to capture work across the repo and push it
 1. **Verify clean tree & remotes**
    - `git status -sb`
    - `git remote -v`
+
+   > ⚠️ If the tree is dirty with generated artifacts, regressions, or merge conflicts, resolve those first:
+   > - For unwanted generated files, clean or add ignores before continuing.
+   > - For merge conflicts, run `git status` to see conflict markers, fix files, then `git add` each resolved file.
 
 2. **Stage changes**
    - All: `git add -A`
