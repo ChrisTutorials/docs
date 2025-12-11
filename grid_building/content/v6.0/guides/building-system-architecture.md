@@ -5,6 +5,10 @@ weight: 45
 url: "/gridbuilding/v6.0-public/guides/building-system-architecture/"
 ---
 
+> **Note:** The v6.0 documentation tracks the in-progress **Grid Placement 6.0 (C#)** line.
+> It is an internal roadmap/preview and should not be treated as a promised public release or timeline.
+> The current GDScript release line is **v5.1**.
+
 # BuildingSystem Architecture (Legacy Session Orchestrator)
 
 > **Status:** This document describes the legacy `BuildingSystem` node in the context of the new v6.x Owner-based architecture. New code should prefer `PlacementSystem` + `IPlacementService`, but some projects may still use `BuildingSystem` as a session-level orchestrator.

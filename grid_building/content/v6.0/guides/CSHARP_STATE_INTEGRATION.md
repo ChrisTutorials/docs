@@ -6,6 +6,10 @@ weight: 15
 aliases: ["/latest/guides/csharp-state-integration/", "/gridbuilding/latest/guides/csharp-state-integration/"]
 ---
 
+> **Note:** The v6.0 documentation tracks the in-progress **Grid Placement 6.0 (C#)** line.
+> It is an internal roadmap/preview and should not be treated as a promised public release or timeline.
+> The current GDScript release line is **v5.1**.
+
 
 This guide explains how the C# backend states connect to the Godot frontend, maintaining GDScript compatibility while exposing necessary state information to Godot objects.
 

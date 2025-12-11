@@ -23,8 +23,8 @@ The Grid Building Plugin is a comprehensive, modular system for implementing gri
 Built with a modular architecture that allows you to use only the components you need. Each system is independent but works seamlessly with others.
 {{< /card >}}
 
-{{< card title="C# Implementation" icon="fas fa-code" >}}
-Fully implemented in C# with modern design patterns, dependency injection, and comprehensive error handling for robust production use.
+{{< card title="GDScript Implementation" icon="fas fa-code" >}}
+Implemented in GDScript (v5.1 release line), with a focus on stable runtime behavior and a clean upgrade path toward the C# port.
 {{< /card >}}
 
 {{< card title="Extensible System" icon="fas fa-cogs" >}}

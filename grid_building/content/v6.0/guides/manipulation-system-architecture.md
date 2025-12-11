@@ -5,6 +5,10 @@ weight: 46
 url: "/gridbuilding/v6.0-public/guides/manipulation-system-architecture/"
 ---
 
+> **Note:** The v6.0 documentation tracks the in-progress **Grid Placement 6.0 (C#)** line.
+> It is an internal roadmap/preview and should not be treated as a promised public release or timeline.
+> The current GDScript release line is **v5.1**.
+
 # ManipulationSystemNode Architecture (Session Orchestrator)
 
 `ManipulationSystemNode` is the **session-level Godot node** that bridges Core manipulation services (e.g. `IManipulationService`) with the Godot engine.

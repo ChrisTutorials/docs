@@ -12,6 +12,10 @@ icon: "fas fa-code"
 tags: ["gdscript", "csharp", "migration", "classes"]
 ---
 
+> **Note:** The v6.0 documentation tracks the in-progress **Grid Placement 6.0 (C#)** line.
+> It is an internal roadmap/preview and should not be treated as a promised public release or timeline.
+> The current GDScript release line is **v5.1**.
+
 # GDScript to C# Migration Guide
 
 This guide provides comprehensive mapping between GDScript classes and their C# equivalents in Grid Building 6.0.

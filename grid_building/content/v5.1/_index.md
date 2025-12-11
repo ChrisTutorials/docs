@@ -1,16 +1,14 @@
 ---
 title: "Grid Building Plugin v5.1.0"
-description: "Development version with latest features and improvements"
+description: "GDScript release line documentation (v5.1) and migration notes"
 ---
 
 
 
-> **Status:** The v5.1 documentation line has been folded into the v6.0 C#-first release.
+> **Status:** v5.1 is the maintained **GDScript** documentation line.
 >
-> The planned 5.1 feature set became too complex to ship as a separate minor version, and the C# language migration justified rolling that work directly into the v6.0 docs.
-> For current, maintained documentation, please use the v6.0 section instead.
-
-_This v5.1 section is legacy and may be removed in a future cleanup once v6.0 is fully stabilized._
+> **Next planned release:** **Grid Placement 6.0 (C#)**.
+> The v6.0 documentation reflects internal C# porting/architecture work and may change; it should not be treated as a promised public release or timeline.
 
 # Grid Building Plugin v5.1.0 (Development)
 

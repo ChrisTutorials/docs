@@ -11,6 +11,10 @@ aliases: ["/latest/guides/6-0-readiness-status/", "/gridbuilding/latest/guides/6
 tags: ["status", "testing", "gridbuilding", "v6.0"]
 ---
 
+> **Note:** The v6.0 documentation tracks the in-progress **Grid Placement 6.0 (C#)** line.
+> It is an internal roadmap/preview and should not be treated as a promised public release or timeline.
+> The current GDScript release line is **v5.1**.
+
 # GridBuilding 6.0 Readiness Status
 
 ## Readiness Scores (0–10)

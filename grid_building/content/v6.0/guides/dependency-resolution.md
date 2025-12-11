@@ -5,6 +5,10 @@ weight: 40
 url: "/gridbuilding/v6.0-public/guides/dependency-resolution/"
 ---
 
+> **Note:** The v6.0 documentation tracks the in-progress **Grid Placement 6.0 (C#)** line.
+> It is an internal roadmap/preview and should not be treated as a promised public release or timeline.
+> The current GDScript release line is **v5.1**.
+
 # Dependency Resolution in GridBuilding v6.0 (Godot)
 
 This guide explains, in practical terms, **how GridBuilding objects find their dependencies** in v6.0: where services come from, how Godot nodes are wired, and what role `CompositionContainer` still plays.

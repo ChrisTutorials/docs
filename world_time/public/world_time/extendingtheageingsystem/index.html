@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1314&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> | World Time Plugin</title>
+
+    <meta name="description"
+        content="">
+
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    
+    <link rel="stylesheet" href="/css/custom.css">
+
+    <meta name="generator" content="Hugo 0.146.5">
+</head>
+
+<body>
+    <div class="gb-layout">
+        <header class="gb-header">
+    <a href="/" class="gb-brand">
+        <i class="fas fa-cubes" style="color: var(--gb-primary);"></i>
+        <span>World Time Plugin</span>
+    </a>
+
+    <div class="gb-search">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search documentation..." aria-label="Search">
+    </div>
+
+    <nav class="gb-nav">
+        
+        
+        <a href="/world_time/getting-started/" class="gb-nav-link ">
+            Getting Started
+        </a>
+        
+        <a href="/world_time/api-reference/" class="gb-nav-link ">
+            API Reference
+        </a>
+        
+        <a href="/world_time/examples/" class="gb-nav-link ">
+            Examples
+        </a>
+        
+        <a href="/world_time/configuration/" class="gb-nav-link ">
+            Configuration
+        </a>
+        
+        <a href="/world_time/extending-the-ageing-system/" class="gb-nav-link ">
+            Extending
+        </a>
+        
+    </nav>
+</header>
+
+        
+        <aside class="gb-sidebar">
+    <nav class="gb-sidebar-nav">
+        
+
+        
+        
+
+        
+
+        
+        <div class="gb-sidebar-section">
+            <div class="gb-sidebar-title">WorldTime Plugin</div>
+            
+            <a href="/world_time/extendingtheageingsystem/"
+                class="gb-sidebar-link active">
+                
+            </a>
+            
+            <a href="/world_time/todo/"
+                class="gb-sidebar-link ">
+                
+            </a>
+            
+        </div>
+        
+    </nav>
+</aside>
+        
+
+        <main class="gb-main">
+            
+            <div class="gb-content">
+                <h1></h1>
+                <h1 id="making-things-age-a-simple-guide">Making Things Age: A Simple Guide</h1>
+<p>Want to make crops grow, characters get older, or buildings fall apart? The AgeingSystem handles the &ldquo;passing time&rdquo; part - you just need to tell it what should happen at different ages.</p>
+<h2 id="-the-basic-idea">🎯 The Basic Idea</h2>
+<p>The AgeingSystem is like a <strong>timer that counts up forever</strong>. You decide what happens when the timer reaches certain numbers.</p>
+<p><strong>Think of it like this:</strong></p>
+<ul>
+<li>Age 0-1: Seed</li>
+<li>Age 1-3: Sprout</li>
+<li>Age 3-5: Growing plant</li>
+<li>Age 5-8: Ready to harvest</li>
+<li>Age 8+: Dead plant</li>
+</ul>
+<p>The system handles the counting. You handle the &ldquo;what happens at each age&rdquo; part.</p>
+<h2 id="-making-crops-grow-the-easy-way">🌱 Making Crops Grow (The Easy Way)</h2>
+<p>Here&rsquo;s how to make a simple crop that grows through different stages:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#75715e">// Create a crop component</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">partial</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WheatCrop</span> : Node2D
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> AgeingComponent _ageing;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> Sprite2D _sprite;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">void</span> _Ready()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        _sprite = GetNode&lt;Sprite2D&gt;(<span style="color:#e6db74">&#34;Sprite&#34;</span>);
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Create the aging component</span>
+</span></span><span style="display:flex;"><span>        _ageing = <span style="color:#66d9ef">new</span> AgeingComponent();
+</span></span><span style="display:flex;"><span>        _ageing.AgeStateChanged += OnCropAged;
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        AddChild(_ageing);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// This is called whenever the crop gets older</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> OnCropAged(<span style="color:#66d9ef">object</span> sender, AgeStateChangedEventArgs e)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (e.NewState == <span style="color:#66d9ef">null</span>) <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">float</span> age = e.NewState.Current;
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Change what the crop looks like based on age</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (age &lt; <span style="color:#ae81ff">1</span>) 
+</span></span><span style="display:flex;"><span>            _sprite.Texture = GD.Load&lt;Texture2D&gt;(<span style="color:#e6db74">&#34;res://crops/wheat/seed.png&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (age &lt; <span style="color:#ae81ff">3</span>) 
+</span></span><span style="display:flex;"><span>            _sprite.Texture = GD.Load&lt;Texture2D&gt;(<span style="color:#e6db74">&#34;res://crops/wheat/sprout.png&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (age &lt; <span style="color:#ae81ff">5</span>) 
+</span></span><span style="display:flex;"><span>            _sprite.Texture = GD.Load&lt;Texture2D&gt;(<span style="color:#e6db74">&#34;res://crops/wheat/growing.png&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (age &lt; <span style="color:#ae81ff">8</span>) 
+</span></span><span style="display:flex;"><span>            _sprite.Texture = GD.Load&lt;Texture2D&gt;(<span style="color:#e6db74">&#34;res://crops/wheat/mature.png&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> 
+</span></span><span style="display:flex;"><span>            _sprite.Texture = GD.Load&lt;Texture2D&gt;(<span style="color:#e6db74">&#34;res://crops/wheat/dead.png&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>That&rsquo;s it! Your wheat crop will now automatically change appearance as it ages.</p>
+<h2 id="-adding-growth-factors">🌾 Adding Growth Factors</h2>
+<p>Want water and seasons to affect growth? Just add some modifiers:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">partial</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WheatCrop</span> : Node2D
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> AgeingComponent _ageing;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> Sprite2D _sprite;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">float</span> _waterLevel = <span style="color:#ae81ff">1.0f</span>;  <span style="color:#75715e">// How much water the crop has</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">float</span> _growthSpeed = <span style="color:#ae81ff">1.0f</span>; <span style="color:#75715e">// How fast it grows</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">void</span> _Ready()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        _sprite = GetNode&lt;Sprite2D&gt;(<span style="color:#e6db74">&#34;Sprite&#34;</span>);
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        _ageing = <span style="color:#66d9ef">new</span> AgeingComponent();
+</span></span><span style="display:flex;"><span>        _ageing.AgeStateChanged += OnCropAged;
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        AddChild(_ageing);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Call this when the player waters the crop</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> WaterCrop()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        _waterLevel = Mathf.Min(<span style="color:#ae81ff">1.0f</span>, _waterLevel + <span style="color:#ae81ff">0.3f</span>);
+</span></span><span style="display:flex;"><span>        _growthSpeed = <span style="color:#ae81ff">0.5f</span> + _waterLevel; <span style="color:#75715e">// More water = faster growth</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Call this every day to simulate water evaporation</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> DailyUpdate()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        _waterLevel = Mathf.Max(<span style="color:#ae81ff">0.0f</span>, _waterLevel - <span style="color:#ae81ff">0.1f</span>);
+</span></span><span style="display:flex;"><span>        _growthSpeed = <span style="color:#ae81ff">0.5f</span> + _waterLevel;
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Apply growth speed to age</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">float</span> effectiveAge = _ageing.AgeState.Current * _growthSpeed;
+</span></span><span style="display:flex;"><span>        UpdateCropAppearance(effectiveAge);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> UpdateCropAppearance(<span style="color:#66d9ef">float</span> age)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (age &lt; <span style="color:#ae81ff">1</span>) 
+</span></span><span style="display:flex;"><span>            _sprite.Texture = GD.Load&lt;Texture2D&gt;(<span style="color:#e6db74">&#34;res://crops/wheat/seed.png&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (age &lt; <span style="color:#ae81ff">3</span>) 
+</span></span><span style="display:flex;"><span>            _sprite.Texture = GD.Load&lt;Texture2D&gt;(<span style="color:#e6db74">&#34;res://crops/wheat/sprout.png&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (age &lt; <span style="color:#ae81ff">5</span>) 
+</span></span><span style="display:flex;"><span>            _sprite.Texture = GD.Load&lt;Texture2D&gt;(<span style="color:#e6db74">&#34;res://crops/wheat/growing.png&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (age &lt; <span style="color:#ae81ff">8</span>) 
+</span></span><span style="display:flex;"><span>            _sprite.Texture = GD.Load&lt;Texture2D&gt;(<span style="color:#e6db74">&#34;res://crops/wheat/mature.png&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> 
+</span></span><span style="display:flex;"><span>            _sprite.Texture = GD.Load&lt;Texture2D&gt;(<span style="color:#e6db74">&#34;res://crops/wheat/dead.png&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> OnCropAged(<span style="color:#66d9ef">object</span> sender, AgeStateChangedEventArgs e)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        DailyUpdate(); <span style="color:#75715e">// Update growth factors when age changes</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="-making-characters-age">👶 Making Characters Age</h2>
+<p>Want NPCs to get older and change appearance over time?</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">partial</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">NPC</span> : Node2D
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> AgeingComponent _ageing;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> Sprite2D _sprite;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">float</span> _moveSpeed = <span style="color:#ae81ff">100.0f</span>;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">void</span> _Ready()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        _sprite = GetNode&lt;Sprite2D&gt;(<span style="color:#e6db74">&#34;Sprite&#34;</span>);
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        _ageing = <span style="color:#66d9ef">new</span> AgeingComponent();
+</span></span><span style="display:flex;"><span>        _ageing.AgeStateChanged += OnCharacterAged;
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        AddChild(_ageing);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> OnCharacterAged(<span style="color:#66d9ef">object</span> sender, AgeStateChangedEventArgs e)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (e.NewState == <span style="color:#66d9ef">null</span>) <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">float</span> age = e.NewState.Current;
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Change appearance based on age</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (age &lt; <span style="color:#ae81ff">18</span>)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            _sprite.Texture = GD.Load&lt;Texture2D&gt;(<span style="color:#e6db74">&#34;res://characters/child.png&#34;</span>);
+</span></span><span style="display:flex;"><span>            _moveSpeed = <span style="color:#ae81ff">120.0f</span>; <span style="color:#75715e">// Kids run faster</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (age &lt; <span style="color:#ae81ff">30</span>)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            _sprite.Texture = GD.Load&lt;Texture2D&gt;(<span style="color:#e6db74">&#34;res://characters/young_adult.png&#34;</span>);
+</span></span><span style="display:flex;"><span>            _moveSpeed = <span style="color:#ae81ff">100.0f</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (age &lt; <span style="color:#ae81ff">50</span>)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            _sprite.Texture = GD.Load&lt;Texture2D&gt;(<span style="color:#e6db74">&#34;res://characters/adult.png&#34;</span>);
+</span></span><span style="display:flex;"><span>            _moveSpeed = <span style="color:#ae81ff">90.0f</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (age &lt; <span style="color:#ae81ff">70</span>)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            _sprite.Texture = GD.Load&lt;Texture2D&gt;(<span style="color:#e6db74">&#34;res://characters/elder.png&#34;</span>);
+</span></span><span style="display:flex;"><span>            _moveSpeed = <span style="color:#ae81ff">70.0f</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            _sprite.Texture = GD.Load&lt;Texture2D&gt;(<span style="color:#e6db74">&#34;res://characters/senior.png&#34;</span>);
+</span></span><span style="display:flex;"><span>            _moveSpeed = <span style="color:#ae81ff">50.0f</span>; <span style="color:#75715e">// Seniors move slower</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">float</span> GetMoveSpeed() =&gt; _moveSpeed;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="-making-buildings-deteriorate">🏠 Making Buildings Deteriorate</h2>
+<p>Want buildings to fall apart over time if not maintained?</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">partial</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Building</span> : Node2D
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> AgeingComponent _ageing;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> Sprite2D _sprite;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">float</span> _condition = <span style="color:#ae81ff">100.0f</span>;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">void</span> _Ready()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        _sprite = GetNode&lt;Sprite2D&gt;(<span style="color:#e6db74">&#34;Sprite&#34;</span>);
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        _ageing = <span style="color:#66d9ef">new</span> AgeingComponent();
+</span></span><span style="display:flex;"><span>        _ageing.AgeStateChanged += OnBuildingAged;
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        AddChild(_ageing);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> OnBuildingAged(<span style="color:#66d9ef">object</span> sender, AgeStateChangedEventArgs e)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (e.NewState == <span style="color:#66d9ef">null</span>) <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">float</span> age = e.NewState.Current;
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Buildings lose condition over time</span>
+</span></span><span style="display:flex;"><span>        _condition = Mathf.Max(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">100.0f</span> - (age * <span style="color:#ae81ff">5.0f</span>));
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Change appearance based on condition</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (_condition &gt; <span style="color:#ae81ff">80</span>)
+</span></span><span style="display:flex;"><span>            _sprite.Texture = GD.Load&lt;Texture2D&gt;(<span style="color:#e6db74">&#34;res://buildings/house_new.png&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (_condition &gt; <span style="color:#ae81ff">60</span>)
+</span></span><span style="display:flex;"><span>            _sprite.Texture = GD.Load&lt;Texture2D&gt;(<span style="color:#e6db74">&#34;res://buildings/house_good.png&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (_condition &gt; <span style="color:#ae81ff">40</span>)
+</span></span><span style="display:flex;"><span>            _sprite.Texture = GD.Load&lt;Texture2D&gt;(<span style="color:#e6db74">&#34;res://buildings/house_fair.png&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (_condition &gt; <span style="color:#ae81ff">20</span>)
+</span></span><span style="display:flex;"><span>            _sprite.Texture = GD.Load&lt;Texture2D&gt;(<span style="color:#e6db74">&#34;res://buildings/house_poor.png&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>            _sprite.Texture = GD.Load&lt;Texture2D&gt;(<span style="color:#e6db74">&#34;res://buildings/house_ruined.png&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Player can repair buildings</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> Repair(<span style="color:#66d9ef">float</span> amount)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        _condition = Mathf.Min(<span style="color:#ae81ff">100.0f</span>, _condition + amount);
+</span></span><span style="display:flex;"><span>        UpdateAppearance();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> UpdateAppearance()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (_condition &gt; <span style="color:#ae81ff">80</span>)
+</span></span><span style="display:flex;"><span>            _sprite.Texture = GD.Load&lt;Texture2D&gt;(<span style="color:#e6db74">&#34;res://buildings/house_new.png&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (_condition &gt; <span style="color:#ae81ff">60</span>)
+</span></span><span style="display:flex;"><span>            _sprite.Texture = GD.Load&lt;Texture2D&gt;(<span style="color:#e6db74">&#34;res://buildings/house_good.png&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (_condition &gt; <span style="color:#ae81ff">40</span>)
+</span></span><span style="display:flex;"><span>            _sprite.Texture = GD.Load&lt;Texture2D&gt;(<span style="color:#e6db74">&#34;res://buildings/house_fair.png&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (_condition &gt; <span style="color:#ae81ff">20</span>)
+</span></span><span style="display:flex;"><span>            _sprite.Texture = GD.Load&lt;Texture2D&gt;(<span style="color:#e6db74">&#34;res://buildings/house_poor.png&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>            _sprite.Texture = GD.Load&lt;Texture2D&gt;(<span style="color:#e6db74">&#34;res://buildings/house_ruined.png&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">bool</span> IsRuined() =&gt; _condition &lt;= <span style="color:#ae81ff">20</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="-quick-tips-for-game-development">🎮 Quick Tips for Game Development</h2>
+<h3 id="making-it-work-in-your-game">Making It Work in Your Game</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#75715e">// In your main game scene</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">partial</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">GameManager</span> : Node
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">void</span> _Ready()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Connect to world time system</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> worldTime = GetNode&lt;TimeManagerNode&gt;(<span style="color:#e6db74">&#34;TimeManager&#34;</span>);
+</span></span><span style="display:flex;"><span>        worldTime.DayChanged += OnNewDay;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> OnNewDay(<span style="color:#66d9ef">int</span> newDay)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Make all crops age by 1 day</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> crops = GetTree().GetNodesInGroup(<span style="color:#e6db74">&#34;crops&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">foreach</span> (Node crop <span style="color:#66d9ef">in</span> crops)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (crop <span style="color:#66d9ef">is</span> WheatCrop wheatCrop)
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>                wheatCrop.DailyUpdate();
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="using-resources-for-easy-configuration">Using Resources for Easy Configuration</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#75715e">// Create a resource file for different crop types</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">[Resource]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CropData</span> : Resource
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [Export]</span> <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> CropName { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [Export]</span> <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">float</span>[] GrowthStages { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; } = { <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">8</span> };
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [Export]</span> <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span>[] StageSprites { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; } = { <span style="color:#e6db74">&#34;seed&#34;</span>, <span style="color:#e6db74">&#34;sprout&#34;</span>, <span style="color:#e6db74">&#34;growing&#34;</span>, <span style="color:#e6db74">&#34;mature&#34;</span>, <span style="color:#e6db74">&#34;dead&#34;</span> };
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [Export]</span> <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">float</span> BaseGrowthSpeed { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; } = <span style="color:#ae81ff">1.0f</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Use it in your crop</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">partial</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">GenericCrop</span> : Node2D
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">    [Export]</span> <span style="color:#66d9ef">public</span> CropData? CropData { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> UpdateAppearance(<span style="color:#66d9ef">float</span> age)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (CropData == <span style="color:#66d9ef">null</span>) <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i = <span style="color:#ae81ff">0</span>; i &lt; CropData.GrowthStages.Length; i++)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (age &lt; CropData.GrowthStages[i])
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>                _sprite.Texture = GD.Load&lt;Texture2D&gt;(<span style="color:#e6db74">$&#34;res://crops/{CropData.StageSprites[i]}.png&#34;</span>);
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="saving-and-loading">Saving and Loading</h3>
+<p>The AgeingSystem automatically handles saving and loading:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#75715e">// Save the game</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> SaveGame()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> saveData = <span style="color:#66d9ef">new</span> Dictionary&lt;<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">string</span>&gt;();
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Save all aging objects</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> crops = GetTree().GetNodesInGroup(<span style="color:#e6db74">&#34;crops&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">foreach</span> (Node crop <span style="color:#66d9ef">in</span> crops)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (crop <span style="color:#66d9ef">is</span> WheatCrop wheatCrop)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">var</span> cropData = wheatCrop._ageing.ToDict();
+</span></span><span style="display:flex;"><span>            saveData[<span style="color:#e6db74">$&#34;crop_{wheatCrop.Name}&#34;</span>] = Json.Stringify(cropData);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Write to file</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> file = FileAccess.Open(<span style="color:#e6db74">&#34;user://savegame.json&#34;</span>, FileAccess.ModeFlags.Write);
+</span></span><span style="display:flex;"><span>    file.StoreString(Json.Stringify(saveData));
+</span></span><span style="display:flex;"><span>    file.Close();
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Load the game</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> LoadGame()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> file = FileAccess.Open(<span style="color:#e6db74">&#34;user://savegame.json&#34;</span>, FileAccess.ModeFlags.Read);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> saveData = Json.ParseString(file.GetAsText()).AsGodotDictionary();
+</span></span><span style="display:flex;"><span>    file.Close();
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Restore all aging objects</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">foreach</span> (<span style="color:#66d9ef">var</span> key <span style="color:#66d9ef">in</span> saveData.Keys)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (key.ToString().StartsWith(<span style="color:#e6db74">&#34;crop_&#34;</span>))
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">var</span> cropName = key.ToString().Replace(<span style="color:#e6db74">&#34;crop_&#34;</span>, <span style="color:#e6db74">&#34;&#34;</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">var</span> cropData = Json.ParseString(saveData[key].ToString()).AsGodotDictionary();
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">var</span> crop = GetNode&lt;WheatCrop&gt;(cropName);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (crop != <span style="color:#66d9ef">null</span>)
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>                crop._ageing.FromDict(cropData);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="-common-patterns">📚 Common Patterns</h2>
+<h3 id="1-different-growth-speeds-for-different-crops">1. Different Growth Speeds for Different Crops</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">partial</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CornCrop</span> : WheatCrop  <span style="color:#75715e">// Reuse wheat crop code</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">void</span> _Ready()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">base</span>._Ready();
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Corn grows slower than wheat</span>
+</span></span><span style="display:flex;"><span>        _growthSpeed = <span style="color:#ae81ff">0.7f</span>;  <span style="color:#75715e">// 70% of normal speed</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="2-seasonal-effects">2. Seasonal Effects</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">partial</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SeasonalCrop</span> : WheatCrop
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">void</span> DailyUpdate()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">base</span>.DailyUpdate();
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Get current season from your world time system</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> season = GetCurrentSeason();
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Adjust growth based on season</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">switch</span> (season)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> Season.Spring:
+</span></span><span style="display:flex;"><span>                _growthSpeed = <span style="color:#ae81ff">1.2f</span>;  <span style="color:#75715e">// Spring bonus</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> Season.Summer:
+</span></span><span style="display:flex;"><span>                _growthSpeed = <span style="color:#ae81ff">1.5f</span>;  <span style="color:#75715e">// Summer bonus</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> Season.Fall:
+</span></span><span style="display:flex;"><span>                _growthSpeed = <span style="color:#ae81ff">0.8f</span>;  <span style="color:#75715e">// Fall penalty</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> Season.Winter:
+</span></span><span style="display:flex;"><span>                _growthSpeed = <span style="color:#ae81ff">0.3f</span>;  <span style="color:#75715e">// Winter penalty</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="3-random-variations">3. Random Variations</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">partial</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RandomCrop</span> : WheatCrop
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">void</span> _Ready()
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">base</span>._Ready();
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Add some randomness to make each crop unique</span>
+</span></span><span style="display:flex;"><span>        _growthSpeed *= GD.RandfRange(<span style="color:#ae81ff">0.8f</span>, <span style="color:#ae81ff">1.2f</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="-common-problems-and-solutions">🐛 Common Problems and Solutions</h2>
+<h3 id="problem-my-crops-arent-aging">Problem: My crops aren&rsquo;t aging!</h3>
+<p><strong>Solution:</strong> Make sure your TimeManager is running and connected to the aging system.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#75715e">// In your TimeManager</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">void</span> _Process(<span style="color:#66d9ef">double</span> delta)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">base</span>._Process(delta);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Update aging system</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> worldAgeSystem = GetNode&lt;WorldAgeSystemNode&gt;(<span style="color:#e6db74">&#34;WorldAgeSystem&#34;</span>);
+</span></span><span style="display:flex;"><span>    worldAgeSystem.Update((<span style="color:#66d9ef">float</span>)delta);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="problem-crops-age-too-fastslow">Problem: Crops age too fast/slow</h3>
+<p><strong>Solution:</strong> Adjust the time scale in your TimeManager settings.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#75715e">// Make time pass slower</span>
+</span></span><span style="display:flex;"><span>timeScale.DeltaMultiplier = <span style="color:#ae81ff">500.0f</span>;  <span style="color:#75715e">// Default is 1000.0f</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Make time pass faster  </span>
+</span></span><span style="display:flex;"><span>timeScale.DeltaMultiplier = <span style="color:#ae81ff">2000.0f</span>;
+</span></span></code></pre></div><h3 id="problem-crops-dont-save-their-age">Problem: Crops don&rsquo;t save their age</h3>
+<p><strong>Solution:</strong> Make sure you&rsquo;re calling the save/load methods correctly.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#75715e">// Save</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> cropData = crop._ageing.ToDict();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Load</span>
+</span></span><span style="display:flex;"><span>crop._ageing.FromDict(cropData);
+</span></span></code></pre></div><h2 id="-what-to-build-next">🎯 What to Build Next?</h2>
+<p>Now that you know the basics, try these ideas:</p>
+<ol>
+<li><strong>Fruit Trees</strong> - Trees that produce fruit every season</li>
+<li><strong>Animal Aging</strong> - Animals that grow up and eventually die</li>
+<li><strong>Tool Wear</strong> - Tools that break after use and need repair</li>
+<li><strong>World Events</strong> - Special things that happen at certain world ages</li>
+<li><strong>Character Relationships</strong> - NPCs that form relationships over time</li>
+</ol>
+<h2 id="-summary">📖 Summary</h2>
+<p>The AgeingSystem is simple:</p>
+<ol>
+<li><strong>Add AgeingComponent</strong> to anything that should age</li>
+<li><strong>Listen for AgeStateChanged</strong> events</li>
+<li><strong>Change appearance/behavior</strong> based on the age</li>
+<li><strong>Save/load</strong> automatically works</li>
+</ol>
+<p>That&rsquo;s it! You now have everything you need to make crops grow, characters age, buildings deteriorate, and anything else you can imagine.</p>
+<p><strong>Remember:</strong> The system handles the counting, you handle what happens at each age. Keep it simple and have fun building your game!</p>
+
+            </div>
+            
+        </main>
+
+        
+        <aside class="gb-toc">
+            <div class="gb-toc-title">On this page</div>
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#-the-basic-idea">🎯 The Basic Idea</a></li>
+    <li><a href="#-making-crops-grow-the-easy-way">🌱 Making Crops Grow (The Easy Way)</a></li>
+    <li><a href="#-adding-growth-factors">🌾 Adding Growth Factors</a></li>
+    <li><a href="#-making-characters-age">👶 Making Characters Age</a></li>
+    <li><a href="#-making-buildings-deteriorate">🏠 Making Buildings Deteriorate</a></li>
+    <li><a href="#-quick-tips-for-game-development">🎮 Quick Tips for Game Development</a>
+      <ul>
+        <li><a href="#making-it-work-in-your-game">Making It Work in Your Game</a></li>
+        <li><a href="#using-resources-for-easy-configuration">Using Resources for Easy Configuration</a></li>
+        <li><a href="#saving-and-loading">Saving and Loading</a></li>
+      </ul>
+    </li>
+    <li><a href="#-common-patterns">📚 Common Patterns</a>
+      <ul>
+        <li><a href="#1-different-growth-speeds-for-different-crops">1. Different Growth Speeds for Different Crops</a></li>
+        <li><a href="#2-seasonal-effects">2. Seasonal Effects</a></li>
+        <li><a href="#3-random-variations">3. Random Variations</a></li>
+      </ul>
+    </li>
+    <li><a href="#-common-problems-and-solutions">🐛 Common Problems and Solutions</a>
+      <ul>
+        <li><a href="#problem-my-crops-arent-aging">Problem: My crops aren&rsquo;t aging!</a></li>
+        <li><a href="#problem-crops-age-too-fastslow">Problem: Crops age too fast/slow</a></li>
+        <li><a href="#problem-crops-dont-save-their-age">Problem: Crops don&rsquo;t save their age</a></li>
+      </ul>
+    </li>
+    <li><a href="#-what-to-build-next">🎯 What to Build Next?</a></li>
+    <li><a href="#-summary">📖 Summary</a></li>
+  </ul>
+</nav>
+        </aside>
+        
+
+        <footer class="gb-footer">
+    <p>&copy; 2025 Chris Tutorials. All rights reserved.</p>
+    <p>
+        Built with <a href="https://gohugo.io/" target="_blank">Hugo</a> and
+        <a href="https://godotengine.org/" target="_blank">Godot</a>.
+    </p>
+</footer>
+    </div>
+</body>
+
+</html>

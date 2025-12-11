@@ -7,7 +7,10 @@ url: "/gridbuilding/v6-0/api/"
 
 # GridBuilding API Reference v6.0
 
-This section contains the complete API reference for the GridBuilding plugin, generated using **AST parsing**.
+> **Note:** The v6.0 documentation tracks the in-progress **Grid Placement 6.0 (C#)** line.
+> It is published as an internal preview and should not be treated as a promised public release or timeline.
+
+This section contains the complete API reference for the C# codebase, generated using **AST parsing**.
 
 ## ⚠️ IMPORTANT: AST Parsing vs Regex
 
@@ -52,4 +55,4 @@ Engine-specific implementations and visual components
 ---
 
 *This documentation is automatically generated using AST parsing technology for maximum accuracy.*
-Project: GridBuilding v6.0
+Project: Grid Placement (C#) v6.0 (internal preview)

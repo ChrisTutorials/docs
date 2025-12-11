@@ -5,6 +5,10 @@ weight: 45
 url: "/gridbuilding/v6.0/guides/placement-system-architecture/"
 ---
 
+> **Note:** The v6.0 documentation tracks the in-progress **Grid Placement 6.0 (C#)** line.
+> It is an internal roadmap/preview and should not be treated as a promised public release or timeline.
+> The current GDScript release line is **v5.1**.
+
 # Placement System and Architecture in v6.0 (Godot)
 
 This guide explains **what the Placement System does in v6.0**, how it **replaces the old GDScript `BuildingSystem`**, and how it fits into the overall architecture.

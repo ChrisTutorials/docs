@@ -11,6 +11,10 @@ aliases: ["/latest/guides/mode-architecture/", "/gridbuilding/latest/guides/mode
 tags: ["architecture", "modes", "gridbuilding", "v6.0"]
 ---
 
+> **Note:** The v6.0 documentation tracks the in-progress **Grid Placement 6.0 (C#)** line.
+> It is an internal roadmap/preview and should not be treated as a promised public release or timeline.
+> The current GDScript release line is **v5.1**.
+
 # GridBuilding 6.0 Mode Architecture
 
 ## What is the Mode Service?

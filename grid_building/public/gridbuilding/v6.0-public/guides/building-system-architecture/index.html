@@ -1,0 +1,67 @@
+<!doctype html><html lang=en-us><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>BuildingSystem Architecture (Legacy Session Orchestrator) | GridBuilding Plugin</title>
+<meta name=description content="How the legacy BuildingSystem node behaves as a session-level orchestrator in v6.x and how it relates to Owner-scoped services."><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel=stylesheet><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css><link rel=stylesheet href=/css/custom.css><meta name=generator content="Hugo 0.146.5"></head><body><div class=gb-layout><header class=gb-header><a href=/ class=gb-brand><i class="fas fa-cubes" style=color:var(--gb-primary)></i>
+<span>GridBuilding Plugin</span></a><div class=gb-search><i class="fas fa-search"></i>
+<input type=text placeholder="Search documentation..." aria-label=Search></div><nav class=gb-nav><a href=/ class=gb-nav-link>Home
+</a><a href=/v6.0/overview/ class=gb-nav-link>Documentation
+</a><a href=/v5.1/overview/ class=gb-nav-link>Grid Building Plugin Overview
+</a><a href=/v6.0/api/ class=gb-nav-link>API Reference
+</a><a href=/v5.1/guides/ class=gb-nav-link>Getting Started Guides
+</a><a href=/v6.0/examples/ class=gb-nav-link>Examples
+</a><a href=/v5.1/examples/ class=gb-nav-link>Code Examples
+</a><a href=/community/ class=gb-nav-link>Community
+</a><a href=/v5.1/architecture-diagrams/ class=gb-nav-link>Architecture Diagrams</a></nav></header><aside class=gb-sidebar><nav class=gb-sidebar-nav><div class=gb-sidebar-section><div class=gb-sidebar-title>V6.0s</div><a href=/v6.0/guides/6-0-readiness-status/ class=gb-sidebar-link>GridBuilding 6.0 Readiness Status
+</a><a href=/v6.0/guides/getting_started/ class=gb-sidebar-link>Getting Started with GridBuilding
+</a><a href=/v6.0/guides/mode-architecture/ class=gb-sidebar-link>GridBuilding 6.0 Mode Architecture
+</a><a href=/v6.0/guides/gdscript-to-csharp-mapping/ class=gb-sidebar-link>GDScript to C# Migration Guide
+</a><a href=/v6.0/guides/csharp_state_integration/ class=gb-sidebar-link>C# State Integration with Godot Frontend
+</a><a href=/v6.0/guides/troubleshooting/ class=gb-sidebar-link>Troubleshooting Guide
+</a><a href=/v6.0/examples/godot_integration_example/ class=gb-sidebar-link>Godot Integration Example
+</a><a href=/gridbuilding/v6.0-public/guides/dependency-resolution/ class=gb-sidebar-link>Dependency Resolution in GridBuilding v6.0 (Godot)
+</a><a href=/gridbuilding/v6.0-public/guides/userid-quickstart/ class=gb-sidebar-link>Quick Start: Game-Owned UserId & Multi-Owner Orchestrators
+</a><a href=/gridbuilding/v6.0-public/guides/building-system-architecture/ class="gb-sidebar-link active">BuildingSystem Architecture (Legacy Session Orchestrator)
+</a><a href=/gridbuilding/v6.0-public/guides/multi-owner-orchestration-priorities/ class=gb-sidebar-link>Multi-Owner Orchestration Priorities (v6.0)
+</a><a href=/gridbuilding/v6.0/guides/placement-system-architecture/ class=gb-sidebar-link>Placement System and Architecture in GridBuilding v6.0 (Godot)
+</a><a href=/gridbuilding/v6.0-public/guides/manipulation-system-architecture/ class=gb-sidebar-link>ManipulationSystemNode Architecture (Session Orchestrator)
+</a><a href=/v6.0/guides/service_based_architecture/ class=gb-sidebar-link>Service-Based Architecture
+</a><a href=/gridbuilding/v6-0/api/ class=gb-sidebar-link>GridBuilding API Reference</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.1.0</div><a href=/v5.1/overview/ class=gb-sidebar-link>Grid Building Plugin Overview
+</a><a href=/v5.1/guides/ class=gb-sidebar-link>Getting Started Guides
+</a><a href=/v5.1/api/ class=gb-sidebar-link>C# API Reference
+</a><a href=/v5.1/examples/ class=gb-sidebar-link>Code Examples
+</a><a href=/v5.1/architecture-diagrams/ class=gb-sidebar-link>Architecture Diagrams
+</a><a href=/v5.1/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.1/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.1/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.1/validation/ class=gb-sidebar-link>Validation Tools</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.0.0</div><a href=/v5.0/api/ class=gb-sidebar-link>GDScript API Reference
+</a><a href=/v5.0/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.0/overview/ class=gb-sidebar-link>Grid Building Plugin v5.0.0
+</a><a href=/v5.0/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.0/guides/ class=gb-sidebar-link>Plugin Overview
+</a><a href=/v5.0/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.0/validation/ class=gb-sidebar-link>Validation Tools</a></div></nav></aside><main class=gb-main><div class=gb-content><h1>BuildingSystem Architecture (Legacy Session Orchestrator)</h1><blockquote><p><strong>Note:</strong> The v6.0 documentation tracks the in-progress <strong>Grid Placement 6.0 (C#)</strong> line.
+It is an internal roadmap/preview and should not be treated as a promised public release or timeline.
+The current GDScript release line is <strong>v5.1</strong>.</p></blockquote><h1 id=buildingsystem-architecture-legacy-session-orchestrator>BuildingSystem Architecture (Legacy Session Orchestrator)</h1><blockquote><p><strong>Status:</strong> This document describes the legacy <code>BuildingSystem</code> node in the context of the new v6.x Owner-based architecture. New code should prefer <code>PlacementSystem</code> + <code>IPlacementService</code>, but some projects may still use <code>BuildingSystem</code> as a session-level orchestrator.</p></blockquote><h2 id=1-role-of-buildingsystem-in-v6x>1. Role of BuildingSystem in v6.x</h2><p><code>BuildingSystem</code> is a Godot <code>Node</code> that historically owned building logic directly. In v6.x:</p><ul><li>It is treated as a <strong>session-level orchestrator</strong> when present.</li><li>There should be <strong>exactly one <code>BuildingSystem</code> node per game session</strong>.</li><li>It coordinates building operations for <strong>all Owners</strong> (players, AI, environment) in that session.</li><li>Per-Owner state (selection, preview, commands) lives in <strong>Owner-scoped services</strong>, not inside the node.</li></ul><p>For new development, prefer using the <strong>Placement System + Core services</strong> documented in <code>placement-system-architecture.md</code>. <code>BuildingSystem</code> exists primarily for backwards compatibility and transitional setups.</p><h2 id=2-lifetime-and-scene-placement>2. Lifetime and Scene Placement</h2><ul><li><code>BuildingSystem</code> is <strong>session-scoped</strong>:<ul><li>Created when a session scene is loaded.</li><li>Destroyed when that session ends/unloads.</li></ul></li><li>Recommended scene pattern:</li></ul><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>GameRoot
+</span></span><span style=display:flex><span>  └─ SessionRoot
+</span></span><span style=display:flex><span>       └─ GridBuildingSessionRoot
+</span></span><span style=display:flex><span>            └─ BuildingSystem   (one per session)
+</span></span><span style=display:flex><span>            └─ ManipulationSystemNode (one per session)
+</span></span><span style=display:flex><span>            └─ ... other GridBuilding nodes
+</span></span></code></pre></td></tr></table></div></div><p>Avoid placing <code>BuildingSystem</code> as:</p><ul><li>A <strong>project-wide autoload</strong> that persists across sessions.</li><li>A <strong>per-Owner node</strong> (e.g., one BuildingSystem per player); instead, Owners call into the single session-level system.</li></ul><h2 id=3-interaction-with-owners>3. Interaction with Owners</h2><p>In the Owner-based architecture:</p><ul><li>Each Owner has an <strong>Owner scope</strong> that holds:<ul><li>Selection state</li><li>Preview/placement intent</li><li>Input/command state</li></ul></li><li>UI/controllers for each Owner resolve the session’s <code>BuildingSystem</code> and issue commands on behalf of that Owner.</li></ul><p>Conceptually, calls look like:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679">6
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-csharp data-lang=csharp><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Pseudo-code</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> ownerScope = ownerContext.Scope; <span style=color:#8b949e;font-style:italic>// per-Owner services</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>var</span> buildingSystem = sessionContext.BuildingSystem; <span style=color:#8b949e;font-style:italic>// session-level</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>// Owner issues a build action</span>
+</span></span><span style=display:flex><span>buildingSystem.PlaceBuildingForOwner(ownerScope.OwnerId, gridPosition, placeableType);
+</span></span></code></pre></td></tr></table></div></div><p>In current v6.x code, the <code>ownerId</code> parameter may still be a <strong>design placeholder</strong>; the important part is that there is <strong>one system per session</strong>, and higher layers treat calls as Owner-specific.</p><h2 id=4-migration-guidance>4. Migration Guidance</h2><ul><li>Prefer using <code>PlacementSystem</code> + <code>IPlacementService</code> for new functionality.</li><li>When you must use <code>BuildingSystem</code>:<ul><li>Ensure there is only <strong>one instance per session</strong>.</li><li>Route per-Owner decisions (what to place, where, for whom) through Owner-scoped services and pass the resulting commands into <code>BuildingSystem</code>.</li></ul></li></ul><p>Over time, projects should migrate away from <code>BuildingSystem</code> to the newer placement architecture while keeping the <strong>session-level orchestrator</strong> concept intact.</p></div></main><aside class=gb-toc><div class=gb-toc-title>On this page</div><nav id=TableOfContents><ul><li><a href=#1-role-of-buildingsystem-in-v6x>1. Role of BuildingSystem in v6.x</a></li><li><a href=#2-lifetime-and-scene-placement>2. Lifetime and Scene Placement</a></li><li><a href=#3-interaction-with-owners>3. Interaction with Owners</a></li><li><a href=#4-migration-guidance>4. Migration Guidance</a></li></ul></nav></aside><footer class=gb-footer><p>&copy; 2025 Chris Tutorials. All rights reserved.</p><p>Built with <a href=https://gohugo.io/ target=_blank>Hugo</a> and
+<a href=https://godotengine.org/ target=_blank>Godot</a>.</p></footer></div></body></html>
