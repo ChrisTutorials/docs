@@ -1,0 +1,35 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Validation Tools | GridBuilding Plugin</title>
+<meta name=description content="Tools and patterns for validating placement, configuration, and runtime state"><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel=stylesheet><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css><link rel=stylesheet href=/css/custom.css><meta name=generator content="Hugo 0.146.5"></head><body><div class=gb-layout><header class=gb-header><a href=/ class=gb-brand><i class="fas fa-cubes" style=color:var(--gb-primary)></i>
+<span>GridBuilding Plugin</span></a><div class=gb-search><i class="fas fa-search"></i>
+<input type=text placeholder="Search documentation..." aria-label=Search></div><nav class=gb-nav><a href=/ class=gb-nav-link>Home
+</a><a href=/v6.0/overview/ class=gb-nav-link>Documentation
+</a><a href=/v5.1/overview/ class=gb-nav-link>Grid Building Plugin Overview
+</a><a href=/v6.0/api/ class=gb-nav-link>API Reference
+</a><a href=/v5.1/guides/ class=gb-nav-link>Getting Started Guides
+</a><a href=/v6.0/examples/ class=gb-nav-link>Examples
+</a><a href=/v5.1/examples/ class=gb-nav-link>Code Examples
+</a><a href=/community/ class=gb-nav-link>Community
+</a><a href=/v5.1/architecture-diagrams/ class=gb-nav-link>Architecture Diagrams</a></nav></header><aside class=gb-sidebar><nav class=gb-sidebar-nav><div class=gb-sidebar-section><div class=gb-sidebar-title>V6.0s</div><a href=/v6.0/guides/6-0-readiness-status/ class=gb-sidebar-link>GridBuilding 6.0 Readiness Status
+</a><a href=/v6.0/guides/getting_started/ class=gb-sidebar-link>Getting Started with GridBuilding
+</a><a href=/v6.0/guides/mode-architecture/ class=gb-sidebar-link>GridBuilding 6.0 Mode Architecture
+</a><a href=/v6.0/guides/gdscript-to-csharp-mapping/ class=gb-sidebar-link>GDScript to C# Migration Guide
+</a><a href=/v6.0/guides/csharp_state_integration/ class=gb-sidebar-link>C# State Integration with Godot Frontend
+</a><a href=/v6.0/guides/troubleshooting/ class=gb-sidebar-link>Troubleshooting Guide
+</a><a href=/v6.0/examples/godot_integration_example/ class=gb-sidebar-link>Godot Integration Example
+</a><a href=/v6.0/guides/service_based_architecture/ class=gb-sidebar-link>Service-Based Architecture
+</a><a href=/gridbuilding/v6-0/api/ class=gb-sidebar-link>GridBuilding API Reference</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.1.0</div><a href=/v5.1/overview/ class=gb-sidebar-link>Grid Building Plugin Overview
+</a><a href=/v5.1/guides/ class=gb-sidebar-link>Getting Started Guides
+</a><a href=/v5.1/api/ class=gb-sidebar-link>C# API Reference
+</a><a href=/v5.1/examples/ class=gb-sidebar-link>Code Examples
+</a><a href=/v5.1/architecture-diagrams/ class=gb-sidebar-link>Architecture Diagrams
+</a><a href=/v5.1/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.1/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.1/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.1/validation/ class=gb-sidebar-link>Validation Tools</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>Grid Building Plugin v5.0.0</div><a href=/v5.0/api/ class=gb-sidebar-link>GDScript API Reference
+</a><a href=/v5.0/debugging/ class=gb-sidebar-link>Debug Tools
+</a><a href=/v5.0/overview/ class=gb-sidebar-link>Grid Building Plugin v5.0.0
+</a><a href=/v5.0/migration/ class=gb-sidebar-link>Migration Guide
+</a><a href=/v5.0/guides/ class=gb-sidebar-link>Plugin Overview
+</a><a href=/v5.0/testing/ class=gb-sidebar-link>Testing
+</a><a href=/v5.0/validation/ class="gb-sidebar-link active">Validation Tools</a></div><div class=gb-sidebar-section><div class=gb-sidebar-title>V6.0-Publics</div><a href=/gridbuilding/v6-0-public/api/ class=gb-sidebar-link>GridBuilding API Reference</a></div></nav></aside><main class=gb-main><div class=gb-content><h1>Validation Tools</h1><hr><p>This page outlines validation utilities and patterns used across the plugin.</p><h2 id=automatic-configuration-validation>Automatic Configuration Validation</h2><p><strong>New in v5.0.0:</strong> <a href=../api/GBInjectorSystem/>GBInjectorSystem</a> automatically validates configuration after dependency injection completes. <strong>No manual validation calls are required.</strong></p><h3 id=how-it-works>How It Works</h3><ol><li><strong>GBInjectorSystem</strong> completes dependency injection for all nodes</li><li><strong>Automatic validation</strong> runs deferred after <code>initial_injection_completed</code></li><li><strong>Configuration issues</strong> are automatically logged if found</li><li><strong>Developers receive feedback</strong> without manual setup</li></ol><h3 id=benefits>Benefits</h3><ul><li><strong>Zero Setup</strong>: Validation happens automatically</li><li><strong>Error Prevention</strong>: No possibility of forgetting validation calls</li><li><strong>Proper Timing</strong>: Validation occurs after all dependencies are wired</li><li><strong>Consistent Behavior</strong>: All Grid Building systems validate automatically</li></ul><h2 id=validation-contract>Validation Contract</h2><ul><li>validate() methods return a boolean (success/failure). When false, inspect issues collected via:<ul><li>get_runtime_issues() in runtime</li><li>get_editor_issues() in editor</li></ul></li><li>Use <a href=/v5-0/api/GBLogger/>GBLogger</a> to log actionable diagnostics during validation.</li></ul><h2 id=key-components>Key components</h2><ul><li><a href=../api/PlacementValidator/>PlacementValidator</a> — Orchestrates rule checks</li><li><a href=../api/RuleResult/>RuleResult</a> — Captures per-rule outcomes</li><li><a href=../api/RuleCheckIndicator/>RuleCheckIndicator</a> — Visualizes rule feedback</li></ul><h2 id=tips>Tips</h2><ul><li>Keep rules stateless and fast; cache expensive lookups at the system level when needed.</li><li>Prefer explicit settings resources (e.g., <a href=/v5-0/api/ValidPlacementRuleSettings/>ValidPlacementRuleSettings</a>) to make validation predictable and testable.</li></ul></div></main><footer class=gb-footer><p>&copy; 2025 Chris Tutorials. All rights reserved.</p><p>Built with <a href=https://gohugo.io/ target=_blank>Hugo</a> and
+<a href=https://godotengine.org/ target=_blank>Godot</a>.</p></footer></div></body></html>

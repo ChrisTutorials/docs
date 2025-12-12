@@ -33,6 +33,24 @@ This tutorial will walk you through setting up and using the GridBuilding plugin
    cp -r GridBuilding /path/to/your/godot/project/addons/
    ```
 
+### Step 1.5: C# Project Setup (Recommended)
+
+If you use C#, import the plugin's shared MSBuild props file into your Godot project's `.csproj`.
+
+Example (edit your Godot project's `.csproj`):
+
+```xml
+<Project Sdk="Godot.NET.Sdk/4.4.1">
+  <Import Project="addons/GridPlacement/Godot/GridPlacement.Godot.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+</Project>
+```
+
+This keeps the plugin's build settings and Core reference rules consistent without requiring you to manually copy/paste `ProjectReference` or `Reference` blocks.
+
 ### Step 2: Enable the Plugin
 
 1. **Open your Godot project**
